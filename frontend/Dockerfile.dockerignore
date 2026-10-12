@@ -1,0 +1,10 @@
+# Context is the repo root; only frontend/ and design-system/ are needed.
+**
+!frontend/**
+!design-system/**
+!infra/nginx/**
+frontend/node_modules
+frontend/dist
+frontend/dev-dist
+frontend/playwright-report
+frontend/test-results

@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dev-dist/
+frontend/playwright-report/
+frontend/test-results/
+
+# backend
+backend/.venv/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
