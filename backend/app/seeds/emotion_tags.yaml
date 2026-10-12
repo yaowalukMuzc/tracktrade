@@ -1,0 +1,20 @@
+# System emotion tags (user_id NULL). Labels taken from the designs
+# (PlanForm / Review / InTradePrompt / Diagnosis screens). valence: pos | neg | neutral
+emotion_tags:
+  - {code: confident,     label_th: มั่นใจ,       label_en: Confident,      valence: pos}
+  - {code: patient,       label_th: อดทน,        label_en: Patient,        valence: pos}
+  - {code: calm,          label_th: ใจเย็น,       label_en: Calm,           valence: pos}
+  - {code: focused,       label_th: มีสมาธิ,      label_en: Focused,        valence: pos}
+  - {code: disciplined,   label_th: มีวินัย,       label_en: Disciplined,    valence: pos}
+  - {code: relieved,      label_th: โล่งใจ,       label_en: Relieved,       valence: neutral}
+  - {code: hopeful,       label_th: หวัง,         label_en: Hopeful,        valence: neutral}
+  - {code: bored,         label_th: เบื่อ,         label_en: Bored,          valence: neutral}
+  - {code: fomo,          label_th: FOMO,        label_en: FOMO,           valence: neg}
+  - {code: revenge,       label_th: อยากเอาคืน,   label_en: Revenge,        valence: neg}
+  - {code: fear,          label_th: กลัว,         label_en: Fear,           valence: neg}
+  - {code: greed,         label_th: โลภ,          label_en: Greed,          valence: neg}
+  - {code: frustrated,    label_th: หงุดหงิด,      label_en: Frustrated,     valence: neg}
+  - {code: regret,        label_th: เสียดาย,       label_en: Regret,         valence: neg}
+  - {code: hesitant,      label_th: ลังเล,         label_en: Hesitant,       valence: neg}
+  - {code: impatient,     label_th: ใจร้อน,       label_en: Impatient,      valence: neg}
+  - {code: overconfident, label_th: มั่นใจเกินไป,  label_en: Overconfident,  valence: neg}

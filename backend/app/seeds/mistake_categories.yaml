@@ -1,0 +1,34 @@
+# Mistake categories by dimension (F-15). Codes line up with deviation types
+# (spec §2.8) and rule codes so the diagnosis engine can map deviation -> category.
+mistake_categories:
+  # analysis
+  - {code: wrong_bias,           dimension: analysis,   label_th: อ่านทิศทางตลาดผิด,          label_en: Wrong bias}
+  - {code: ignored_htf,          dimension: analysis,   label_th: ไม่ดู timeframe ใหญ่,         label_en: Ignored higher timeframe}
+  - {code: forced_setup,         dimension: analysis,   label_th: ฝืนหา setup ที่ไม่มีจริง,      label_en: Forced setup}
+  - {code: ignored_news,         dimension: analysis,   label_th: ไม่เช็กข่าวก่อนวิเคราะห์,       label_en: Ignored news}
+  # planning
+  - {code: no_plan,              dimension: planning,   label_th: ไม่มีแผน,                  label_en: No plan}
+  - {code: unplanned,            dimension: planning,   label_th: เทรดนอกแผน,                label_en: Unplanned trade}
+  - {code: poor_rr,              dimension: planning,   label_th: "R:R ไม่คุ้ม",              label_en: "Poor risk:reward"}
+  - {code: incomplete_checklist, dimension: planning,   label_th: เช็กลิสต์ไม่ครบ,             label_en: Incomplete checklist}
+  # execution
+  - {code: entry_slippage,       dimension: execution,  label_th: เข้าไม่ตรงราคาแผน,           label_en: Entry slippage}
+  - {code: early_entry,          dimension: execution,  label_th: เข้าเร็วไป,                 label_en: Early entry}
+  - {code: late_exit,            dimension: execution,  label_th: ปิดช้ากว่าแผน,              label_en: Late exit}
+  - {code: missed_partial,       dimension: execution,  label_th: ไม่ทำ partial ตามแผน,        label_en: Missed partial}
+  - {code: missed_be,            dimension: execution,  label_th: ไม่เลื่อน SL ไป BE ตามแผน,    label_en: Missed break-even}
+  # risk
+  - {code: oversize,             dimension: risk,       label_th: Lot เกินความเสี่ยงที่กำหนด,    label_en: Oversize}
+  - {code: sl_widened,           dimension: risk,       label_th: ขยาย SL,                   label_en: SL widened}
+  - {code: no_stop_loss,         dimension: risk,       label_th: ไม่ตั้ง SL,                 label_en: No stop loss}
+  - {code: daily_loss_breach,    dimension: risk,       label_th: ขาดทุนเกินลิมิตรายวัน,       label_en: Daily loss limit breached}
+  # discipline
+  - {code: overtrading,          dimension: discipline, label_th: เกิน max trades / วัน,      label_en: Overtrading (max trades per day)}
+  - {code: revenge,              dimension: discipline, label_th: Revenge ใน cooldown,        label_en: Revenge trade in cooldown}
+  - {code: news_blackout,        dimension: discipline, label_th: เทรดช่วงข่าว,              label_en: Traded in news blackout}
+  - {code: tp_moved,             dimension: discipline, label_th: ขยับ TP ออกจากแผน,          label_en: TP moved off plan}
+  # emotion
+  - {code: early_exit,           dimension: emotion,    label_th: ปิดก่อน TP,                 label_en: Early exit}
+  - {code: fomo,                 dimension: emotion,    label_th: เข้าเพราะ FOMO,             label_en: FOMO entry}
+  - {code: fear_hesitation,      dimension: emotion,    label_th: ลังเล / กลัวจนพลาดจังหวะ,    label_en: Fear / hesitation}
+  - {code: greed_hold,           dimension: emotion,    label_th: โลภ ถือเกินเป้า,            label_en: Greed - held past target}

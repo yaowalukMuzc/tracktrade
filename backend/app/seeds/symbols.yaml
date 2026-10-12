@@ -1,0 +1,244 @@
+# Symbol specifications (F-03). Brokers may differ -> per-account overrides (Phase 2).
+# FX: non-JPY quote = 5 digits, point 0.00001, pip 0.0001; JPY quote = 3 digits, point 0.001, pip 0.01.
+# Standard lot = 100,000 base units. XAUUSD lot = 100 oz, XAGUSD lot = 5,000 oz.
+symbols:
+  - code: EURUSD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: USD
+  - code: GBPUSD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: USD
+  - code: USDJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: USD
+    quote_currency: JPY
+  - code: USDCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: USD
+    quote_currency: CHF
+  - code: AUDUSD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: AUD
+    quote_currency: USD
+  - code: USDCAD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: USD
+    quote_currency: CAD
+  - code: NZDUSD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: NZD
+    quote_currency: USD
+  - code: EURGBP
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: GBP
+  - code: EURJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: JPY
+  - code: GBPJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: JPY
+  - code: EURCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: CHF
+  - code: EURAUD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: AUD
+  - code: EURCAD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: CAD
+  - code: EURNZD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: EUR
+    quote_currency: NZD
+  - code: GBPCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: CHF
+  - code: GBPAUD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: AUD
+  - code: GBPCAD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: CAD
+  - code: GBPNZD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: GBP
+    quote_currency: NZD
+  - code: AUDJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: AUD
+    quote_currency: JPY
+  - code: AUDCAD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: AUD
+    quote_currency: CAD
+  - code: AUDCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: AUD
+    quote_currency: CHF
+  - code: AUDNZD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: AUD
+    quote_currency: NZD
+  - code: CADJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: CAD
+    quote_currency: JPY
+  - code: CADCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: CAD
+    quote_currency: CHF
+  - code: CHFJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: CHF
+    quote_currency: JPY
+  - code: NZDJPY
+    asset_class: fx
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "100000"
+    base_currency: NZD
+    quote_currency: JPY
+  - code: NZDCAD
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: NZD
+    quote_currency: CAD
+  - code: NZDCHF
+    asset_class: fx
+    digits: 5
+    point_size: "0.00001"
+    pip_size: "0.0001"
+    contract_size: "100000"
+    base_currency: NZD
+    quote_currency: CHF
+  - code: XAUUSD
+    asset_class: metal
+    digits: 2
+    point_size: "0.01"
+    pip_size: "0.1"
+    contract_size: "100"
+    base_currency: XAU
+    quote_currency: USD
+  - code: XAGUSD
+    asset_class: metal
+    digits: 3
+    point_size: "0.001"
+    pip_size: "0.01"
+    contract_size: "5000"
+    base_currency: XAG
+    quote_currency: USD
