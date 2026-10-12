@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trade detail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.bub{background:var(--surface-sunken);border-radius:4px 14px 14px 14px;padding:10px 12px;font:400 14px/22px var(--font-sans)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="trades" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><a href="WTrades.dc.html" class="crumb"><span class="i i-sm i-arrow-left-01"></span>เทรด</a><h1>XAUUSD <span class="tt-badge tt-badge--long" style="vertical-align: middle">LONG</span> <span class="tt-badge tt-badge--outline" style="vertical-align: middle">MT5</span></h1></div>
+      <button class="tt-btn tt-btn--secondary"><span class="i i-share-08"></span>แชร์ให้ Mentor</button>
+      <a href="WReview.dc.html" class="tt-btn tt-btn--primary" style="text-decoration: none"><span class="i i-note-edit"></span>เขียนรีวิว</a>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="kpis">
+        <div class="tt-stat"><span class="tt-stat__label">Net P/L</span><span class="tt-stat__value tt-pnl--up">+$517.30</span><span class="tt-stat__delta">+0.51R · 0.48 lot · ถือ 2 ชม. 47 น.</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Adherence</span><span class="tt-stat__value" style="color: var(--warning-ink)">64%</span><span class="tt-stat__delta">engine v1.3</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Quality</span><span class="tt-stat__value">C · 58</span><span class="tt-stat__delta">mentor &gt; self &gt; auto</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Quadrant</span><span class="tt-stat__value" style="color: var(--warning-ink)">Bad-Win</span><span class="tt-stat__delta">ชนะแต่ไม่ได้ทำตามแผน</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Mistake cost</span><span class="tt-stat__value tt-pnl--down">−1.00R</span><span class="tt-stat__delta">3 deviations</span></div>
+      </div>
+      <div class="split--main">
+        <div class="split__a">
+          <div class="chartbox">
+            <div class="chartbar" style="padding: 10px 12px"><span class="body-strong" style="font-size: 14px">Plan vs Actual</span><span style="flex: 1"></span><span class="tt-chip">M5</span><span class="tt-chip tt-chip--on">M15</span><span class="tt-chip">H1</span><button class="tt-iconbtn" style="width: 32px; height: 32px" aria-label="วาดบนกราฟ"><span class="i i-sm i-pencil-edit-02"></span></button></div>
+            <div style="overflow: hidden"><dc-import name="Chart" mode="actual" cw="{{cw}}" ch="{{ch}}" theme="{{theme}}" hint-size="780px,440px"></dc-import></div>
+            <div class="legend" style="padding: 10px 14px; border-top: 1px solid var(--border)"><span><i></i>Plan: entry / SL / TP (เส้นประ)</span><span><i class="solid"></i>Actual: จุด fill ○ และ exit ■</span><span style="color: var(--loss-ink)">━ SL ที่ถูกขยับตามเวลา</span></div>
+          </div>
+          <div class="tt-card" style="padding: 0; overflow: hidden">
+            <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">Deviations</h2><span class="caption tt-muted">expected → actual · cost $ และ R</span></div>
+            <div class="tblwrap" style="margin-top: 12px"><table class="tbl" style="min-width: 640px"><thead><tr><th>Deviation</th><th>Plan</th><th>Actual</th><th>มิติ</th><th class="r">Cost $</th><th class="r">Cost R</th></tr></thead><tbody>
+              <tr><td><b>SL widened</b></td><td>4,366.78</td><td>4,360.00</td><td><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="tt-dim-swatch dim-risk"></i>Risk</span></td><td class="r tt-pnl tt-pnl--down">−$326</td><td class="r">−0.32</td></tr>
+              <tr><td><b>Early exit</b></td><td>TP1 4,418.00</td><td>4,398.40</td><td><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="tt-dim-swatch dim-emotion"></i>Emotion</span></td><td class="r tt-pnl tt-pnl--down">−$486</td><td class="r">−0.48</td></tr>
+              <tr><td><b>Missed partial</b></td><td>50% ที่ TP1</td><td>ไม่ได้ทำ</td><td><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="tt-dim-swatch dim-execution"></i>Execution</span></td><td class="r tt-pnl tt-pnl--down">−$202</td><td class="r">−0.20</td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="split">
+            <div class="tt-card" style="display: flex; gap: 20px; align-items: center">
+              <div class="tt-ring" style="--v: 64; --c: var(--warning)"><span class="tt-ring__v">64</span></div>
+              <div class="tt-stack" style="flex: 1; gap: 10px">
+                <div class="tt-meter"><div class="tt-meter__top">Price &amp; Size<b>55%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 55%; background: var(--loss)"></div></div></div>
+                <div class="tt-meter"><div class="tt-meter__top">Rules<b>100%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 100%"></div></div></div>
+                <div class="tt-meter"><div class="tt-meter__top">Management<b>50%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 50%; background: var(--loss)"></div></div></div>
+              </div>
+            </div>
+            <div class="tt-card">
+              <div class="tt-card__head"><h2 class="tt-card__title">Quality · 6 มิติ</h2><span class="tt-grade tt-grade--C">C</span></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-analysis"></i> Analysis · self</span><b>80</b></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-planning"></i> Planning · mentor</span><b>75</b></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-execution"></i> Execution · auto</span><b>55</b></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-risk"></i> Risk · auto</span><b>40</b></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-discipline"></i> Discipline · auto</span><b>50</b></div>
+              <div class="kv"><span><i class="tt-dim-swatch dim-emotion"></i> Emotion · self</span><b>45</b></div>
+            </div>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 380px">
+          <div class="tt-card">
+            <h2 class="tt-card__title" style="margin-bottom: 12px">Timeline</h2>
+            <ol class="tt-tl">
+              <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--brand"><span class="i i-sm i-chart-line-data-01"></span></span><div class="tt-tl__time">08:40</div><div class="tt-tl__title">Analysis · H4 Bull</div><div class="tt-tl__body">Confidence 7/10</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--brand"><span class="i i-sm i-square-lock-02"></span></span><div class="tt-tl__time">09:12</div><div class="tt-tl__title">Plan A locked · rev 1</div><div class="tt-tl__body">Pre-trade mood 7 · มั่นใจ, FOMO</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot"><span class="i i-sm i-exchange-01"></span></span><div class="tt-tl__time">10:05</div><div class="tt-tl__title">Filled 0.48 lot @ 4,387.60</div><div class="tt-tl__body">Auto-match กับแผน A</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--loss"><span class="i i-sm i-alert-02"></span></span><div class="tt-tl__time">10:41</div><div class="tt-tl__title">SL 4,366.78 → 4,360.00</div><div class="tt-tl__body">Risk เพิ่ม · in-trade: กลัว, หวัง (mood 4)</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--warning"><span class="i i-sm i-pencil-edit-02"></span></span><div class="tt-tl__time">10:42</div><div class="tt-tl__title">Plan revision 2</div><div class="tt-tl__body">แก้หลังเข้าเทรด · "กลัว stop hunt ก่อนข่าว"</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot"><span class="i i-sm i-exchange-01"></span></span><div class="tt-tl__time">12:52</div><div class="tt-tl__title">Closed 0.48 lot @ 4,398.40</div></li>
+              <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--warning"><span class="i i-sm i-note-edit"></span></span><div class="tt-tl__time">—</div><div class="tt-tl__title">รอรีวิว</div></li>
+            </ol>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">คอมเมนต์</h2><span class="tt-badge">1</span></div>
+            <div style="display: flex; gap: 8px"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">KB</span><div><div class="caption tt-muted">Kru Bank · Mentor · 11:02</div><div class="bub">ขยับ SL รอบนี้ ลองดู structure M15 อีกที — 4,366 ยังไม่ถูกเบรก</div></div></div>
+            <div style="display: flex; gap: 8px"><input class="tt-input" aria-label="ตอบกลับ" placeholder="ตอบกลับ…"><button class="tt-btn tt-btn--primary" aria-label="ส่ง"><span class="i i-sent"></span></button></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1450}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light', cw: 760, ch: 440 };
+  }
+}
+</script>
+</body>
+</html>

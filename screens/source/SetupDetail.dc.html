@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Setup detail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1450px">
+  <div class="tt-appbar"><a href="Playbook.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">London Breakout</h1><button class="tt-iconbtn" style="border: 0" aria-label="แก้ไข"><span class="i i-edit-02"></span></button></div>
+  <div class="scr__body">
+    <p class="body" style="margin: 0; color: var(--ink-muted)">รอ Asia range แล้วเข้าเมื่อ London เบรก high/low พร้อม pullback เข้า zone และแท่ง confirm บน M15</p>
+    <div class="tt-row"><span class="tt-badge tt-badge--outline">M15 · H1</span><span class="tt-badge tt-badge--outline">London</span><span class="tt-badge tt-badge--brand">Default risk 1%</span></div>
+
+    <div class="grid2">
+      <div class="tt-stat"><span class="tt-stat__label">เทรด</span><span class="tt-stat__value">18</span><span class="tt-stat__delta">11W · 7L</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Win rate</span><span class="tt-stat__value">61.1%</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Expectancy</span><span class="tt-stat__value tt-pnl--up">+0.31R</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Avg adherence · quality</span><span class="tt-stat__value">84% · B</span></div>
+    </div>
+
+    <div class="tt-card" style="padding-bottom: 4px">
+      <div class="tt-card__head" style="margin-bottom: 0"><h2 class="tt-card__title">Checklist</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-add-01"></span>เพิ่ม</button></div>
+      <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">H4 bias ตรงทิศทาง</span><span class="tt-badge">จำเป็น</span></div>
+      <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">ราคาอยู่ใน demand / supply zone</span></div>
+      <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">มีแท่ง confirm บน M15</span><span class="tt-badge">จำเป็น</span></div>
+      <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">ไม่มีข่าว high impact ใน 30 นาที</span><span class="tt-badge">จำเป็น</span></div>
+    </div>
+
+    <div class="tt-card">
+      <h2 class="tt-card__title" style="margin-bottom: 4px">Management rules</h2>
+      <div class="kv"><span>Partial</span><b>50% ที่ 1.5R</b></div>
+      <div class="kv"><span>Break-even</span><b>เมื่อถึง +1R</b></div>
+      <div class="kv"><span>Trailing</span><b>Swing low M15</b></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">ภาพตัวอย่าง</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-upload-04"></span>อัปโหลด</button></div>
+      <div class="grid2">
+        <div style="aspect-ratio: 4 / 3; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle); font-size: 12px; text-align: center">[ภาพตัวอย่าง A+]</div>
+        <div style="aspect-ratio: 4 / 3; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle); font-size: 12px; text-align: center">[ภาพตัวอย่างที่ไม่ควรเข้า]</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">เทรดล่าสุด</h2><a href="Trades.dc.html" class="sec__link">ดูทั้งหมด</a></div>
+      <div class="list">
+        <a href="TradeDetail.dc.html" class="row"><span class="tt-badge tt-badge--long">LONG</span><div class="row__main"><span class="row__t">XAUUSD · 9 ต.ค.</span><span class="row__s">Adherence 64% · Bad-Win</span></div><b class="num tt-pnl tt-pnl--up">+0.51R</b></a>
+        <a href="TradeDetail.dc.html" class="row"><span class="tt-badge tt-badge--long">LONG</span><div class="row__main"><span class="row__t">XAUUSD · 8 ต.ค.</span><span class="row__s">Adherence 100% · Good-Loss</span></div><b class="num tt-pnl tt-pnl--down">−1.00R</b></a>
+      </div>
+    </div>
+    <button class="tt-btn tt-btn--ghost tt-btn--block" style="color: var(--ink-muted)">Archive setup นี้</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1450}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

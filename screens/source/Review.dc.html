@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trade review</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1750px">
+  <div class="tt-appbar"><a href="TradeDetail.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">รีวิวเทรด</h1><span class="tt-badge tt-badge--warning">รอรีวิว</span></div>
+  <div class="scr__body">
+    <div class="tt-card" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px"><span class="body-strong">XAUUSD</span><span class="tt-badge tt-badge--long">LONG</span><span class="caption tt-muted">9 ต.ค. · Adherence 64%</span><span style="flex: 1"></span><span class="num tt-pnl tt-pnl--up">+0.51R</span></div>
+
+    <div class="tt-card tt-stack">
+      <div class="tt-field"><label class="tt-label" for="w1">อะไรทำได้ดี</label><textarea class="tt-textarea" id="w1" style="min-height: 72px">รอให้ราคาเข้า zone ตามแผน ไม่ไล่ราคา</textarea></div>
+      <div class="tt-field"><label class="tt-label" for="w2">อะไรผิดพลาด</label><textarea class="tt-textarea" id="w2" style="min-height: 72px">ขยับ SL ลงเพราะกลัวโดน stop hunt แล้วปิดก่อน TP1 เพราะใกล้ข่าว</textarea></div>
+      <div class="tt-field"><label class="tt-label" for="w3">บทเรียน</label><textarea class="tt-textarea" id="w3" style="min-height: 72px">ถ้าไม่มั่นใจ SL ให้ลด lot ตั้งแต่ตอนวางแผน ไม่ใช่ขยับ SL ระหว่างเทรด</textarea></div>
+      <div style="display: flex; justify-content: space-between; align-items: center"><span class="body-strong" style="font-size: 14px">จะเข้าเทรดนี้อีกไหม?</span><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ใช่</button><button class="tt-seg__item">ไม่</button></div></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">ให้คะแนนตัวเอง</h2><span class="caption tt-muted">Rubric 0–100</span></div>
+      <div class="tt-field"><span class="tt-label"><i class="tt-dim-swatch dim-analysis"></i> Analysis — bias และ key level ชัดเจนไหม</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25</button><button class="tt-seg__item">50</button><button class="tt-seg__item">75</button><button class="tt-seg__item tt-seg__item--on">100</button></div></div>
+      <div class="tt-field"><span class="tt-label"><i class="tt-dim-swatch dim-planning"></i> Planning — แผนครบและสมเหตุสมผลไหม</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25</button><button class="tt-seg__item">50</button><button class="tt-seg__item tt-seg__item--on">75</button><button class="tt-seg__item">100</button></div></div>
+      <div class="tt-field"><span class="tt-label"><i class="tt-dim-swatch dim-emotion"></i> Emotion — ควบคุมอารมณ์ได้ไหม</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25</button><button class="tt-seg__item tt-seg__item--on">50</button><button class="tt-seg__item">75</button><button class="tt-seg__item">100</button></div></div>
+      <span class="tt-help">Execution, Risk, Discipline คำนวณอัตโนมัติจาก deviations</span>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <h2 class="h3" style="margin: 0">Mistake tags</h2>
+      <div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">ขยับ SL</span><span class="tt-chip tt-chip--neg tt-chip--on">ปิดก่อน TP</span><span class="tt-chip">เข้าเร็วไป</span><span class="tt-chip">Oversize</span><span class="tt-chip">ไม่ทำ partial</span><span class="tt-chip">เทรดช่วงข่าว</span></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">อารมณ์หลังเทรด</h2><span class="tt-badge tt-badge--outline">Post-trade</span></div>
+      <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--on">5</button><button class="tt-mood__step">6</button><button class="tt-mood__step">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div>
+      <div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">เสียดาย</span><span class="tt-chip tt-chip--pos">โล่งใจ</span><span class="tt-chip tt-chip--neg">หงุดหงิด</span></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <h2 class="h3" style="margin: 0">แนบภาพ / วาดบนกราฟ</h2>
+      <div class="grid3">
+        <div style="aspect-ratio: 1; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle)"><span class="i i-image-01"></span></div>
+        <button style="aspect-ratio: 1; border-radius: var(--radius-md); border: 1.5px dashed var(--border-strong); background: var(--surface); display: grid; place-items: center; color: var(--ink-muted)" aria-label="เพิ่มภาพ"><span class="i i-add-01"></span></button>
+        <button style="aspect-ratio: 1; border-radius: var(--radius-md); border: 1.5px dashed var(--border-strong); background: var(--surface); display: grid; place-items: center; color: var(--ink-muted)" aria-label="วาดบนกราฟ"><span class="i i-pencil-edit-02"></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="scr__foot"><button class="tt-btn tt-btn--secondary tt-btn--lg" style="flex: 1">บันทึกร่าง</button><button class="tt-btn tt-btn--primary tt-btn--lg" style="flex: 1.4">ส่งรีวิว</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1750}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

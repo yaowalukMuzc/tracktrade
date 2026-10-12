@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Mentor trade view — R only</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.bub{background:var(--surface-sunken);border-radius:4px 14px 14px 14px;padding:10px 12px;font:400 14px/22px var(--font-sans)}.bub--me{background:var(--brand-100);color:var(--ink);border-radius:14px 4px 14px 14px}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1400px">
+  <div class="tt-appbar"><a href="MentorDashboard.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">Nook · XAUUSD</h1><span class="tt-badge tt-badge--brand"><span class="i i-sm i-view"></span>R only</span></div>
+  <div class="scr__body">
+    <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-information-circle"></span><div><span class="tt-alert__body">โหมดอ่านอย่างเดียว · คุณให้คะแนน คอมเมนต์ และติด mistake tag ได้</span></div></div>
+    <div class="tt-card" style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; gap: 8px"><span class="tt-badge tt-badge--long">LONG</span><span class="caption tt-muted">9 ต.ค. · London Breakout</span><span style="flex: 1"></span><span class="tt-badge tt-badge--warning">Bad-Win</span></div>
+      <div class="display tt-pnl tt-pnl--up">+0.51R</div>
+      <div class="grid3"><div class="calc" style="grid-template-columns: 1fr"><div><span>Adherence</span><b>64%</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>Quality</span><b>C · 58</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>Mistake</span><b>−1.0R</b></div></div></div>
+    </div>
+    <div class="chartbox"><dc-import name="Chart" mode="actual" theme="{{theme}}" hint-size="358px,260px"></dc-import></div>
+
+    <div class="tt-card tt-stack">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">คะแนนจาก Mentor</h2><span class="tt-badge tt-badge--brand">source: mentor</span></div>
+      <div class="tt-field"><span class="tt-label"><i class="tt-dim-swatch dim-planning"></i> Planning</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25</button><button class="tt-seg__item">50</button><button class="tt-seg__item tt-seg__item--on">75</button><button class="tt-seg__item">100</button></div></div>
+      <div class="tt-field"><span class="tt-label"><i class="tt-dim-swatch dim-emotion"></i> Emotion</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on">25</button><button class="tt-seg__item">50</button><button class="tt-seg__item">75</button><button class="tt-seg__item">100</button></div></div>
+      <div class="tt-field"><span class="tt-label">Mistake tags</span><div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">ขยับ SL</span><span class="tt-chip tt-chip--neg tt-chip--on">ปิดก่อน TP</span><span class="tt-chip tt-chip--add"><span class="i i-sm i-add-01"></span>Tag</span></div></div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">คอมเมนต์</h2>
+      <div style="display: flex; gap: 8px"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">KB</span><div class="bub">ขยับ SL รอบนี้ ลองดู structure M15 อีกที — 4,366 ยังไม่ถูกเบรก ไม่มีเหตุผลต้องขยับ</div></div>
+      <div style="display: flex; gap: 8px; flex-direction: row-reverse"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px; background: var(--surface-sunken); color: var(--ink-muted)">NK</span><div class="bub bub--me">ตอนนั้นกลัว stop hunt ก่อนข่าวครับ รอบหน้าจะลด lot ตั้งแต่ตอนวางแผนแทน</div></div>
+      <div style="display: flex; gap: 8px"><input class="tt-input" aria-label="เขียนคอมเมนต์" placeholder="เขียนคอมเมนต์…"><button class="tt-btn tt-btn--primary" aria-label="ส่ง"><span class="i i-sent"></span></button></div>
+    </div>
+  </div>
+  <div class="scr__foot"><button class="tt-btn tt-btn--secondary tt-btn--lg" style="flex: 1"><span class="i i-shield-01"></span>มอบหมายกฎ</button><button class="tt-btn tt-btn--primary tt-btn--lg" style="flex: 1">บันทึกคะแนน</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

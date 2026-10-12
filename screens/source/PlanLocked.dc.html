@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Plan locked — revision</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1000px">
+  <div class="tt-appbar"><a href="Today.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">แผน A · XAUUSD</h1><span class="tt-badge tt-badge--brand">Triggered</span></div>
+  <div class="scr__body">
+    <div class="tt-lock"><span class="tt-lock__icon"><span class="i i-square-lock-02"></span></span><div style="flex: 1; min-width: 0"><div class="body-strong">ล็อกแผนแล้ว 09:12</div><div class="tt-lock__hash">sha256 · 7f3a…c91e · rev 1</div></div></div>
+    <div class="tt-card">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px"><span class="tt-badge tt-badge--long">LONG</span><span class="body-strong">Buy limit · London Breakout</span></div>
+      <div class="kv"><span>Entry</span><b>4,387.52</b></div>
+      <div class="kv"><span>Stop loss</span><b>4,366.78</b></div>
+      <div class="kv"><span>TP1 · 50%</span><b>4,418.00</b></div>
+      <div class="kv"><span>TP2 · 50%</span><b>4,437.51</b></div>
+      <div class="kv"><span>Risk</span><b>1% · $1,012 · 0.48 lot</b></div>
+    </div>
+    <div class="tt-alert tt-alert--profit" style="font-size: 13px; line-height: 20px"><span class="i i-exchange-01"></span><div><span class="tt-alert__title">Filled 0.48 lot @ 4,387.60 · 10:05</span><span class="tt-alert__body">จับคู่อัตโนมัติจาก MT5 · position เปิดอยู่</span></div></div>
+    <button class="tt-btn tt-btn--secondary tt-btn--block"><span class="i i-pencil-edit-02"></span>แก้แผน (สร้าง revision)</button>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <span class="sheet__grab"></span>
+    <div class="sec__head"><h2 class="h3" style="margin: 0">สร้าง revision 2</h2><button class="tt-iconbtn" style="border: 0" aria-label="ปิด"><span class="i i-cancel-01"></span></button></div>
+    <div class="tt-alert tt-alert--warning" style="font-size: 13px; line-height: 20px"><span class="i i-alert-02"></span><div><span class="tt-alert__title">แก้หลังเข้าเทรด</span><span class="tt-alert__body">revision นี้จะถูกนับเป็น deviation และแสดงใน timeline</span></div></div>
+    <div class="grid2">
+      <div class="tt-field"><span class="tt-label">SL เดิม</span><input class="tt-input tt-input--num" value="4,366.78" disabled style="color: var(--ink-subtle); background: var(--surface-sunken)"></div>
+      <div class="tt-field"><label class="tt-label" for="nsl">SL ใหม่</label><input class="tt-input tt-input--num" id="nsl" value="4,360.00"></div>
+    </div>
+    <div class="tt-help tt-help--error">Risk เพิ่มขึ้น +0.33R (+$335)</div>
+    <div class="tt-field"><label class="tt-label" for="rs">เหตุผล <span class="tt-req">*</span></label><textarea class="tt-textarea" id="rs" style="min-height: 80px" placeholder="ทำไมต้องแก้แผน?"></textarea></div>
+    <div style="display: flex; gap: 8px"><button class="tt-btn tt-btn--secondary tt-btn--lg" style="flex: 1">ยกเลิก</button><button class="tt-btn tt-btn--lg" disabled style="flex: 1.4">บันทึก revision</button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

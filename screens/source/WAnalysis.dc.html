@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Market analysis</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.tool{width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:var(--ink-muted);display:grid;place-items:center;font:700 14px/1 var(--font-sans)}.tool--on{background:var(--brand-100);color:var(--brand-700)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="today" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><a href="WToday.dc.html" class="crumb"><span class="i i-sm i-arrow-left-01"></span>วันนี้</a><h1>Market Analysis · XAUUSD</h1></div>
+      <span class="caption tt-muted">บันทึกอัตโนมัติ 08:41</span>
+      <button class="tt-btn tt-btn--secondary">บันทึก</button>
+      <a href="WPlan.dc.html" class="tt-btn tt-btn--primary" style="text-decoration: none"><span class="i i-target-02"></span>สร้างแผนจาก Analysis นี้</a>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__a">
+          <div class="chartbox">
+            <div class="chartbar" style="flex-wrap: wrap; padding: 10px 12px">
+              <select class="tt-select" aria-label="Symbol" style="width: 140px; height: 36px"><option>XAUUSD</option></select>
+              <span class="tt-chip">M5</span><span class="tt-chip">M15</span><span class="tt-chip tt-chip--on">H1</span><span class="tt-chip">H4</span><span class="tt-chip">D1</span>
+              <span style="flex: 1"></span><span class="caption tt-muted">OHLC จาก MT5 · FTMO 100K</span>
+            </div>
+            <div style="display: flex">
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 8px; border-right: 1px solid var(--border)">
+                <button class="tool" aria-label="Cursor"><span class="i i-sm i-arrow-up-right-01"></span></button>
+                <button class="tool tool--on" aria-label="Trendline"><span class="i i-sm i-chart-line-data-01"></span></button>
+                <button class="tool" aria-label="Horizontal line">—</button>
+                <button class="tool" aria-label="Rectangle">▭</button>
+                <button class="tool" aria-label="Text">T</button>
+                <button class="tool" aria-label="Measure"><span class="i i-sm i-layers-01"></span></button>
+                <button class="tool" aria-label="ลบ drawing"><span class="i i-sm i-delete-02"></span></button>
+              </div>
+              <div style="flex: 1; overflow: hidden"><dc-import name="Chart" mode="analysis" cw="{{cw}}" ch="{{ch}}" theme="{{theme}}" hint-size="820px,560px"></dc-import></div>
+            </div>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">Narrative</h2><div class="tt-row" style="gap: 2px"><button class="tool" style="font-weight: 700">B</button><button class="tool" style="font-style: italic">I</button><button class="tool">H2</button><button class="tool" aria-label="ใส่รูป"><span class="i i-sm i-image-01"></span></button></div></div>
+            <textarea class="tt-textarea" aria-label="Narrative" style="min-height: 120px">DXY อ่อนตัวหลัง FOMC minutes ทองทำ higher low ที่ 4,366 บน H4 รอ pullback เข้า demand 4,380–4,388 ช่วง London แล้วดู confirm บน M15 ก่อนเข้า Long ถ้าปิด H1 ใต้ 4,366 เปลี่ยนเป็น scenario B (Short)</textarea>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 380px">
+          <div class="tt-card tt-stack">
+            <div class="grid2"><div class="tt-field"><label class="tt-label" for="dt">วันที่</label><input class="tt-input" id="dt" value="9 ต.ค. 2026"></div><div class="tt-field"><label class="tt-label" for="ac">บัญชี</label><select class="tt-select" id="ac"><option>FTMO 100K</option></select></div></div>
+            <div class="tt-field"><span class="tt-label">HTF bias</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on" style="color: var(--profit-ink)">Bull</button><button class="tt-seg__item">Bear</button><button class="tt-seg__item">Range</button></div></div>
+            <div class="tt-field"><span class="tt-label">Timeframes</span><div class="tt-row"><span class="tt-chip">M5</span><span class="tt-chip tt-chip--on">M15</span><span class="tt-chip tt-chip--on">H1</span><span class="tt-chip tt-chip--on">H4</span><span class="tt-chip">D1</span></div></div>
+            <div class="tt-field"><span class="tt-label">Session</span><div class="tt-row"><span class="tt-chip">Asia</span><span class="tt-chip tt-chip--on"><i class="tt-chip__dot"></i>London</span><span class="tt-chip">New York</span></div></div>
+            <div class="tt-field"><span class="tt-label">Confidence</span><div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--fill">5</button><button class="tt-mood__step tt-mood__step--fill">6</button><button class="tt-mood__step tt-mood__step--on">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div></div>
+          </div>
+          <div class="tt-card" style="padding: 0; overflow: hidden">
+            <div class="tt-card__head" style="padding: 16px 16px 0"><h2 class="tt-card__title">Key levels</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-add-01"></span>เพิ่ม</button></div>
+            <div class="row" style="padding: 10px 16px"><i style="width: 12px; height: 3px; background: var(--warning); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,366.00</span><span class="row__s">Support · H4 swing low</span></div></div>
+            <div class="row" style="padding: 10px 16px"><i style="width: 12px; height: 10px; background: var(--brand-100); border: 1px solid var(--brand-500); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,380 – 4,388</span><span class="row__s">Demand zone · H1</span></div></div>
+            <div class="row" style="padding: 10px 16px"><i style="width: 12px; height: 3px; background: var(--ink-muted); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,437.50</span><span class="row__s">Resistance · previous high</span></div></div>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">แผนจาก Analysis นี้</h2><span class="tt-badge">2</span></div>
+            <a href="WPlan.dc.html" class="row" style="padding: 6px 0"><span class="tt-badge tt-badge--long">A</span><span class="row__main row__t">Buy limit 4,387.52</span><span class="tt-badge tt-badge--solid">Locked</span></a>
+            <a href="WPlan.dc.html" class="row" style="padding: 6px 0; border: 0"><span class="tt-badge tt-badge--short">B</span><span class="row__main row__t">Sell stop 4,362.00</span><span class="tt-badge">Draft</span></a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1050}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light', cw: 760, ch: 560 };
+  }
+}
+</script>
+</body>
+</html>

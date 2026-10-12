@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Alerts and economic calendar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.unread{background:var(--brand-50)}.dotu{width:8px;height:8px;border-radius:50%;background:var(--brand-700);flex:none}.imp{display:inline-flex;gap:2px}.imp i{width:4px;height:12px;border-radius:2px;background:var(--border)}.imp--h i{background:var(--loss)}.imp--m i:nth-child(-n+2){background:var(--warning)}.imp--l i:first-child{background:var(--ink-subtle)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="alerts" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><h1>แจ้งเตือน &amp; ข่าว</h1></div>
+      <button class="tt-btn tt-btn--secondary">อ่านทั้งหมด</button>
+      <a href="WSettings.dc.html" class="tt-iconbtn" aria-label="ตั้งค่าการแจ้งเตือน"><span class="i i-settings-02"></span></a>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__a">
+          <div class="tt-row"><span class="tt-chip tt-chip--on">ทั้งหมด</span><span class="tt-chip">ผิดกฎ 2</span><span class="tt-chip">ข่าว</span><span class="tt-chip">Mentor</span><span class="tt-chip">ระบบ</span><span class="tt-chip">ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></span></div>
+          <div class="ov">วันนี้</div>
+          <div class="list">
+            <div class="row unread" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--loss"><span class="i i-alert-02"></span></span><div class="row__main"><span class="row__t">ผิดกฎ: Max trades per day (6/5)</span><span class="row__s">FTMO 100K · XAUUSD SHORT เปิด 14:32 · ส่งให้ Mentor แล้ว</span></div><span class="caption tt-subtle">14:32</span><i class="dotu" style="margin-top: 6px"></i></div>
+            <div class="row unread" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--loss"><span class="i i-clock-01"></span></span><div class="row__main"><span class="row__t">ผิดกฎ: Revenge cooldown</span><span class="row__s">เปิดเทรด 8 นาทีหลังโดน SL (กำหนด 30 นาที)</span></div><span class="caption tt-subtle">14:20</span><i class="dotu" style="margin-top: 6px"></i></div>
+            <div class="row" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--warn"><span class="i i-news-01"></span></span><div class="row__main"><span class="row__t">USD CPI อีก 15 นาที</span><span class="row__s">High impact · blackout ±15 นาที</span></div><span class="caption tt-subtle">19:15</span></div>
+            <div class="row" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--brand"><span class="i i-bubble-chat"></span></span><div class="row__main"><span class="row__t">Kru Bank คอมเมนต์เทรด XAUUSD LONG</span><span class="row__s">"ขยับ SL รอบนี้ ลองดู structure M15 อีกที"</span></div><span class="caption tt-subtle">11:02</span></div>
+          </div>
+          <div class="ov">เมื่อวาน</div>
+          <div class="list">
+            <div class="row" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--warn"><span class="i i-link-01"></span></span><div class="row__main"><span class="row__t">cTrader sync ล้มเหลว</span><span class="row__s">IC Markets · token หมดอายุ</span></div><span class="caption tt-subtle">22:14</span></div>
+            <div class="row" style="align-items: flex-start; padding: 14px 20px"><span class="row__ic row__ic--brand"><span class="i i-ai-magic"></span></span><div class="row__main"><span class="row__t">รายงาน AI Coach สัปดาห์ 40 พร้อมแล้ว</span><span class="row__s">มิติหลัก: Risk</span></div><span class="caption tt-subtle">06:00</span></div>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 460px">
+          <div class="tt-card" style="padding: 0; overflow: hidden">
+            <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">ปฏิทินข่าว</h2><div class="tt-row"><span class="tt-chip tt-chip--on" style="height: 28px">High</span><span class="tt-chip tt-chip--on" style="height: 28px">Med</span><span class="tt-chip" style="height: 28px">Low</span></div></div>
+            <p class="caption tt-muted" style="margin: 6px 20px 0">เฉพาะ USD · EUR · XAU · อัปเดตทุก 1 ชม. · ข้อมูลจาก provider</p>
+            <div class="tblwrap" style="margin-top: 12px"><table class="tbl" style="min-width: 400px"><thead><tr><th>เวลา</th><th>เหตุการณ์</th><th>Impact</th><th class="r">Fcst / Prev</th></tr></thead><tbody>
+              <tr><td colspan="4" class="ov" style="background: var(--surface)">พฤ. 9 ต.ค.</td></tr>
+              <tr><td>15:00</td><td>EUR · ECB Accounts</td><td><span class="imp imp--m"><i></i><i></i><i></i></span></td><td class="r">—</td></tr>
+              <tr style="background: var(--loss-100)"><td>19:30</td><td><b>USD · CPI m/m</b><div class="caption" style="color: var(--loss-ink)">Blackout 19:15–19:45</div></td><td><span class="imp imp--h"><i></i><i></i><i></i></span></td><td class="r">0.3% / 0.4%</td></tr>
+              <tr><td>19:30</td><td>USD · Jobless Claims</td><td><span class="imp imp--m"><i></i><i></i><i></i></span></td><td class="r">228K / 231K</td></tr>
+              <tr><td colspan="4" class="ov" style="background: var(--surface)">ศ. 10 ต.ค.</td></tr>
+              <tr><td>13:00</td><td>EUR · German Trade Balance</td><td><span class="imp imp--l"><i></i><i></i><i></i></span></td><td class="r">17.1B</td></tr>
+              <tr><td>21:00</td><td>USD · UoM Consumer Sentiment</td><td><span class="imp imp--m"><i></i><i></i><i></i></span></td><td class="r">55.4</td></tr>
+              <tr><td>21:00</td><td><b>USD · UoM Inflation Expect.</b></td><td><span class="imp imp--h"><i></i><i></i><i></i></span></td><td class="r">— / 4.7%</td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="tt-card" style="display: flex; gap: 12px; align-items: center"><span class="i i-notification-01" style="color: var(--brand-700)"></span><div class="row__main"><span class="row__t">แจ้งเตือนก่อนข่าว High</span><span class="row__s">15 นาที · Web Push เปิดอยู่</span></div><button class="toggle toggle--on" aria-label="แจ้งเตือนข่าว"></button></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":950}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Playbook</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;font-family:var(--font-sans);color:var(--ink)}.sc--on{border:2px solid var(--brand-700);background:var(--brand-50)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="playbook" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><h1>Playbook</h1></div>
+      <div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ใช้งาน 4</button><button class="tt-seg__item">Archived 1</button></div>
+      <button class="tt-btn tt-btn--primary"><span class="i i-add-01"></span>สร้าง Setup</button>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__b" style="flex: 1 1 320px; max-width: 380px; gap: 12px">
+          <sc-for list="{{setups}}" as="s" hint-placeholder-count="4">
+            <button class="{{s.cls}}" onClick="{{s.pick}}">
+              <div style="display: flex; gap: 10px; align-items: center; width: 100%"><span class="row__ic row__ic--brand"><span class="i i-book-02"></span></span><div class="row__main"><span class="row__t">{{s.name}}</span><span class="row__s">{{s.meta}}</span></div></div>
+              <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%">
+                <div><div class="caption tt-muted">เทรด</div><div class="num">{{s.n}}</div></div>
+                <div><div class="caption tt-muted">Win</div><div class="num">{{s.wr}}</div></div>
+                <div><div class="caption tt-muted">Exp.</div><div class="{{s.expCls}}">{{s.exp}}</div></div>
+                <div><div class="caption tt-muted">Adh.</div><div class="num">{{s.adh}}</div></div>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+        <div class="split__a">
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><div><h2 class="h2" style="margin: 0">{{cur.name}}</h2><div class="tt-row" style="margin-top: 6px"><span class="tt-badge tt-badge--outline">{{cur.meta}}</span></div></div><div class="tt-row"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-edit-02"></span>แก้ไข</button><button class="tt-btn tt-btn--ghost tt-btn--sm" style="color: var(--ink-muted)">Archive</button></div></div>
+            <p class="body tt-muted" style="margin: 0">{{cur.desc}}</p>
+          </div>
+          <div class="kpis">
+            <div class="tt-stat"><span class="tt-stat__label">เทรด</span><span class="tt-stat__value">{{cur.n}}</span></div>
+            <div class="tt-stat"><span class="tt-stat__label">Win rate</span><span class="tt-stat__value">{{cur.wr}}</span></div>
+            <div class="tt-stat"><span class="tt-stat__label">Expectancy</span><span class="{{cur.expTile}}">{{cur.exp}}</span></div>
+            <div class="tt-stat"><span class="tt-stat__label">Avg adherence</span><span class="tt-stat__value">{{cur.adh}}</span></div>
+            <div class="tt-stat"><span class="tt-stat__label">Avg quality</span><span class="tt-stat__value">{{cur.q}}</span></div>
+          </div>
+          <div class="split">
+            <div class="tt-card" style="padding-bottom: 4px">
+              <div class="tt-card__head" style="margin-bottom: 0"><h2 class="tt-card__title">Checklist</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-add-01"></span>เพิ่ม</button></div>
+              <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">H4 bias ตรงทิศทาง</span><span class="tt-badge">จำเป็น</span></div>
+              <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">ราคาอยู่ใน demand / supply zone</span></div>
+              <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">มีแท่ง confirm บน M15</span><span class="tt-badge">จำเป็น</span></div>
+              <div class="tt-check"><span class="i i-drag-drop-vertical" style="color: var(--ink-subtle)"></span><span class="tt-check__text">ไม่มีข่าว high impact ใน 30 นาที</span><span class="tt-badge">จำเป็น</span></div>
+            </div>
+            <div class="tt-card">
+              <h2 class="tt-card__title" style="margin-bottom: 4px">Management rules</h2>
+              <div class="kv"><span>Default risk</span><b>1.0%</b></div>
+              <div class="kv"><span>Partial</span><b>50% ที่ 1.5R</b></div>
+              <div class="kv"><span>Break-even</span><b>เมื่อถึง +1R</b></div>
+              <div class="kv"><span>Trailing</span><b>Swing low M15</b></div>
+            </div>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">ภาพตัวอย่าง</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-upload-04"></span>อัปโหลด</button></div>
+            <div class="grid3">
+              <div style="aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle); font-size: 12px">[ตัวอย่าง A+]</div>
+              <div style="aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle); font-size: 12px">[ตัวอย่าง B]</div>
+              <div style="aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle); font-size: 12px">[ไม่ควรเข้า]</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1150}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 0 }; }
+  renderVals() {
+    const S = [
+      { name: 'London Breakout', meta: 'M15 · H1 · London · 1%', n: 18, wr: '61%', exp: '+0.31R', adh: '84%', q: 'B · 74', desc: 'รอ Asia range แล้วเข้าเมื่อ London เบรก high/low พร้อม pullback เข้า zone และแท่ง confirm บน M15' },
+      { name: 'NY Reversal', meta: 'M5 · M15 · New York · 0.75%', n: 11, wr: '45%', exp: '+0.12R', adh: '79%', q: 'B · 70', desc: 'Fade การ sweep high/low ของ London ช่วงเปิด New York เมื่อมี divergence บน M5' },
+      { name: 'Asia Range', meta: 'M15 · Asia · 0.5%', n: 8, wr: '50%', exp: '−0.08R', adh: '70%', q: 'C · 63', desc: 'เล่นในกรอบ Asia session เมื่อ ATR ต่ำ' },
+      { name: 'News Fade', meta: 'M5 · New York · 0.5%', n: 5, wr: '40%', exp: '−0.22R', adh: '58%', q: 'D · 49', desc: 'สวนแรงเหวี่ยงหลังข่าว 15 นาที — ทดลอง' }
+    ];
+    const up = (x) => x.exp.startsWith('+');
+    const cur = S[this.state.sel];
+    return {
+      theme: this.props.theme ?? 'light',
+      setups: S.map((x, i) => ({ ...x, cls: 'sc' + (i === this.state.sel ? ' sc--on' : ''), expCls: 'num tt-pnl ' + (up(x) ? 'tt-pnl--up' : 'tt-pnl--down'), pick: () => this.setState({ sel: i }) })),
+      cur: { ...cur, expTile: 'tt-stat__value ' + (up(cur) ? 'tt-pnl--up' : 'tt-pnl--down') }
+    };
+  }
+}
+</script>
+</body>
+</html>

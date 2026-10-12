@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Onboarding — account and risk profile</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1100px">
+  <div class="tt-appbar"><a href="Register.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">ตั้งค่าบัญชีเทรด</h1><span class="caption tt-muted">1 / 2</span></div>
+  <div style="height: 4px; background: var(--surface-sunken)"><div style="width: 50%; height: 4px; background: var(--brand-700)"></div></div>
+  <div class="scr__body">
+    <div class="sec">
+      <h2 class="h2" style="margin: 0">บัญชีแรกของคุณ</h2>
+      <p class="pg-sub">แยกบัญชี Live / Demo / Prop ได้ — แต่ละบัญชีมี Risk Profile ของตัวเอง</p>
+    </div>
+    <div class="tt-card tt-stack">
+      <div class="tt-field"><label class="tt-label" for="an">ชื่อบัญชี</label><input class="tt-input" id="an" value="FTMO 100K Challenge"></div>
+      <div class="tt-field"><span class="tt-label">ประเภทบัญชี</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">Live</button><button class="tt-seg__item">Demo</button><button class="tt-seg__item tt-seg__item--on">Prop</button></div></div>
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="pf">แพลตฟอร์ม</label><select class="tt-select" id="pf"><option>MT5</option><option>cTrader</option><option>Manual</option></select></div>
+        <div class="tt-field"><label class="tt-label" for="cu">สกุลเงิน</label><select class="tt-select" id="cu"><option>USD</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="br">Broker</label><input class="tt-input" id="br" value="FTMO"></div>
+        <div class="tt-field"><label class="tt-label" for="ib">Initial balance</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="ib" value="100,000"><span class="tt-suffix">USD</span></div></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec__head"><h3 class="sec__title">Risk Profile</h3><span class="tt-badge tt-badge--brand">ค่าเริ่มต้น</span></div>
+      <p class="pg-sub">ใช้คำนวณ lot อัตโนมัติและตรวจการผิดกฎ — แก้ทีหลังได้ เทรดเก่าใช้ค่า ณ เวลาที่เทรด</p>
+    </div>
+    <div class="tt-card tt-stack">
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="r1">Risk ต่อเทรด</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r1" value="1.0"><span class="tt-suffix">%</span></div></div>
+        <div class="tt-field"><label class="tt-label" for="r2">Max daily loss</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r2" value="3.0"><span class="tt-suffix">%</span></div></div>
+        <div class="tt-field"><label class="tt-label" for="r3">Max drawdown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r3" value="10.0"><span class="tt-suffix">%</span></div></div>
+        <div class="tt-field"><label class="tt-label" for="r4">Max trades / วัน</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r4" value="5"><span class="tt-suffix">ไม้</span></div></div>
+        <div class="tt-field"><label class="tt-label" for="r5">Revenge cooldown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r5" value="30"><span class="tt-suffix">นาที</span></div></div>
+        <div class="tt-field"><label class="tt-label" for="r6">News blackout</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r6" value="15"><span class="tt-suffix">นาที</span></div></div>
+      </div>
+      <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-information-circle"></span><div><span class="tt-alert__title">1% ของ 100,000 = $1,000 ต่อเทรด</span><span class="tt-alert__body">Daily loss limit $3,000 · DD limit $10,000</span></div></div>
+    </div>
+  </div>
+  <div class="scr__foot"><a href="ConnectBroker.dc.html" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block" style="text-decoration: none">ถัดไป: เชื่อมต่อ Broker</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trade detail — plan vs actual</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1800px">
+  <div class="tt-appbar"><a href="Trades.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">XAUUSD · 9 ต.ค.</h1><button class="tt-iconbtn" style="border: 0" aria-label="แชร์"><span class="i i-share-08"></span></button><button class="tt-iconbtn" style="border: 0" aria-label="เพิ่มเติม"><span class="i i-more-horizontal"></span></button></div>
+  <div style="background: var(--surface); padding: 16px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid var(--border)">
+    <div style="display: flex; align-items: center; gap: 8px"><span class="tt-badge tt-badge--long">LONG</span><span class="tt-badge tt-badge--outline">MT5</span><span class="caption tt-muted">London Breakout · แผน A</span></div>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between"><div><div class="display tt-pnl tt-pnl--up">+$517.30</div><div class="body-sm tt-muted">+0.51R · ถือ 2 ชม. 47 น. · 0.48 lot</div></div><span class="tt-badge tt-badge--warning" style="height: 28px; padding: 0 10px; font-size: 13px">Bad-Win · โชค</span></div>
+    <div class="grid3">
+      <div class="tt-stat" style="padding: 8px 10px"><span class="tt-stat__label">Adherence</span><span class="num" style="color: var(--warning-ink)">64%</span></div>
+      <div class="tt-stat" style="padding: 8px 10px"><span class="tt-stat__label">Quality</span><span class="num">C · 58</span></div>
+      <div class="tt-stat" style="padding: 8px 10px"><span class="tt-stat__label">Mistake cost</span><span class="num" style="color: var(--loss)">−1.0R</span></div>
+    </div>
+  </div>
+  <div style="padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border)"><div class="tt-tabs" style="border: 0"><span class="tt-tab tt-tab--on">Plan vs Actual</span><a href="Review.dc.html" class="tt-tab" style="text-decoration: none">Review</a><span class="tt-tab">Timeline</span><span class="tt-tab">Comments 2</span></div></div>
+  <div class="scr__body">
+    <div class="chartbox">
+      <div class="chartbar"><span class="tt-chip">M5</span><span class="tt-chip tt-chip--on">M15</span><span class="tt-chip">H1</span><span style="flex: 1"></span><button class="tt-iconbtn" style="width: 32px; height: 32px" aria-label="วาดบนกราฟ"><span class="i i-sm i-pencil-edit-02"></span></button></div>
+      <dc-import name="Chart" mode="actual" theme="{{theme}}" hint-size="358px,260px"></dc-import>
+      <div class="legend" style="padding: 8px 12px; border-top: 1px solid var(--border)"><span><i></i>Plan (entry / SL / TP)</span><span><i class="solid"></i>Actual fill · exit</span><span style="color: var(--loss-ink)">━ SL ที่ถูกขยับ</span></div>
+    </div>
+
+    <div class="tt-card" style="display: flex; gap: 16px; align-items: center">
+      <div class="tt-ring" style="--v: 64; --c: var(--warning)"><span class="tt-ring__v">64</span></div>
+      <div class="tt-stack" style="flex: 1; gap: 10px">
+        <div class="tt-meter"><div class="tt-meter__top">Price &amp; Size<b>55%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 55%; background: var(--loss)"></div></div></div>
+        <div class="tt-meter"><div class="tt-meter__top">Rules<b>100%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 100%"></div></div></div>
+        <div class="tt-meter"><div class="tt-meter__top">Management<b>50%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 50%; background: var(--loss)"></div></div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">Deviations</h2><span class="caption tt-muted">engine v1.3</span></div>
+      <div class="tt-card" style="padding: 0 16px">
+        <div class="tt-dev"><span class="tt-dev__name"><span class="i i-sm i-alert-02" style="color: var(--loss)"></span>SL widened</span><span class="tt-dev__cost">−$326 · −0.32R</span><span class="tt-dev__ea">Plan 4,366.78 → Actual 4,360.00</span><span class="tt-badge" style="justify-self: end"><i class="tt-dim-swatch dim-risk"></i>Risk</span></div>
+        <div class="tt-dev"><span class="tt-dev__name"><span class="i i-sm i-clock-01" style="color: var(--loss)"></span>Early exit</span><span class="tt-dev__cost">−$486 · −0.48R</span><span class="tt-dev__ea">TP1 4,418.00 → Exit 4,398.40</span><span class="tt-badge" style="justify-self: end"><i class="tt-dim-swatch dim-emotion"></i>Emotion</span></div>
+        <div class="tt-dev"><span class="tt-dev__name"><span class="i i-sm i-flag-01" style="color: var(--loss)"></span>Missed partial</span><span class="tt-dev__cost">−$202 · −0.20R</span><span class="tt-dev__ea">Partial 50% ที่ TP1 → ไม่ได้ทำ</span><span class="tt-badge" style="justify-self: end"><i class="tt-dim-swatch dim-execution"></i>Execution</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">Quality · 6 มิติ</h2><span class="tt-grade tt-grade--C">C</span></div>
+      <div class="list">
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-analysis"></i><span class="row__main row__t">Analysis</span><span class="tt-badge tt-badge--outline">self</span><b class="num" style="width: 32px; text-align: right">80</b></div>
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-planning"></i><span class="row__main row__t">Planning</span><span class="tt-badge tt-badge--brand">mentor</span><b class="num" style="width: 32px; text-align: right">75</b></div>
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-execution"></i><span class="row__main row__t">Execution</span><span class="tt-badge">auto</span><b class="num" style="width: 32px; text-align: right">55</b></div>
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-risk"></i><span class="row__main row__t">Risk</span><span class="tt-badge">auto</span><b class="num" style="width: 32px; text-align: right">40</b></div>
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-discipline"></i><span class="row__main row__t">Discipline</span><span class="tt-badge">auto</span><b class="num" style="width: 32px; text-align: right">50</b></div>
+        <div class="row" style="padding: 10px 16px"><i class="tt-dim-swatch dim-emotion"></i><span class="row__main row__t">Emotion</span><span class="tt-badge tt-badge--outline">self</span><b class="num" style="width: 32px; text-align: right">45</b></div>
+      </div>
+      <span class="tt-help">ใช้ mentor &gt; self &gt; auto ต่อมิติ · P/L ไม่ถูกใช้คำนวณ quality</span>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">Timeline</h2>
+      <ol class="tt-tl">
+        <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--brand"><span class="i i-sm i-chart-line-data-01"></span></span><div class="tt-tl__time">08:40</div><div class="tt-tl__title">Analysis · H4 Bull</div><div class="tt-tl__body">Confidence 7/10</div></li>
+        <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--brand"><span class="i i-sm i-square-lock-02"></span></span><div class="tt-tl__time">09:12</div><div class="tt-tl__title">Plan A locked</div><div class="tt-tl__body">Pre-trade mood 7 · มั่นใจ, FOMO</div></li>
+        <li class="tt-tl__item"><span class="tt-tl__dot"><span class="i i-sm i-exchange-01"></span></span><div class="tt-tl__time">10:05</div><div class="tt-tl__title">Filled 0.48 lot @ 4,387.60</div></li>
+        <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--loss"><span class="i i-sm i-alert-02"></span></span><div class="tt-tl__time">10:41</div><div class="tt-tl__title">SL 4,366.78 → 4,360.00</div><div class="tt-tl__body">Risk เพิ่ม · in-trade: กลัว, หวัง (mood 4)</div></li>
+        <li class="tt-tl__item"><span class="tt-tl__dot"><span class="i i-sm i-exchange-01"></span></span><div class="tt-tl__time">12:52</div><div class="tt-tl__title">Closed 0.48 lot @ 4,398.40</div></li>
+        <li class="tt-tl__item"><span class="tt-tl__dot tt-tl__dot--warning"><span class="i i-sm i-note-edit"></span></span><div class="tt-tl__time">—</div><div class="tt-tl__title">รอรีวิว</div></li>
+      </ol>
+    </div>
+  </div>
+  <div class="scr__foot"><a href="Review.dc.html" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block" style="text-decoration: none"><span class="i i-note-edit"></span>เขียนรีวิว</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

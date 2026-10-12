@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>TrackTrade — Register</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}a{color:var(--brand-700)}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 844px; background: var(--surface)">
+  <div class="tt-appbar" style="border: 0"><a href="Main.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><span style="flex: 1"></span><span class="tt-wordmark">Track<b>Trade</b></span><span style="flex: 1"></span><span style="width: 40px"></span></div>
+  <div style="flex: 1; padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 class="h1" style="margin: 0">สร้างบัญชี</h1>
+      <p class="pg-sub" style="font-size: 15px; line-height: 24px">ใช้ฟรีใน MVP · ตั้งค่าภาษาและเขตเวลาได้ทีหลัง</p>
+    </div>
+    <div class="tt-field"><label class="tt-label" for="dn">ชื่อที่แสดง</label><input class="tt-input" id="dn" value="Nook Knight"></div>
+    <div class="tt-field"><label class="tt-label" for="em">อีเมล</label><input class="tt-input" id="em" type="email" value="nook@email.com"></div>
+    <div class="tt-field">
+      <label class="tt-label" for="pw">รหัสผ่าน</label>
+      <input class="tt-input" id="pw" type="password" value="trade1">
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 4px"><i style="height: 4px; border-radius: 2px; background: var(--warning)"></i><i style="height: 4px; border-radius: 2px; background: var(--warning)"></i><i style="height: 4px; border-radius: 2px; background: var(--surface-sunken)"></i><i style="height: 4px; border-radius: 2px; background: var(--surface-sunken)"></i></div>
+      <span class="tt-help tt-help--error">รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร (ตอนนี้ 6)</span>
+    </div>
+    <div class="grid2">
+      <div class="tt-field"><label class="tt-label" for="lc">ภาษา</label><select class="tt-select" id="lc"><option>ไทย</option><option>English</option></select></div>
+      <div class="tt-field"><label class="tt-label" for="tz">เขตเวลา</label><select class="tt-select" id="tz"><option>Asia/Bangkok (UTC+7)</option></select></div>
+    </div>
+    <label style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 22px; color: var(--ink-muted)"><input type="checkbox" checked style="width: 18px; height: 18px; margin-top: 2px; accent-color: var(--brand-700)">ยอมรับ <a href="#">เงื่อนไขการใช้งาน</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a></label>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; align-items: center">
+      <a href="Onboarding.dc.html" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block" style="text-decoration: none">สร้างบัญชี</a>
+      <span style="font-size: 14px; color: var(--ink-muted)">มีบัญชีแล้ว? <a href="Main.dc.html" style="font-weight: 600; text-decoration: none">เข้าสู่ระบบ</a></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

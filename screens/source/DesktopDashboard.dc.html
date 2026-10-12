@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Desktop — performance dashboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.eq-line{fill:none;stroke:var(--brand-500);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.eq-area{fill:var(--chart-area)}
+.eq-grid{stroke:var(--chart-grid);stroke-width:1;vector-effect:non-scaling-stroke}
+.tbl{width:100%;border-collapse:collapse;font:400 14px/20px var(--font-sans);min-width:640px}
+.tbl th{font:600 12px/16px var(--font-sans);color:var(--ink-muted);text-align:left;padding:10px 12px;background:var(--surface-sunken)}
+.tbl td{padding:12px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.tbl .r{text-align:right}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 100%; min-height: 1100px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); display: flex; flex-wrap: wrap">
+  <div class="app__side"><dc-import name="WSide" active="stats" hint-size="240px,900px"></dc-import></div>
+  <main style="flex: 999 1 560px; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 24px; max-width: 1200px">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+      <div style="flex: 1; min-width: 240px"><div class="caption tt-muted">10 ก.ย. – 9 ต.ค. 2026 · ทุกบัญชี</div><h1 class="h1" style="margin: 0">สถิติ</h1></div>
+      <div class="tt-seg"><button class="tt-seg__item">7 วัน</button><button class="tt-seg__item tt-seg__item--on">30 วัน</button><button class="tt-seg__item">ปีนี้</button><button class="tt-seg__item">กำหนดเอง</button></div>
+      <button class="tt-chip"><span class="i i-sm i-wallet-01"></span>ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></button>
+      <button class="tt-chip">ทุก Setup<span class="i i-sm i-arrow-down-01"></span></button>
+      <a href="WDiagnosis.dc.html" class="tt-btn tt-btn--secondary tt-btn--sm" style="text-decoration: none"><span class="i i-sm i-ai-magic"></span>Diagnosis &amp; AI Coach</a>
+    </div>
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <div class="ov">P/L metrics</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+        <div class="tt-stat"><span class="tt-stat__label">Net P/L</span><span class="tt-stat__value tt-pnl--up">+$6,842</span><span class="tt-stat__delta">+6.8R · 42 เทรด</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Win rate</span><span class="tt-stat__value">52.4%</span><span class="tt-stat__delta">22W · 20L</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Profit factor</span><span class="tt-stat__value">1.71</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Expectancy</span><span class="tt-stat__value">+0.16R</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Avg win / loss</span><span class="tt-stat__value">+0.75 / −0.48R</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Max drawdown</span><span class="tt-stat__value tt-pnl--down">−4.1%</span></div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <div class="ov">Behavior metrics</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+        <div class="tt-stat"><span class="tt-stat__label"><span class="i i-sm i-check-list"></span>Avg adherence</span><span class="tt-stat__value">78%</span></div>
+        <div class="tt-stat"><span class="tt-stat__label"><span class="i i-sm i-star"></span>Avg quality</span><span class="tt-stat__value">B · 71</span></div>
+        <div class="tt-stat"><span class="tt-stat__label"><span class="i i-sm i-alert-02"></span>Unplanned</span><span class="tt-stat__value">9.5%</span></div>
+        <div class="tt-stat"><span class="tt-stat__label"><span class="i i-sm i-flag-01"></span>Mistake cost</span><span class="tt-stat__value tt-pnl--down">−7.4R</span></div>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px">
+      <div class="tt-card" style="grid-column: span 2; min-width: 0">
+        <div class="tt-card__head"><h2 class="tt-card__title">Equity curve</h2><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">$</button><button class="tt-seg__item">R</button></div></div>
+        <svg width="100%" height="220" viewBox="0 0 600 220" preserveAspectRatio="none" role="img" aria-label="Equity เพิ่มจาก 100,000 เป็น 106,842 ใน 30 วัน">
+          <line class="eq-grid" x1="0" x2="600" y1="30" y2="30"></line><line class="eq-grid" x1="0" x2="600" y1="110" y2="110"></line><line class="eq-grid" x1="0" x2="600" y1="190" y2="190"></line>
+          <polygon class="eq-area" points="{{area}}"></polygon>
+          <polyline class="eq-line" points="{{line}}"></polyline>
+        </svg>
+        <div style="display: flex; justify-content: space-between" class="caption tt-subtle"><span>10 ก.ย.</span><span>$100k → $106.8k</span><span>9 ต.ค.</span></div>
+      </div>
+      <div class="tt-card">
+        <div class="tt-card__head"><h2 class="tt-card__title">Quality × Outcome</h2></div>
+        <div class="tt-quad">
+          <span></span><span class="tt-quad__axis">Win</span><span class="tt-quad__axis">Loss</span>
+          <span class="tt-quad__axis" style="writing-mode: vertical-rl; transform: rotate(180deg)">Good</span>
+          <div class="tt-quad__cell tt-quad__cell--gw"><span>Good-Win</span><b>16</b></div>
+          <div class="tt-quad__cell tt-quad__cell--gl"><span>Good-Loss</span><b>11</b></div>
+          <span class="tt-quad__axis" style="writing-mode: vertical-rl; transform: rotate(180deg)">Bad</span>
+          <div class="tt-quad__cell tt-quad__cell--bw"><span>Bad-Win</span><b>6</b></div>
+          <div class="tt-quad__cell tt-quad__cell--bl"><span>Bad-Loss</span><b>9</b></div>
+        </div>
+      </div>
+      <div class="tt-card">
+        <div class="tt-card__head"><h2 class="tt-card__title">Mistake cost · 6 มิติ</h2><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="tt-dim-swatch dim-discipline"></i>มิติหลัก: Discipline</span></div>
+        <div class="tt-dims">
+          <div class="tt-dim"><span>Analysis</span><div class="tt-dim__bar"><i class="dim-analysis" style="width: 15%"></i></div><span class="tt-dim__v">0.4R</span></div>
+          <div class="tt-dim"><span>Planning</span><div class="tt-dim__bar"><i class="dim-planning" style="width: 8%"></i></div><span class="tt-dim__v">0.2R</span></div>
+          <div class="tt-dim"><span>Execution</span><div class="tt-dim__bar"><i class="dim-execution" style="width: 42%"></i></div><span class="tt-dim__v">1.1R</span></div>
+          <div class="tt-dim"><span>Risk</span><div class="tt-dim__bar"><i class="dim-risk" style="width: 65%"></i></div><span class="tt-dim__v">1.7R</span></div>
+          <div class="tt-dim tt-dim--primary"><span>Discipline</span><div class="tt-dim__bar"><i class="dim-discipline" style="width: 100%"></i></div><span class="tt-dim__v">2.6R</span></div>
+          <div class="tt-dim"><span>Emotion</span><div class="tt-dim__bar"><i class="dim-emotion" style="width: 54%"></i></div><span class="tt-dim__v">1.4R</span></div>
+        </div>
+      </div>
+      <div class="tt-card" style="grid-column: span 2; min-width: 0; padding: 0; overflow: hidden">
+        <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">เทรดล่าสุด</h2><a href="WTrades.dc.html" class="sec__link">ดูทั้งหมด</a></div>
+        <div style="overflow-x: auto; margin-top: 12px">
+          <table class="tbl">
+            <thead><tr><th>วันที่</th><th>Symbol</th><th>Setup</th><th class="r">Adherence</th><th>Quality</th><th>Quadrant</th><th class="r">P/L</th><th class="r">R</th></tr></thead>
+            <tbody>
+              <tr><td>9 ต.ค. 10:05</td><td><b>XAUUSD</b> <span class="tt-badge tt-badge--long">LONG</span></td><td>London Breakout</td><td class="r">64%</td><td><span class="tt-grade tt-grade--C" style="width: 22px; height: 22px; font-size: 12px">C</span></td><td><span class="tt-badge tt-badge--warning">Bad-Win</span></td><td class="r tt-pnl tt-pnl--up">+$517.30</td><td class="r">+0.51</td></tr>
+              <tr><td>9 ต.ค. 08:42</td><td><b>EURUSD</b> <span class="tt-badge tt-badge--short">SHORT</span></td><td>—</td><td class="r">—</td><td><span class="tt-grade tt-grade--D" style="width: 22px; height: 22px; font-size: 12px">D</span></td><td><span class="tt-badge tt-badge--loss">Bad-Loss</span></td><td class="r tt-pnl tt-pnl--down">−$97.30</td><td class="r">−0.10</td></tr>
+              <tr><td>8 ต.ค. 15:00</td><td><b>XAUUSD</b> <span class="tt-badge tt-badge--long">LONG</span></td><td>London Breakout</td><td class="r">100%</td><td><span class="tt-grade tt-grade--A" style="width: 22px; height: 22px; font-size: 12px">A</span></td><td><span class="tt-badge tt-badge--brand">Good-Loss</span></td><td class="r tt-pnl tt-pnl--down">−$1,012.00</td><td class="r">−1.00</td></tr>
+              <tr><td>8 ต.ค. 09:30</td><td><b>GBPUSD</b> <span class="tt-badge tt-badge--short">SHORT</span></td><td>NY Reversal</td><td class="r">82%</td><td><span class="tt-grade tt-grade--B" style="width: 22px; height: 22px; font-size: 12px">B</span></td><td><span class="tt-badge tt-badge--brand">Good-Loss</span></td><td class="r tt-pnl tt-pnl--down">−$13.08</td><td class="r">−0.01</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const eq = [100000, 100420, 100180, 101050, 101600, 101320, 102240, 103100, 102700, 103900, 104400, 103650, 102900, 102480, 103300, 104200, 104900, 104500, 105700, 106100, 105400, 106300, 106842];
+    const pts = eq.map((v, i) => Math.round(i * 600 / (eq.length - 1)) + ',' + Math.round(190 - (v - 100000) / 8000 * 160));
+    return { theme: this.props.theme ?? 'light', line: pts.join(' '), area: '0,190 ' + pts.join(' ') + ' 600,190' };
+  }
+}
+</script>
+</body>
+</html>

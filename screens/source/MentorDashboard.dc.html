@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Mentor dashboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1250px">
+  <div class="tt-appbar"><span class="tt-wordmark">Track<b>Trade</b></span><span class="tt-badge tt-badge--brand">Mentor</span><span style="flex: 1"></span><button class="tt-iconbtn" aria-label="การแจ้งเตือน"><span class="i i-notification-01"></span></button></div>
+  <div class="scr__body">
+    <div><div class="caption tt-muted">สวัสดี Kru Bank</div><h1 class="h2" style="margin: 0">Trader ของคุณ</h1></div>
+    <div class="grid3">
+      <div class="tt-stat" style="padding: 10px 12px"><span class="tt-stat__label">Trader</span><span class="num">4</span></div>
+      <div class="tt-stat" style="padding: 10px 12px"><span class="tt-stat__label">รอรีวิว</span><span class="num" style="color: var(--warning-ink)">7</span></div>
+      <div class="tt-stat" style="padding: 10px 12px"><span class="tt-stat__label">ผิดกฎ 7 วัน</span><span class="num" style="color: var(--loss)">5</span></div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">ภาพรวม 30 วัน</h2>
+      <sc-for list="{{traders}}" as="t" hint-placeholder-count="4">
+        <div class="tt-card" style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 10px; align-items: center"><span class="avatar">{{t.ini}}</span><div class="row__main"><span class="row__t">{{t.name}}</span><span class="row__s">{{t.meta}}</span></div><sc-if value="{{t.rOnly}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--outline">R only</span></sc-if></div>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+            <div><div class="caption tt-muted">Adherence</div><div class="num">{{t.adh}}</div></div>
+            <div><div class="caption tt-muted">Quality</div><div class="num">{{t.q}}</div></div>
+            <div><div class="caption tt-muted">Unplanned</div><div class="num">{{t.un}}</div></div>
+            <div><div class="caption tt-muted">Net</div><div class="{{t.rCls}}">{{t.r}}</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px"><span class="caption tt-muted">มิติหลัก</span><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="{{t.dimCls}}"></i>{{t.dim}}</span><span style="flex: 1"></span><span class="tt-badge tt-badge--warning">{{t.pending}} รอรีวิว</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">คิวรีวิว</h2><a href="MentorTradeView.dc.html" class="sec__link">ดูทั้งหมด</a></div>
+      <div class="list">
+        <a href="MentorTradeView.dc.html" class="row"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">NK</span><div class="row__main"><span class="row__t">XAUUSD LONG · Bad-Win</span><span class="row__s">Nook · 9 ต.ค. · adherence 64%</span></div><b class="num tt-pnl tt-pnl--up">+0.51R</b></a>
+        <a href="MentorTradeView.dc.html" class="row"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">JT</span><div class="row__main"><span class="row__t">EURUSD SHORT · Bad-Loss</span><span class="row__s">Jay · 9 ต.ค. · unplanned</span></div><b class="num tt-pnl tt-pnl--down">−1.20R</b></a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1250}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = [
+      { ini: 'NK', name: 'Nook Knight', meta: '42 เทรด · FTMO 100K', adh: '78%', q: 'B', un: '9.5%', r: '+6.8R', dim: 'Discipline', dimKey: 'discipline', pending: 3, rOnly: true },
+      { ini: 'JT', name: 'Jay T.', meta: '61 เทรด · Live', adh: '62%', q: 'C', un: '21%', r: '−3.4R', dim: 'Emotion', dimKey: 'emotion', pending: 2, rOnly: false },
+      { ini: 'PM', name: 'Pim M.', meta: '23 เทรด · Demo', adh: '88%', q: 'A', un: '0%', r: '+2.1R', dim: 'Analysis', dimKey: 'analysis', pending: 1, rOnly: true },
+      { ini: 'OK', name: 'Ohm K.', meta: '35 เทรด · Prop', adh: '71%', q: 'B', un: '11%', r: '+0.9R', dim: 'Risk', dimKey: 'risk', pending: 1, rOnly: false }
+    ];
+    return {
+      theme: this.props.theme ?? 'light',
+      traders: t.map((x) => ({ ...x, rCls: 'num tt-pnl ' + (x.r.startsWith('+') ? 'tt-pnl--up' : 'tt-pnl--down'), dimCls: 'tt-dim-swatch dim-' + x.dimKey }))
+    };
+  }
+}
+</script>
+</body>
+</html>

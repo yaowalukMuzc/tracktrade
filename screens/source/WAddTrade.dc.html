@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Add trade</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.shot{background:var(--surface-sunken);border:1px solid var(--border);border-radius:var(--radius-lg);aspect-ratio:9/16;max-height:620px;display:flex;flex-direction:column;gap:10px;padding:20px;box-sizing:border-box;color:var(--ink-muted);font:500 13px/20px var(--font-sans)}.shot .ln{height:12px;border-radius:6px;background:var(--border)}.shot .hl{outline:2px solid var(--warning);outline-offset:3px}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="trades" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><a href="WTrades.dc.html" class="crumb"><span class="i i-sm i-arrow-left-01"></span>เทรด</a><h1>เพิ่มเทรด</h1></div>
+      <div class="tt-seg"><button class="{{segOcr}}" onClick="{{toOcr}}"><span class="i i-sm i-ai-scan"></span> Screenshot scan</button><button class="{{segMan}}" onClick="{{toMan}}"><span class="i i-sm i-edit-02"></span> กรอกเอง</button></div>
+    </header>
+    <div class="content">
+      <sc-if value="{{ocr}}" hint-placeholder-val="{{true}}">
+        <div class="split--main">
+          <div class="split__b" style="flex: 1 1 300px; max-width: 360px">
+            <div class="shot">
+              <span class="body-strong" style="color: var(--ink)">IMG_4821.PNG</span>
+              <span class="ln" style="width: 60%"></span><span class="ln" style="width: 80%"></span>
+              <span class="ln hl" style="width: 40%"></span>
+              <span class="ln" style="width: 70%"></span><span class="ln" style="width: 55%"></span>
+              <span class="ln hl" style="width: 50%"></span><span class="ln" style="width: 75%"></span>
+              <span style="margin-top: auto">[ภาพหน้าจอออเดอร์ที่อัปโหลด — กรอบสีส้ม = ค่าที่อ่านไม่ชัด]</span>
+            </div>
+            <div class="dropzone" style="padding: 16px"><span class="i i-lg i-upload-04" style="color: var(--brand-700)"></span><span class="body-strong">ลากไฟล์มาวาง หรือเลือกไฟล์</span><span class="caption tt-muted">PNG / JPG ≤ 10MB · อ่านเสร็จภายใน 15 วินาที</span></div>
+          </div>
+          <div class="split__a">
+            <div class="tt-alert tt-alert--warning"><span class="i i-alert-02"></span><div><span class="tt-alert__title">อ่านได้ 9/11 ฟิลด์ · 2 ฟิลด์ความมั่นใจต่ำ</span><span class="tt-alert__body">ตรวจช่องที่ไฮไลต์ก่อนยืนยัน — ระบบจะไม่บันทึกจนกว่าคุณกดยืนยัน</span></div></div>
+            <div class="tt-card tt-stack">
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+                <div class="tt-field"><label class="tt-label" for="a1">Symbol</label><input class="tt-input" id="a1" value="XAUUSD"></div>
+                <div class="tt-field"><span class="tt-label">Direction</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on" style="color: var(--profit-ink)">LONG</button><button class="tt-seg__item">SHORT</button></div></div>
+                <div class="tt-field"><label class="tt-label" for="a2">Lot</label><input class="tt-input tt-input--num tt-input--lowconf" id="a2" value="0.13"><span class="tt-help tt-help--warn">มั่นใจ 62%</span></div>
+                <div class="tt-field"><label class="tt-label" for="a3">Entry</label><input class="tt-input tt-input--num" id="a3" value="4,352.40"></div>
+                <div class="tt-field"><label class="tt-label" for="a4">SL</label><input class="tt-input tt-input--num" id="a4" value="4,344.71"></div>
+                <div class="tt-field"><label class="tt-label" for="a5">TP</label><input class="tt-input tt-input--num" id="a5" value="4,392.20"></div>
+                <div class="tt-field"><label class="tt-label" for="a6">Exit</label><input class="tt-input tt-input--num" id="a6" value="4,392.19"></div>
+                <div class="tt-field"><label class="tt-label" for="a8">เปิด</label><input class="tt-input tt-input--lowconf" id="a8" value="8 ก.ย. 07:15"><span class="tt-help tt-help--warn">ไม่พบ timezone — ใช้ UTC+7</span></div>
+                <div class="tt-field"><label class="tt-label" for="a9">ปิด</label><input class="tt-input" id="a9" value="8 ก.ย. 11:40"></div>
+              </div>
+              <div class="calc" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><div><span>Net P/L</span><b style="color: var(--profit)">+$517.30</b></div><div><span>R-multiple</span><b style="color: var(--profit)">+5.17R</b></div><div><span>Source</span><b>OCR</b></div><div><span>แนบภาพต้นฉบับ</span><b>ใช่</b></div></div>
+              <div class="grid2"><div class="tt-field"><label class="tt-label" for="ac">บัญชี</label><select class="tt-select" id="ac"><option>Demo Practice</option></select></div><div class="tt-field"><label class="tt-label" for="pl">ผูกกับแผน</label><select class="tt-select" id="pl"><option>เลือกภายหลัง (เข้าคิวจับคู่)</option></select></div></div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px"><button class="tt-btn tt-btn--secondary tt-btn--lg">สแกนใหม่</button><button class="tt-btn tt-btn--primary tt-btn--lg"><span class="i i-tick-02"></span>ยืนยันและบันทึก</button></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{manual}}" hint-placeholder-val="{{false}}">
+        <div class="split--main">
+          <div class="split__a">
+            <div class="tt-card tt-stack">
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+                <div class="tt-field"><label class="tt-label" for="m1">บัญชี</label><select class="tt-select" id="m1"><option>FTMO 100K</option></select></div>
+                <div class="tt-field"><label class="tt-label" for="m2">Symbol</label><select class="tt-select" id="m2"><option>XAUUSD</option></select></div>
+                <div class="tt-field"><span class="tt-label">Direction</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">LONG</button><button class="tt-seg__item tt-seg__item--on" style="color: var(--loss-ink)">SHORT</button></div></div>
+                <div class="tt-field"><label class="tt-label" for="m3">Initial SL</label><input class="tt-input tt-input--num" id="m3" value="4,412.40"></div>
+                <div class="tt-field"><label class="tt-label" for="m4">Initial TP</label><input class="tt-input tt-input--num" id="m4" value="4,371.00"></div>
+                <div class="tt-field"><label class="tt-label" for="m5">ผูกกับแผน</label><select class="tt-select" id="m5"><option>B · XAUUSD SHORT (Draft)</option></select><span class="tt-help tt-help--warn">แผนยังไม่ล็อกก่อน entry → Unplanned</span></div>
+              </div>
+            </div>
+            <div class="tt-card" style="padding: 0; overflow: hidden">
+              <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">Executions</h2><div class="tt-row"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-add-01"></span>Entry</button><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-add-01"></span>Exit</button></div></div>
+              <div class="tblwrap" style="margin-top: 12px"><table class="tbl" style="min-width: 560px"><thead><tr><th>Side</th><th>เวลา</th><th class="r">Lot</th><th class="r">ราคา</th><th class="r">Commission</th><th></th></tr></thead><tbody>
+                <tr><td><span class="tt-badge tt-badge--brand">IN</span></td><td>9 ต.ค. 13:20</td><td class="r">0.30</td><td class="r">4,402.10</td><td class="r">−$2.10</td><td class="r"><span class="i i-sm i-edit-02" style="color: var(--ink-subtle)"></span></td></tr>
+                <tr><td><span class="tt-badge tt-badge--brand">IN</span></td><td>9 ต.ค. 13:41 · scale-in</td><td class="r">0.20</td><td class="r">4,404.80</td><td class="r">−$1.40</td><td class="r"><span class="i i-sm i-edit-02" style="color: var(--ink-subtle)"></span></td></tr>
+                <tr><td><span class="tt-badge tt-badge--outline">OUT</span></td><td>9 ต.ค. 14:30 · partial</td><td class="r">0.25</td><td class="r">4,388.00</td><td class="r">$0.00</td><td class="r"><span class="i i-sm i-edit-02" style="color: var(--ink-subtle)"></span></td></tr>
+                <tr><td><span class="tt-badge tt-badge--outline">OUT</span></td><td>9 ต.ค. 15:05</td><td class="r">0.25</td><td class="r">4,379.50</td><td class="r">$0.00</td><td class="r"><span class="i i-sm i-edit-02" style="color: var(--ink-subtle)"></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </div>
+          <aside class="split__b" style="max-width: 360px">
+            <div class="tt-card">
+              <h2 class="tt-card__title" style="margin-bottom: 4px">คำนวณอัตโนมัติ</h2>
+              <div class="kv"><span>Avg entry / exit</span><b>4,403.18 / 4,383.75</b></div>
+              <div class="kv"><span>Total lot</span><b>0.50</b></div>
+              <div class="kv"><span>Commission</span><b>−$3.50</b></div>
+              <div class="kv"><span>Net P/L</span><b class="tt-pnl tt-pnl--up">+$968.00</b></div>
+              <div class="kv"><span>R-multiple</span><b class="tt-pnl tt-pnl--up">+2.10R</b></div>
+            </div>
+            <button class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block">บันทึกเทรด</button>
+          </aside>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1050}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { mode: 'ocr' }; }
+  renderVals() {
+    const m = this.state.mode;
+    return {
+      theme: this.props.theme ?? 'light', ocr: m === 'ocr', manual: m === 'manual',
+      segOcr: 'tt-seg__item' + (m === 'ocr' ? ' tt-seg__item--on' : ''),
+      segMan: 'tt-seg__item' + (m === 'manual' ? ' tt-seg__item--on' : ''),
+      toOcr: () => this.setState({ mode: 'ocr' }), toMan: () => this.setState({ mode: 'manual' })
+    };
+  }
+}
+</script>
+</body>
+</html>

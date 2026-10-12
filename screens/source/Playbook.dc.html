@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Playbook</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1000px">
+  <div class="tt-appbar"><a href="More.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">Playbook</h1><button class="tt-btn tt-btn--primary tt-btn--sm"><span class="i i-sm i-add-01"></span>Setup</button></div>
+  <div class="scr__body">
+    <div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ใช้งาน 4</button><button class="tt-seg__item">Archived 1</button></div>
+    <sc-for list="{{setups}}" as="s" hint-placeholder-count="4">
+      <a href="SetupDetail.dc.html" class="tt-card" style="text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; gap: 8px"><span class="row__ic row__ic--brand"><span class="i i-book-02"></span></span><div class="row__main"><span class="row__t">{{s.name}}</span><span class="row__s">{{s.meta}}</span></div><span class="i i-arrow-right-01" style="color: var(--ink-subtle)"></span></div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding-top: 10px; border-top: 1px dashed var(--border)">
+          <div><div class="caption tt-muted">เทรด</div><div class="num">{{s.n}}</div></div>
+          <div><div class="caption tt-muted">Win rate</div><div class="num">{{s.wr}}</div></div>
+          <div><div class="caption tt-muted">Expectancy</div><div class="{{s.expCls}}">{{s.exp}}</div></div>
+          <div><div class="caption tt-muted">Adherence</div><div class="num">{{s.adh}}</div></div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+  <dc-import name="Nav" active="more" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = [
+      { name: 'London Breakout', meta: 'M15 · H1 · London · 1%', n: 18, wr: '61%', exp: '+0.31R', adh: '84%' },
+      { name: 'NY Reversal', meta: 'M5 · M15 · New York · 0.75%', n: 11, wr: '45%', exp: '+0.12R', adh: '79%' },
+      { name: 'Asia Range', meta: 'M15 · Asia · 0.5%', n: 8, wr: '50%', exp: '−0.08R', adh: '70%' },
+      { name: 'News Fade', meta: 'M5 · New York · 0.5%', n: 5, wr: '40%', exp: '−0.22R', adh: '58%' }
+    ];
+    return {
+      theme: this.props.theme ?? 'light',
+      setups: s.map((x) => ({ ...x, expCls: 'num tt-pnl ' + (x.exp.startsWith('+') ? 'tt-pnl--up' : 'tt-pnl--down') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

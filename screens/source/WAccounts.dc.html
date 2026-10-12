@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Accounts, risk and connections</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="accounts" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><h1>บัญชี &amp; การเชื่อมต่อ</h1></div>
+      <button class="tt-btn tt-btn--primary"><span class="i i-add-01"></span>เพิ่มบัญชี</button>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="tt-card" style="padding: 0; overflow: hidden">
+        <div class="tblwrap"><table class="tbl">
+          <thead><tr><th>บัญชี</th><th>ประเภท</th><th>แพลตฟอร์ม</th><th class="r">Balance</th><th class="r">Equity</th><th>Daily loss</th><th>Drawdown</th><th>การเชื่อมต่อ</th><th></th></tr></thead>
+          <tbody>
+            <tr style="background: var(--brand-50)"><td><b>FTMO 100K Challenge</b><div class="caption tt-muted">#5120934</div></td><td><span class="tt-badge tt-badge--gold">Prop</span></td><td>MT5</td><td class="r">$101,240</td><td class="r">$101,757</td><td>$0 / $3,000</td><td>1.6% / 10%</td><td><span class="tt-badge tt-badge--profit">Synced 10 วิ</span></td><td class="r"><span class="i i-more-horizontal" style="color: var(--ink-subtle)"></span></td></tr>
+            <tr><td><b>IC Markets Live</b><div class="caption tt-muted">#8830211</div></td><td><span class="tt-badge tt-badge--brand">Live</span></td><td>cTrader</td><td class="r">$8,412</td><td class="r">$8,412</td><td>$0 / $252</td><td>3.2% / 10%</td><td><span class="tt-badge tt-badge--loss">Token หมดอายุ</span></td><td class="r"><span class="i i-more-horizontal" style="color: var(--ink-subtle)"></span></td></tr>
+            <tr><td><b>Demo Practice</b><div class="caption tt-muted">Manual / OCR</div></td><td><span class="tt-badge">Demo</span></td><td>Manual</td><td class="r">$10,517</td><td class="r">$10,517</td><td>$0 / $300</td><td>0% / 10%</td><td><span class="tt-badge tt-badge--outline">ไม่เชื่อมต่อ</span></td><td class="r"><span class="i i-more-horizontal" style="color: var(--ink-subtle)"></span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="tt-tabs"><span class="tt-tab tt-tab--on">FTMO 100K · Risk Profile</span><span class="tt-tab">กฎเพิ่มเติม 2</span><span class="tt-tab">Symbol mapping</span><span class="tt-tab">การเชื่อมต่อ</span><span class="tt-tab">Audit log</span></div>
+      <div class="split--main">
+        <div class="split__a">
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">Risk Profile</h2><span class="caption tt-muted">แก้ล่าสุด 2 ต.ค. · เทรดเก่าใช้ค่า ณ เวลาที่เทรด</span></div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+              <div class="tt-field"><label class="tt-label" for="r1">Risk ต่อเทรด</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r1" value="1.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r2">Max daily loss</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r2" value="3.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r3">Max drawdown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r3" value="10.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r4">Max trades / วัน</label><input class="tt-input tt-input--num" id="r4" value="5"></div>
+              <div class="tt-field"><label class="tt-label" for="r5">Revenge cooldown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r5" value="30"><span class="tt-suffix">นาที</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r6">News blackout</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r6" value="15"><span class="tt-suffix">นาที</span></div></div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px"><button class="tt-btn tt-btn--secondary">ยกเลิก</button><button class="tt-btn tt-btn--primary">บันทึก</button></div>
+          </div>
+          <div class="tt-card" style="padding: 0; overflow: hidden">
+            <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">กฎเพิ่มเติม</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-add-01"></span>เพิ่มกฎ</button></div>
+            <div class="row" style="padding: 12px 20px"><span class="row__ic row__ic--loss"><span class="i i-shield-01"></span></span><div class="row__main"><span class="row__t">ห้ามเทรดศุกร์หลัง 20:00</span><span class="row__s">มอบหมายโดย Mentor · Kru Bank · severity สูง</span></div><button class="toggle toggle--on" aria-label="เปิดใช้"></button></div>
+            <div class="row" style="padding: 12px 20px"><span class="row__ic row__ic--warn"><span class="i i-shield-01"></span></span><div class="row__main"><span class="row__t">Lot ไม่เกิน 1.2× planned</span><span class="row__s">โดยคุณ · severity กลาง</span></div><button class="toggle toggle--on" aria-label="เปิดใช้"></button></div>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 400px">
+          <div class="tt-card tt-stack">
+            <h2 class="h3" style="margin: 0">วันนี้</h2>
+            <div class="tt-meter"><div class="tt-meter__top">Daily loss<b>$0 / $3,000</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 1%"></div></div></div>
+            <div class="tt-meter"><div class="tt-meter__top">Drawdown จาก peak<b>1.6% / 10%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 16%"></div></div></div>
+            <div class="tt-meter"><div class="tt-meter__top">เทรด<b>2 / 5</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 40%"></div></div></div>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">MT5 EA</h2><span class="tt-badge tt-badge--profit"><span class="i i-sm i-checkmark-circle-02"></span>Connected</span></div>
+            <div class="tt-field"><span class="tt-label">API key</span><div style="display: flex; gap: 8px"><div class="code" style="flex: 1">tt_live_9f2c••••••••a71b</div><button class="tt-iconbtn" aria-label="คัดลอก"><span class="i i-copy-01"></span></button></div></div>
+            <div class="kv"><span>Sync ล่าสุด</span><b>10 วินาทีที่แล้ว</b></div>
+            <div class="kv"><span>Deals วันนี้ · SL/TP mods</span><b>14 · 3</b></div>
+            <div class="tt-row"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-refresh"></span>Sync ตอนนี้</button><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-download-04"></span>ดาวน์โหลด EA</button><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-key-01"></span>สร้าง key ใหม่</button></div>
+          </div>
+          <div class="tt-card tt-stack" style="border-color: var(--loss)">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">cTrader · IC Markets</h2><span class="tt-badge tt-badge--loss">Error</span></div>
+            <span class="body-sm tt-muted">401 invalid_grant · 8 ต.ค. 22:14 · retry 3/3 ล้มเหลว</span>
+            <button class="tt-btn tt-btn--primary tt-btn--block"><span class="i i-link-01"></span>เชื่อมต่อ cTrader ใหม่</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1150}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trades</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1150px">
+  <div class="tt-appbar"><h1 class="tt-appbar__title">เทรด</h1><button class="tt-iconbtn" aria-label="ค้นหา"><span class="i i-search-01"></span></button><button class="tt-iconbtn" aria-label="ตัวกรอง"><span class="i i-filter-horizontal"></span></button></div>
+  <div style="padding: 12px 16px 0; background: var(--surface); border-bottom: 1px solid var(--border)">
+    <div class="tt-tabs" style="border: 0"><span class="tt-tab tt-tab--on">ทั้งหมด 42</span><span class="tt-tab">รอรีวิว 3</span><span class="tt-tab">รอจับคู่ 2</span><span class="tt-tab">Unplanned 4</span></div>
+  </div>
+  <div class="scr__body">
+    <div class="tt-row" style="flex-wrap: nowrap; overflow: hidden"><span class="tt-chip tt-chip--on">ต.ค. 2026</span><span class="tt-chip">XAUUSD</span><span class="tt-chip">ทุก Setup</span><span class="tt-chip">Good-Loss</span></div>
+    <a href="MatchQueue.dc.html" class="tt-alert tt-alert--warning" style="text-decoration: none"><span class="i i-link-01"></span><div style="flex: 1"><span class="tt-alert__title">2 เทรดรอจับคู่กับแผน</span><span class="tt-alert__body">Adherence จะคำนวณหลังเลือกแผน</span></div><span class="i i-arrow-right-01"></span></a>
+    <div style="display: flex; justify-content: space-between; align-items: center"><span class="ov">วันนี้ · 9 ต.ค.</span><span class="num-sm tt-pnl tt-pnl--up">+$420.00 · +0.4R</span></div>
+    <sc-for list="{{today}}" as="t" hint-placeholder-count="2">
+      <a href="TradeDetail.dc.html" class="tt-trade" style="text-decoration: none; color: var(--ink)">
+        <div class="tt-trade__sym">{{t.sym}} <span class="{{t.dirCls}}">{{t.dir}}</span></div>
+        <div class="tt-trade__right"><span class="{{t.pnlCls}}">{{t.pnl}}</span><div class="caption tt-muted">{{t.r}}</div></div>
+        <div class="tt-trade__meta"><span>{{t.time}}</span><span>{{t.hold}}</span><span>{{t.setup}}</span><span class="tt-badge tt-badge--outline">{{t.src}}</span></div>
+        <div class="tt-trade__scores"><span class="{{t.adhCls}}">Adherence {{t.adh}}</span><span class="{{t.gradeCls}}" style="width: 22px; height: 22px; font-size: 12px">{{t.grade}}</span><span class="{{t.qCls}}">{{t.quad}}</span><sc-if value="{{t.tag}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--warning">{{t.tag}}</span></sc-if></div>
+      </a>
+    </sc-for>
+    <div style="display: flex; justify-content: space-between; align-items: center"><span class="ov">เมื่อวาน · 8 ต.ค.</span><span class="num-sm tt-pnl tt-pnl--down">−$1,025.08 · −1.0R</span></div>
+    <sc-for list="{{yday}}" as="t" hint-placeholder-count="2">
+      <a href="TradeDetail.dc.html" class="tt-trade" style="text-decoration: none; color: var(--ink)">
+        <div class="tt-trade__sym">{{t.sym}} <span class="{{t.dirCls}}">{{t.dir}}</span></div>
+        <div class="tt-trade__right"><span class="{{t.pnlCls}}">{{t.pnl}}</span><div class="caption tt-muted">{{t.r}}</div></div>
+        <div class="tt-trade__meta"><span>{{t.time}}</span><span>{{t.hold}}</span><span>{{t.setup}}</span><span class="tt-badge tt-badge--outline">{{t.src}}</span></div>
+        <div class="tt-trade__scores"><span class="{{t.adhCls}}">Adherence {{t.adh}}</span><span class="{{t.gradeCls}}" style="width: 22px; height: 22px; font-size: 12px">{{t.grade}}</span><span class="{{t.qCls}}">{{t.quad}}</span><sc-if value="{{t.tag}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--warning">{{t.tag}}</span></sc-if></div>
+      </a>
+    </sc-for>
+  </div>
+  <a href="ManualTrade.dc.html" class="tt-fab fab" aria-label="เพิ่มเทรด"><span class="i i-lg i-add-01"></span></a>
+  <dc-import name="Nav" active="trades" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1150}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const q = { 'Good-Win': 'tt-badge tt-badge--profit', 'Good-Loss': 'tt-badge tt-badge--brand', 'Bad-Win': 'tt-badge tt-badge--warning', 'Bad-Loss': 'tt-badge tt-badge--loss' };
+    const mk = (t) => ({
+      ...t,
+      dirCls: 'tt-badge ' + (t.dir === 'LONG' ? 'tt-badge--long' : 'tt-badge--short'),
+      pnlCls: 'num tt-pnl ' + (t.pnl.startsWith('+') ? 'tt-pnl--up' : 'tt-pnl--down'),
+      adhCls: 'tt-badge ' + (parseInt(t.adh) >= 80 ? 'tt-badge--brand' : (parseInt(t.adh) >= 60 ? 'tt-badge--warning' : 'tt-badge--loss')),
+      gradeCls: 'tt-grade tt-grade--' + t.grade,
+      qCls: q[t.quad],
+      tag: t.tag || ''
+    });
+    return {
+      theme: this.props.theme ?? 'light',
+      today: [
+        { sym: 'XAUUSD', dir: 'LONG', pnl: '+$517.30', r: '+0.51R', time: '10:05', hold: '2 ชม. 47 น.', setup: 'London Breakout', src: 'MT5', adh: '64%', grade: 'C', quad: 'Bad-Win', tag: 'SL widened' },
+        { sym: 'EURUSD', dir: 'SHORT', pnl: '−$97.30', r: '−0.10R', time: '08:42', hold: '18 น.', setup: '—', src: 'MT5', adh: '—', grade: 'D', quad: 'Bad-Loss', tag: 'Unplanned' }
+      ].map(mk),
+      yday: [
+        { sym: 'XAUUSD', dir: 'LONG', pnl: '−$1,012.00', r: '−1.00R', time: '15:00', hold: '1 ชม. 12 น.', setup: 'London Breakout', src: 'MT5', adh: '100%', grade: 'A', quad: 'Good-Loss', tag: 'รอรีวิว' },
+        { sym: 'GBPUSD', dir: 'SHORT', pnl: '−$13.08', r: '−0.01R', time: '09:30', hold: '2 น.', setup: 'NY Reversal', src: 'OCR', adh: '82%', grade: 'B', quad: 'Good-Loss' }
+      ].map(mk)
+    };
+  }
+}
+</script>
+</body>
+</html>

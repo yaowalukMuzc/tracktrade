@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Bottom navigation</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<nav class="tt-nav" style="width: 390px; box-sizing: border-box; font-family: var(--font-sans)">
+  <sc-for list="{{items}}" as="it" hint-placeholder-count="5">
+    <a href="{{it.href}}" class="{{it.cls}}"><span class="{{it.icon}}"></span>{{it.label}}<sc-if value="{{it.dot}}" hint-placeholder-val="{{false}}"><i class="tt-nav__dot"></i></sc-if></a>
+  </sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["today","calendar","trades","stats","more"],"default":"today"},"$preview":{"width":390,"height":64}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'today';
+    const defs = [
+      { id: 'today', label: 'วันนี้', icon: 'home-01', href: 'Today.dc.html' },
+      { id: 'calendar', label: 'ปฏิทิน', icon: 'calendar-03', href: 'Calendar.dc.html' },
+      { id: 'trades', label: 'เทรด', icon: 'chart-candlestick', href: 'Trades.dc.html', dot: true },
+      { id: 'stats', label: 'สถิติ', icon: 'analytics-01', href: 'Performance.dc.html' },
+      { id: 'more', label: 'เพิ่มเติม', icon: 'menu-01', href: 'More.dc.html' }
+    ];
+    return {
+      items: defs.map((d) => ({
+        ...d,
+        dot: !!d.dot,
+        icon: 'i i-lg i-' + d.icon,
+        cls: 'tt-nav__item' + (d.id === active ? ' tt-nav__item--on' : '')
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

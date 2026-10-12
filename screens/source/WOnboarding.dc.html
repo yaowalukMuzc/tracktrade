@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Onboarding</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.step{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:var(--radius-md)}.step__n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 13px/1 var(--font-sans);flex:none;background:var(--surface-sunken);color:var(--ink-muted)}.step--done .step__n{background:var(--profit-100);color:var(--profit-ink)}.step--on{background:var(--brand-50)}.step--on .step__n{background:var(--brand-600);color:var(--on-brand)}</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 100%; min-height: 1000px; background: var(--bg); color: var(--ink); font-family: var(--font-sans); display: flex; flex-direction: column">
+  <header class="topbar"><span class="tt-wordmark" style="font-size: 20px">Track<b>Trade</b></span><span style="flex: 1"></span><span class="caption tt-muted">ขั้นตอน 2 จาก 3</span><a href="WToday.dc.html" class="tt-btn tt-btn--ghost tt-btn--sm" style="text-decoration: none">ข้ามไปก่อน</a></header>
+  <div class="content" style="margin: 0 auto">
+    <div class="split--main">
+      <aside class="split__b" style="flex: 1 1 240px; max-width: 280px">
+        <div class="tt-card" style="padding: 8px">
+          <div class="step step--done"><span class="step__n"><span class="i i-sm i-tick-02"></span></span><div><div class="body-strong">สร้างบัญชีผู้ใช้</div><div class="caption tt-muted">nook@email.com</div></div></div>
+          <div class="step step--on"><span class="step__n">2</span><div><div class="body-strong">บัญชีเทรด &amp; Risk</div><div class="caption tt-muted">ใช้คำนวณ lot และตรวจกฎ</div></div></div>
+          <div class="step"><span class="step__n">3</span><div><div class="body-strong">เชื่อมต่อ Broker</div><div class="caption tt-muted">MT5 · cTrader · Screenshot</div></div></div>
+        </div>
+      </aside>
+      <div class="split__a">
+        <div><h1 class="h1" style="margin: 0">ตั้งค่าบัญชีเทรดแรก</h1><p class="pg-sub" style="font-size: 15px">แยกบัญชี Live / Demo / Prop ได้ — แต่ละบัญชีมี Risk Profile ของตัวเอง</p></div>
+        <div class="split">
+          <div class="tt-card tt-stack">
+            <h2 class="h3" style="margin: 0">บัญชี</h2>
+            <div class="tt-field"><label class="tt-label" for="an">ชื่อบัญชี</label><input class="tt-input" id="an" value="FTMO 100K Challenge"></div>
+            <div class="tt-field"><span class="tt-label">ประเภท</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">Live</button><button class="tt-seg__item">Demo</button><button class="tt-seg__item tt-seg__item--on">Prop</button></div></div>
+            <div class="grid2">
+              <div class="tt-field"><label class="tt-label" for="pf">แพลตฟอร์ม</label><select class="tt-select" id="pf"><option>MT5</option><option>cTrader</option><option>Manual</option></select></div>
+              <div class="tt-field"><label class="tt-label" for="br">Broker</label><input class="tt-input" id="br" value="FTMO"></div>
+              <div class="tt-field"><label class="tt-label" for="cu">สกุลเงิน</label><select class="tt-select" id="cu"><option>USD</option></select></div>
+              <div class="tt-field"><label class="tt-label" for="ib">Initial balance</label><input class="tt-input tt-input--num" id="ib" value="100,000"></div>
+            </div>
+          </div>
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">Risk Profile</h2><span class="tt-badge tt-badge--brand">ค่าเริ่มต้น</span></div>
+            <div class="grid2">
+              <div class="tt-field"><label class="tt-label" for="r1">Risk ต่อเทรด</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r1" value="1.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r2">Max daily loss</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r2" value="3.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r3">Max drawdown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r3" value="10.0"><span class="tt-suffix">%</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r4">Max trades / วัน</label><input class="tt-input tt-input--num" id="r4" value="5"></div>
+              <div class="tt-field"><label class="tt-label" for="r5">Revenge cooldown</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r5" value="30"><span class="tt-suffix">นาที</span></div></div>
+              <div class="tt-field"><label class="tt-label" for="r6">News blackout</label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="r6" value="15"><span class="tt-suffix">นาที</span></div></div>
+            </div>
+            <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-information-circle"></span><div><span class="tt-alert__title">1% ของ $100,000 = $1,000 ต่อเทรด</span><span class="tt-alert__body">Daily loss $3,000 · DD limit $10,000</span></div></div>
+          </div>
+        </div>
+        <div class="tt-card tt-stack">
+          <div class="sec__head"><h2 class="h3" style="margin: 0">ถัดไป: นำเข้าเทรด</h2><span class="caption tt-muted">ดึงย้อนหลัง 90 วันอัตโนมัติ</span></div>
+          <div class="split" style="gap: 12px">
+            <div class="tt-card" style="border: 2px solid var(--brand-700); box-shadow: none; display: flex; gap: 12px; align-items: center"><span class="row__ic row__ic--brand"><span class="i i-plug-01"></span></span><div class="row__main"><span class="row__t">MT5 (EA)</span><span class="row__s">วาง API key ใน EA</span></div></div>
+            <div class="tt-card" style="box-shadow: none; display: flex; gap: 12px; align-items: center"><span class="row__ic"><span class="i i-link-01"></span></span><div class="row__main"><span class="row__t">cTrader</span><span class="row__s">OAuth · real-time</span></div></div>
+            <div class="tt-card" style="box-shadow: none; display: flex; gap: 12px; align-items: center"><span class="row__ic"><span class="i i-ai-scan"></span></span><div class="row__main"><span class="row__t">Screenshot / กรอกเอง</span><span class="row__s">ไม่ต้องเชื่อมต่อ</span></div></div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px"><a href="WLogin.dc.html" class="tt-btn tt-btn--secondary tt-btn--lg" style="text-decoration: none">ย้อนกลับ</a><a href="WAccounts.dc.html" class="tt-btn tt-btn--primary tt-btn--lg" style="text-decoration: none">บันทึกและเชื่อมต่อ Broker</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

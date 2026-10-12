@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Diagnosis and AI Coach</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="diagnosis" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><div class="caption tt-muted">10 ก.ย. – 9 ต.ค. 2026 · ทุกบัญชี</div><h1>Diagnosis &amp; AI Coach</h1></div>
+      <div class="tt-seg"><button class="tt-seg__item">7 วัน</button><button class="tt-seg__item tt-seg__item--on">30 วัน</button><button class="tt-seg__item">ปีนี้</button></div>
+      <button class="tt-btn tt-btn--primary"><span class="i i-ai-magic"></span>สร้างรายงาน AI ใหม่</button>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__a">
+          <div class="tt-card" style="background: var(--brand-50); border-color: var(--brand-200); display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
+            <span class="row__ic" style="width: 48px; height: 48px; background: var(--dim-discipline); color: #FFFFFF"><span class="i i-lg i-flag-01"></span></span>
+            <div style="flex: 1; min-width: 240px"><div class="caption tt-muted">มิติที่เป็นปัญหาหลัก (cost R สูงสุด)</div><div class="h2">Discipline · −2.6R</div><div class="body-sm tt-muted">35% ของ mistake cost ทั้งหมด −7.4R มาจากการเทรดเกิน max trades และ revenge ใน cooldown</div></div>
+          </div>
+          <div class="split">
+            <div class="tt-card">
+              <div class="tt-card__head"><h2 class="tt-card__title">Mistake cost · 6 มิติ</h2><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">R</button><button class="tt-seg__item">$</button><button class="tt-seg__item">%</button></div></div>
+              <div class="tt-dims">
+                <div class="tt-dim"><span><i class="tt-dim-swatch dim-analysis"></i> Analysis</span><div class="tt-dim__bar"><i class="dim-analysis" style="width: 15%"></i></div><span class="tt-dim__v">0.4R</span></div>
+                <div class="tt-dim"><span><i class="tt-dim-swatch dim-planning"></i> Planning</span><div class="tt-dim__bar"><i class="dim-planning" style="width: 8%"></i></div><span class="tt-dim__v">0.2R</span></div>
+                <div class="tt-dim"><span><i class="tt-dim-swatch dim-execution"></i> Execution</span><div class="tt-dim__bar"><i class="dim-execution" style="width: 42%"></i></div><span class="tt-dim__v">1.1R</span></div>
+                <div class="tt-dim"><span><i class="tt-dim-swatch dim-risk"></i> Risk</span><div class="tt-dim__bar"><i class="dim-risk" style="width: 65%"></i></div><span class="tt-dim__v">1.7R</span></div>
+                <div class="tt-dim tt-dim--primary"><span><i class="tt-dim-swatch dim-discipline"></i> Discipline</span><div class="tt-dim__bar"><i class="dim-discipline" style="width: 100%"></i></div><span class="tt-dim__v">2.6R</span></div>
+                <div class="tt-dim"><span><i class="tt-dim-swatch dim-emotion"></i> Emotion</span><div class="tt-dim__bar"><i class="dim-emotion" style="width: 54%"></i></div><span class="tt-dim__v">1.4R</span></div>
+              </div>
+            </div>
+            <div class="tt-card">
+              <div class="tt-card__head"><h2 class="tt-card__title">ตาม Emotion tag (pre-trade)</h2><span class="caption tt-muted">Expectancy · n</span></div>
+              <div class="kv"><span><span class="tt-chip tt-chip--pos tt-chip--on" style="height: 26px">อดทน</span></span><b class="tt-pnl tt-pnl--up">+0.41R · 9</b></div>
+              <div class="kv"><span><span class="tt-chip tt-chip--pos tt-chip--on" style="height: 26px">มั่นใจ</span></span><b class="tt-pnl tt-pnl--up">+0.34R · 18</b></div>
+              <div class="kv"><span><span class="tt-chip tt-chip--neg tt-chip--on" style="height: 26px">FOMO</span></span><b class="tt-pnl tt-pnl--down">−0.38R · 8</b></div>
+              <div class="kv"><span><span class="tt-chip tt-chip--neg tt-chip--on" style="height: 26px">อยากเอาคืน</span></span><b class="tt-pnl tt-pnl--down">−0.72R · 4</b></div>
+            </div>
+          </div>
+          <div class="tt-card" style="padding: 0; overflow: hidden">
+            <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">Mistake ที่เกิดบ่อย</h2><span class="caption tt-muted">deviation → mistake category → มิติ</span></div>
+            <div class="tblwrap" style="margin-top: 12px"><table class="tbl" style="min-width: 600px"><thead><tr><th>Mistake</th><th>มิติ</th><th class="r">ครั้ง</th><th class="r">Cost $</th><th class="r">Cost R</th><th>ล่าสุด</th></tr></thead><tbody>
+              <tr><td><b>เกิน max trades / วัน</b></td><td><i class="tt-dim-swatch dim-discipline"></i> Discipline</td><td class="r">5</td><td class="r tt-pnl tt-pnl--down">−$1,520</td><td class="r">−1.5</td><td>7 ต.ค.</td></tr>
+              <tr><td><b>ปิดก่อน TP</b></td><td><i class="tt-dim-swatch dim-emotion"></i> Emotion</td><td class="r">6</td><td class="r tt-pnl tt-pnl--down">−$1,410</td><td class="r">−1.4</td><td>9 ต.ค.</td></tr>
+              <tr><td><b>SL widened</b></td><td><i class="tt-dim-swatch dim-risk"></i> Risk</td><td class="r">4</td><td class="r tt-pnl tt-pnl--down">−$1,215</td><td class="r">−1.2</td><td>9 ต.ค.</td></tr>
+              <tr><td><b>Revenge ใน cooldown</b></td><td><i class="tt-dim-swatch dim-discipline"></i> Discipline</td><td class="r">3</td><td class="r tt-pnl tt-pnl--down">−$1,105</td><td class="r">−1.1</td><td>7 ต.ค.</td></tr>
+              <tr><td><b>Oversize &gt; 10%</b></td><td><i class="tt-dim-swatch dim-risk"></i> Risk</td><td class="r">2</td><td class="r tt-pnl tt-pnl--down">−$505</td><td class="r">−0.5</td><td>7 ต.ค.</td></tr>
+            </tbody></table></div>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 420px">
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><div style="display: flex; gap: 10px; align-items: center"><span class="row__ic row__ic--brand"><span class="i i-ai-magic"></span></span><div><div class="h3">AI Coach · สัปดาห์ 41</div><div class="caption tt-muted">5–9 ต.ค. · สร้างอัตโนมัติ จันทร์ 06:00</div></div></div></div>
+            <p class="body" style="margin: 0">สัปดาห์นี้คุณทำตามแผนได้ดีในช่วงต้นสัปดาห์ (adherence 92%) แต่หลังโดน SL วันพุธ คุณเปิดเพิ่มอีก 3 ไม้ภายใน 20 นาที ทั้งที่ตั้ง cooldown ไว้ 30 นาที</p>
+            <div class="ov">หลักฐาน</div>
+            <a href="WTradeDetail.dc.html" class="row" style="padding: 6px 0"><span class="tt-badge tt-badge--loss">#T-1042</span><span class="row__main row__s">revenge 8 นาทีหลัง SL</span><b class="num tt-pnl tt-pnl--down">−0.9R</b></a>
+            <a href="WTradeDetail.dc.html" class="row" style="padding: 6px 0"><span class="tt-badge tt-badge--loss">#T-1043</span><span class="row__main row__s">oversize 1.6×</span><b class="num tt-pnl tt-pnl--down">−1.5R</b></a>
+            <a href="WTradeDetail.dc.html" class="row" style="padding: 6px 0; border: 0"><span class="tt-badge tt-badge--warning">#T-1044</span><span class="row__main row__s">unplanned</span><b class="num tt-pnl tt-pnl--up">+0.3R</b></a>
+            <div class="ov">คำแนะนำ 3 ข้อ</div>
+            <div style="display: flex; gap: 10px"><span class="avatar" style="width: 26px; height: 26px; font-size: 12px">1</span><div class="body-sm"><b>ล็อกการสร้างแผน 30 นาทีหลังโดน SL</b> — เปิด Revenge cooldown แบบบังคับ</div></div>
+            <div style="display: flex; gap: 10px"><span class="avatar" style="width: 26px; height: 26px; font-size: 12px">2</span><div class="body-sm"><b>ลด max trades เหลือ 3 ไม้ในวันพุธ–พฤหัส</b> — expectancy −0.18R ตลอด 4 สัปดาห์</div></div>
+            <div style="display: flex; gap: 10px"><span class="avatar" style="width: 26px; height: 26px; font-size: 12px">3</span><div class="body-sm"><b>ตอบ in-trade prompt ทุกครั้งที่ขยับ SL</b> — ตอนนี้ตอบ 2 จาก 5 ครั้ง</div></div>
+            <div class="tt-alert" style="font-size: 12px; line-height: 18px"><span class="i i-sm i-shield-01"></span><div><span class="tt-alert__body">ส่งเฉพาะสถิติรวมและสรุปเทรด — ไม่มีอีเมลหรือเลขบัญชี</span></div></div>
+          </div>
+          <div class="tt-card">
+            <h2 class="tt-card__title" style="margin-bottom: 4px">รายงานก่อนหน้า</h2>
+            <div class="kv"><span>สัปดาห์ 40</span><b><i class="tt-dim-swatch dim-risk"></i> Risk</b></div>
+            <div class="kv"><span>สัปดาห์ 39</span><b><i class="tt-dim-swatch dim-emotion"></i> Emotion</b></div>
+            <div class="kv"><span>สัปดาห์ 38</span><b style="color: var(--loss-ink)">ล้มเหลว · ลองใหม่</b></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

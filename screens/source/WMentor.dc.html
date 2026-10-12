@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Mentor dashboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.gbar{fill:var(--brand-500)}.bbar{fill:var(--warning)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="mentor" mode="mentor" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><div class="caption tt-muted">สวัสดี Kru Bank</div><h1>Trader ของฉัน <span class="tt-badge tt-badge--brand" style="vertical-align: middle">Mentor</span></h1></div>
+      <div class="tt-seg"><button class="tt-seg__item">7 วัน</button><button class="tt-seg__item tt-seg__item--on">30 วัน</button></div>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="kpis">
+        <div class="tt-stat"><span class="tt-stat__label">Trader ที่ดูแล</span><span class="tt-stat__value">4</span><span class="tt-stat__delta">1 คำเชิญรอตอบรับ</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">รอรีวิว</span><span class="tt-stat__value" style="color: var(--warning-ink)">7</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">ผิดกฎ 7 วัน</span><span class="tt-stat__value" style="color: var(--loss)">5</span></div>
+        <div class="tt-stat"><span class="tt-stat__label">Avg adherence (ทุกคน)</span><span class="tt-stat__value">75%</span></div>
+      </div>
+      <div class="tt-card" style="padding: 0; overflow: hidden">
+        <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">Behavior metrics ราย trader</h2><span class="caption tt-muted">R only สำหรับ trader ที่ปิดการมองเห็น $</span></div>
+        <div class="tblwrap" style="margin-top: 12px"><table class="tbl">
+          <thead><tr><th>Trader</th><th class="r">เทรด</th><th class="r">Adherence</th><th>Quality</th><th class="r">Unplanned</th><th>Good / Bad</th><th>มิติหลัก</th><th class="r">Net</th><th class="r">รอรีวิว</th><th>สิทธิ์</th></tr></thead>
+          <tbody>
+            <sc-for list="{{traders}}" as="t" hint-placeholder-count="4">
+              <tr>
+                <td><div style="display: flex; gap: 10px; align-items: center"><span class="avatar">{{t.ini}}</span><div><b>{{t.name}}</b><div class="caption tt-muted">{{t.acct}}</div></div></div></td>
+                <td class="r">{{t.n}}</td><td class="r">{{t.adh}}</td>
+                <td><span class="{{t.gCls}}" style="width: 24px; height: 24px; font-size: 12px">{{t.q}}</span></td>
+                <td class="r">{{t.un}}</td>
+                <td><svg width="120" height="10" viewBox="0 0 100 10" preserveAspectRatio="none" role="img" aria-label="{{t.gb}}"><rect x="0" y="0" width="{{t.good}}" height="10" class="gbar"></rect><rect x="{{t.good}}" y="0" width="{{t.bad}}" height="10" class="bbar"></rect></svg><div class="caption tt-muted">{{t.gb}}</div></td>
+                <td><span class="tt-badge" style="background: var(--surface-sunken); color: var(--ink)"><i class="{{t.dimCls}}"></i>{{t.dim}}</span></td>
+                <td class="r"><span class="{{t.rCls}}">{{t.r}}</span></td>
+                <td class="r"><span class="tt-badge tt-badge--warning">{{t.pending}}</span></td>
+                <td><span class="tt-badge tt-badge--outline">{{t.vis}}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="split">
+        <div class="tt-card" style="padding: 0; overflow: hidden">
+          <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">คิวรีวิว</h2><a href="WMentorTrade.dc.html" class="sec__link">เริ่มรีวิว</a></div>
+          <a href="WMentorTrade.dc.html" class="row" style="padding: 12px 20px"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">NK</span><div class="row__main"><span class="row__t">XAUUSD LONG · Bad-Win</span><span class="row__s">Nook · 9 ต.ค. · adherence 64%</span></div><b class="num tt-pnl tt-pnl--up">+0.51R</b></a>
+          <a href="WMentorTrade.dc.html" class="row" style="padding: 12px 20px"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">JT</span><div class="row__main"><span class="row__t">EURUSD SHORT · Bad-Loss</span><span class="row__s">Jay · 9 ต.ค. · unplanned</span></div><b class="num tt-pnl tt-pnl--down">−1.20R</b></a>
+          <a href="WMentorTrade.dc.html" class="row" style="padding: 12px 20px"><span class="avatar" style="width: 28px; height: 28px; font-size: 11px">PM</span><div class="row__main"><span class="row__t">GBPUSD LONG · Good-Loss</span><span class="row__s">Pim · 8 ต.ค. · adherence 95%</span></div><b class="num tt-pnl tt-pnl--down">−1.00R</b></a>
+        </div>
+        <div class="tt-card" style="padding: 0; overflow: hidden">
+          <div class="tt-card__head" style="padding: 16px 20px 0"><h2 class="tt-card__title">Alert ผิดกฎล่าสุด</h2><span class="caption tt-muted">ส่งต่อจาก trader</span></div>
+          <div class="row" style="padding: 12px 20px"><span class="row__ic row__ic--loss"><span class="i i-alert-02"></span></span><div class="row__main"><span class="row__t">Nook · Max trades per day (6/5)</span><span class="row__s">วันนี้ 14:32</span></div></div>
+          <div class="row" style="padding: 12px 20px"><span class="row__ic row__ic--loss"><span class="i i-clock-01"></span></span><div class="row__main"><span class="row__t">Nook · Revenge cooldown</span><span class="row__s">วันนี้ 14:20</span></div></div>
+          <div class="row" style="padding: 12px 20px"><span class="row__ic row__ic--loss"><span class="i i-news-01"></span></span><div class="row__main"><span class="row__t">Jay · เทรดช่วง news blackout</span><span class="row__s">เมื่อวาน 19:31</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1150}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = [
+      { ini: 'NK', name: 'Nook Knight', acct: 'FTMO 100K · Prop', n: 42, adh: '78%', q: 'B', un: '9.5%', good: 64, gb: 'Good 64% · Bad 36%', dim: 'Discipline', dk: 'discipline', r: '+6.8R', pending: 3, vis: 'R only' },
+      { ini: 'JT', name: 'Jay T.', acct: 'Live', n: 61, adh: '62%', q: 'C', un: '21%', good: 41, gb: 'Good 41% · Bad 59%', dim: 'Emotion', dk: 'emotion', r: '−3.4R', pending: 2, vis: '$ + R' },
+      { ini: 'PM', name: 'Pim M.', acct: 'Demo', n: 23, adh: '88%', q: 'A', un: '0%', good: 83, gb: 'Good 83% · Bad 17%', dim: 'Analysis', dk: 'analysis', r: '+2.1R', pending: 1, vis: 'R only' },
+      { ini: 'OK', name: 'Ohm K.', acct: 'Prop', n: 35, adh: '71%', q: 'B', un: '11%', good: 57, gb: 'Good 57% · Bad 43%', dim: 'Risk', dk: 'risk', r: '+0.9R', pending: 1, vis: '$ + R' }
+    ];
+    return {
+      theme: this.props.theme ?? 'light',
+      traders: t.map((x) => ({ ...x, bad: 100 - x.good, gCls: 'tt-grade tt-grade--' + x.q, dimCls: 'tt-dim-swatch dim-' + x.dk, rCls: 'tt-pnl ' + (x.r.startsWith('+') ? 'tt-pnl--up' : 'tt-pnl--down') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

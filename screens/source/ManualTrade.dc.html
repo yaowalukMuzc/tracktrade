@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Manual trade entry</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1350px">
+  <div class="tt-appbar"><a href="Trades.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ปิด"><span class="i i-cancel-01"></span></a><h1 class="tt-appbar__title">เพิ่มเทรด</h1><a href="ScanConfirm.dc.html" class="tt-btn tt-btn--ghost tt-btn--sm" style="text-decoration: none"><span class="i i-sm i-ai-scan"></span>Scan ภาพ</a></div>
+  <div class="scr__body">
+    <div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on">กรอกเอง</button><a href="ScanConfirm.dc.html" class="tt-seg__item" style="display: grid; place-items: center; text-decoration: none">Screenshot</a></div>
+
+    <div class="tt-card tt-stack">
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="ac">บัญชี</label><select class="tt-select" id="ac"><option>FTMO 100K</option></select></div>
+        <div class="tt-field"><label class="tt-label" for="sy">Symbol</label><select class="tt-select" id="sy"><option>XAUUSD</option></select></div>
+      </div>
+      <div class="dirtoggle"><button class="dirbtn"><span class="i i-arrow-up-right-01"></span>LONG</button><button class="dirbtn dirbtn--short"><span class="i i-arrow-down-right-01"></span>SHORT</button></div>
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="isl">Initial SL</label><input class="tt-input tt-input--num" id="isl" value="4,412.40"></div>
+        <div class="tt-field"><label class="tt-label" for="itp">Initial TP</label><input class="tt-input tt-input--num" id="itp" value="4,371.00"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">Executions</h2><span class="caption tt-muted">scale-in / partial close</span></div>
+      <div class="list">
+        <div class="row" style="align-items: flex-start"><span class="tt-badge tt-badge--brand" style="margin-top: 2px">IN</span><div class="row__main"><span class="row__t num">0.30 lot @ 4,402.10</span><span class="row__s">9 ต.ค. 13:20</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="แก้"><span class="i i-sm i-edit-02"></span></button></div>
+        <div class="row" style="align-items: flex-start"><span class="tt-badge tt-badge--brand" style="margin-top: 2px">IN</span><div class="row__main"><span class="row__t num">0.20 lot @ 4,404.80</span><span class="row__s">9 ต.ค. 13:41 · scale-in</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="แก้"><span class="i i-sm i-edit-02"></span></button></div>
+        <div class="row" style="align-items: flex-start"><span class="tt-badge tt-badge--outline" style="margin-top: 2px">OUT</span><div class="row__main"><span class="row__t num">0.25 lot @ 4,388.00</span><span class="row__s">9 ต.ค. 14:30 · partial</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="แก้"><span class="i i-sm i-edit-02"></span></button></div>
+        <div class="row" style="align-items: flex-start"><span class="tt-badge tt-badge--outline" style="margin-top: 2px">OUT</span><div class="row__main"><span class="row__t num">0.25 lot @ 4,379.50</span><span class="row__s">9 ต.ค. 15:05</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="แก้"><span class="i i-sm i-edit-02"></span></button></div>
+      </div>
+      <div class="grid2"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-add-01"></span>Entry</button><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-add-01"></span>Exit</button></div>
+    </div>
+
+    <div class="tt-card">
+      <div class="sec__head" style="margin-bottom: 4px"><h2 class="h3" style="margin: 0">คำนวณให้อัตโนมัติ</h2><span class="tt-badge tt-badge--outline">Closed</span></div>
+      <div class="kv"><span>Avg entry / exit</span><b>4,403.18 / 4,383.75</b></div>
+      <div class="kv"><span>Total lot</span><b>0.50</b></div>
+      <div class="kv"><span>Commission</span><b>−$3.50</b></div>
+      <div class="kv"><span>Net P/L</span><b class="tt-pnl tt-pnl--up">+$968.00</b></div>
+      <div class="kv"><span>R-multiple</span><b class="tt-pnl tt-pnl--up">+2.10R</b></div>
+    </div>
+
+    <div class="tt-field"><label class="tt-label" for="pl">ผูกกับแผน</label><select class="tt-select" id="pl"><option>B · XAUUSD SHORT (Draft — ยังไม่ล็อก)</option></select>
+      <span class="tt-help tt-help--warn">แผนนี้ยังไม่ถูกล็อกก่อนเวลา entry — เทรดจะถูกติด Unplanned</span></div>
+  </div>
+  <div class="scr__foot"><button class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block">บันทึกเทรด</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1350}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

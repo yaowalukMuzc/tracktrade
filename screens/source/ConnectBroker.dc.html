@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Onboarding — connect broker</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1050px">
+  <div class="tt-appbar"><a href="Onboarding.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">นำเข้าเทรดอัตโนมัติ</h1><span class="caption tt-muted">2 / 2</span></div>
+  <div style="height: 4px; background: var(--brand-700)"></div>
+  <div class="scr__body">
+    <div class="sec">
+      <h2 class="h2" style="margin: 0">เลือกวิธีบันทึกเทรด</h2>
+      <p class="pg-sub">เชื่อมครั้งเดียว ระบบดึงประวัติย้อนหลัง 90 วัน และการแก้ SL/TP แบบ real-time</p>
+    </div>
+    <div class="tt-card" style="border: 2px solid var(--brand-700); display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="row__ic row__ic--brand"><span class="i i-plug-01"></span></span><div class="row__main"><span class="row__t">MetaTrader 5 (EA)</span><span class="row__s">ติดตั้ง EA แล้ววาง API key</span></div><span class="tt-badge tt-badge--solid">เลือกอยู่</span></div>
+      <div class="ov">API key ของบัญชี FTMO 100K</div>
+      <div class="code">tt_live_9f2c4e…a71b</div>
+      <div class="tt-row"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-copy-01"></span>คัดลอก key</button><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-download-04"></span>ดาวน์โหลด EA</button></div>
+      <ol style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 22px; color: var(--ink-muted)">
+        <li>คัดลอก TrackTrade.ex5 ไปที่ MQL5/Experts</li>
+        <li>เปิด Allow WebRequest ให้ api.tracktrade.app</li>
+        <li>ลาก EA ลงกราฟใดก็ได้ แล้ววาง API key</li>
+      </ol>
+      <div class="tt-alert tt-alert--warning" style="font-size: 13px; line-height: 20px"><span class="i i-clock-01"></span><div><span class="tt-alert__title">รอสัญญาณจาก EA…</span><span class="tt-alert__body">เราจะแจ้งทันทีเมื่อได้รับ deal แรก</span></div></div>
+    </div>
+    <div class="list">
+      <div class="row"><span class="row__ic"><span class="i i-link-01"></span></span><div class="row__main"><span class="row__t">cTrader</span><span class="row__s">เชื่อมผ่าน OAuth · real-time</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+      <div class="row"><span class="row__ic"><span class="i i-ai-scan"></span></span><div class="row__main"><span class="row__t">Screenshot scan</span><span class="row__s">แคปภาพออเดอร์ ให้ AI อ่านค่า</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+      <div class="row"><span class="row__ic"><span class="i i-edit-02"></span></span><div class="row__main"><span class="row__t">กรอกเอง</span><span class="row__s">บันทึก position และ executions ด้วยมือ</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+    </div>
+  </div>
+  <div class="scr__foot" style="flex-direction: column"><a href="Today.dc.html" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block" style="text-decoration: none">เริ่มใช้งาน</a><a href="Today.dc.html" class="tt-btn tt-btn--ghost tt-btn--block" style="text-decoration: none">ข้ามไปก่อน</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1050}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

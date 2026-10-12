@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Performance — P/L</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.eq-line{fill:none;stroke:var(--brand-500);stroke-width:2;stroke-linejoin:round}
+.eq-area{fill:var(--chart-area)}
+.eq-grid{stroke:var(--chart-grid);stroke-width:1}
+.eq-ax{fill:var(--ink-subtle);font:500 10px Inter,sans-serif}
+.eq-dd{fill:var(--loss);fill-opacity:.12}
+.bar{display:grid;grid-template-columns:112px 1fr 64px;gap:10px;align-items:center;font:500 13px/20px var(--font-sans)}
+.bar-bg{fill:var(--surface-sunken)}.bar-up{fill:var(--profit)}.bar-down{fill:var(--loss)}.bar-mid{stroke:var(--border-strong);stroke-width:1;vector-effect:non-scaling-stroke}
+</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1650px">
+  <div class="tt-appbar"><h1 class="tt-appbar__title">สถิติ</h1><button class="tt-chip"><span class="i i-sm i-wallet-01"></span>ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></button></div>
+  <div style="padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border)"><div class="tt-tabs" style="border: 0"><span class="tt-tab tt-tab--on">P/L</span><a href="Behavior.dc.html" class="tt-tab" style="text-decoration: none">Behavior</a><a href="Behavior.dc.html" class="tt-tab" style="text-decoration: none">Diagnosis</a><a href="AICoach.dc.html" class="tt-tab" style="text-decoration: none">AI Coach</a></div></div>
+  <div class="scr__body">
+    <div style="display: flex; gap: 8px; align-items: center"><div class="tt-seg"><button class="tt-seg__item">7 วัน</button><button class="tt-seg__item tt-seg__item--on">30 วัน</button><button class="tt-seg__item">ปีนี้</button></div><span style="flex: 1"></span><button class="tt-chip">ทุก Setup<span class="i i-sm i-arrow-down-01"></span></button></div>
+
+    <div class="grid2">
+      <div class="tt-stat"><span class="tt-stat__label">Net P/L</span><span class="tt-stat__value tt-pnl--up">+$6,842</span><span class="tt-stat__delta">+6.8R · 42 เทรด</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Win rate</span><span class="tt-stat__value">52.4%</span><span class="tt-stat__delta">22W · 20L</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Profit factor</span><span class="tt-stat__value">1.71</span><span class="tt-stat__delta">Gross +$16.5k / −$9.6k</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Expectancy</span><span class="tt-stat__value">+0.16R</span><span class="tt-stat__delta">ต่อเทรด</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Avg win / loss</span><span class="tt-stat__value" style="font-size: 20px">+0.75R / −0.48R</span></div>
+      <div class="tt-stat"><span class="tt-stat__label">Max drawdown</span><span class="tt-stat__value tt-pnl--down">−4.1%</span><span class="tt-stat__delta">limit 10%</span></div>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card__head"><h2 class="tt-card__title">Equity curve</h2><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">$</button><button class="tt-seg__item">R</button></div></div>
+      <svg width="326" height="170" viewBox="0 0 326 170" role="img" aria-label="Equity curve 30 วัน เพิ่มขึ้นจาก 100,000 เป็น 106,842">
+        <line class="eq-grid" x1="0" x2="290" y1="20" y2="20"></line><line class="eq-grid" x1="0" x2="290" y1="75" y2="75"></line><line class="eq-grid" x1="0" x2="290" y1="130" y2="130"></line>
+        <text class="eq-ax" x="294" y="23">108k</text><text class="eq-ax" x="294" y="78">104k</text><text class="eq-ax" x="294" y="133">100k</text>
+        <rect class="eq-dd" x="{{ddX}}" y="10" width="{{ddW}}" height="130"></rect>
+        <polygon class="eq-area" points="{{area}}"></polygon>
+        <polyline class="eq-line" points="{{line}}"></polyline>
+        <text class="eq-ax" x="0" y="158">10 ก.ย.</text><text class="eq-ax" x="250" y="158">9 ต.ค.</text>
+      </svg>
+      <div class="legend"><span><b style="display: inline-block; width: 14px; height: 2px; background: var(--brand-500); vertical-align: middle"></b> Equity</span><span><b style="display: inline-block; width: 10px; height: 10px; background: var(--loss-100); vertical-align: middle"></b> Max drawdown −4.1%</span></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="tt-card__head" style="margin: 0"><h2 class="tt-card__title">ตาม Setup</h2><span class="caption tt-muted">Expectancy (R)</span></div>
+      <sc-for list="{{setups}}" as="b" hint-placeholder-count="4">
+        <div class="bar"><span>{{b.name}}</span><svg width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-bg" x="0" y="0" width="100" height="10" rx="5"></rect><rect class="{{b.cls}}" x="{{b.left}}" y="0" width="{{b.w}}" height="10"></rect><line class="bar-mid" x1="50" x2="50" y1="0" y2="10"></line></svg><b class="num" style="text-align: right">{{b.v}}</b></div>
+      </sc-for>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="tt-card__head" style="margin: 0"><h2 class="tt-card__title">ตาม Session</h2><span class="caption tt-muted">Net R</span></div>
+      <sc-for list="{{sessions}}" as="b" hint-placeholder-count="3">
+        <div class="bar"><span>{{b.name}}</span><svg width="100%" height="10" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><rect class="bar-bg" x="0" y="0" width="100" height="10" rx="5"></rect><rect class="{{b.cls}}" x="{{b.left}}" y="0" width="{{b.w}}" height="10"></rect><line class="bar-mid" x1="50" x2="50" y1="0" y2="10"></line></svg><b class="num" style="text-align: right">{{b.v}}</b></div>
+      </sc-for>
+    </div>
+
+    <div class="tt-card">
+      <div class="tt-card__head"><h2 class="tt-card__title">ตามวันในสัปดาห์</h2><span class="caption tt-muted">Net R</span></div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; text-align: center">
+        <div><div class="tt-day tt-day--win" style="min-height: 44px; align-items: center; justify-content: center"><span class="tt-day__pnl">+2.4R</span></div><span class="caption tt-muted">จ</span></div>
+        <div><div class="tt-day tt-day--win" style="min-height: 44px; align-items: center; justify-content: center"><span class="tt-day__pnl">+3.1R</span></div><span class="caption tt-muted">อ</span></div>
+        <div><div class="tt-day tt-day--loss" style="min-height: 44px; align-items: center; justify-content: center"><span class="tt-day__pnl">−1.2R</span></div><span class="caption tt-muted">พ</span></div>
+        <div><div class="tt-day tt-day--win" style="min-height: 44px; align-items: center; justify-content: center"><span class="tt-day__pnl">+2.9R</span></div><span class="caption tt-muted">พฤ</span></div>
+        <div><div class="tt-day tt-day--loss" style="min-height: 44px; align-items: center; justify-content: center"><span class="tt-day__pnl">−0.4R</span></div><span class="caption tt-muted">ศ</span></div>
+      </div>
+    </div>
+  </div>
+  <dc-import name="Nav" active="stats" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const eq = [100000, 100420, 100180, 101050, 101600, 101320, 102240, 103100, 102700, 103900, 104400, 103650, 102900, 102480, 103300, 104200, 104900, 104500, 105700, 106100, 105400, 106300, 106842];
+    const X = (i) => Math.round(i * (290 / (eq.length - 1)));
+    const Y = (v) => Math.round(130 - (v - 100000) / 8000 * 110);
+    const pts = eq.map((v, i) => X(i) + ',' + Y(v));
+    const bar = (name, v, max) => {
+      const w = Math.min(100, Math.abs(v) / max * 50);
+      const left = v >= 0 ? 50 : 50 - w;
+      return { name, v: (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2) + 'R', cls: v >= 0 ? 'bar-up' : 'bar-down', w, left };
+    };
+    const style = (b) => ({ ...b, cls: b.cls });
+    return {
+      theme: this.props.theme ?? 'light',
+      line: pts.join(' '),
+      area: '0,130 ' + pts.join(' ') + ' 290,130',
+      ddX: X(10), ddW: X(13) - X(10),
+      setups: [bar('London Breakout', 0.31, 0.4), bar('NY Reversal', 0.12, 0.4), bar('Asia Range', -0.08, 0.4), bar('News Fade', -0.22, 0.4)].map(style),
+      sessions: [bar('London', 5.9, 6), bar('New York', 2.1, 6), bar('Asia', -1.2, 6)].map(style)
+    };
+  }
+}
+</script>
+</body>
+</html>

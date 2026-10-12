@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Settings and privacy</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1250px">
+  <div class="tt-appbar"><a href="More.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">ตั้งค่า</h1></div>
+  <div class="scr__body">
+    <div class="ov">โปรไฟล์</div>
+    <div class="tt-card tt-stack">
+      <div class="tt-field"><label class="tt-label" for="nm">ชื่อที่แสดง</label><input class="tt-input" id="nm" value="Nook Knight"></div>
+      <div class="tt-field"><label class="tt-label" for="em">อีเมล</label><input class="tt-input" id="em" value="nook@email.com"></div>
+      <div class="tt-field"><span class="tt-label">ภาษา</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on">ไทย</button><button class="tt-seg__item">English</button></div><span class="tt-help">เปลี่ยนทันทีโดยไม่ต้องโหลดใหม่</span></div>
+      <div class="tt-field"><label class="tt-label" for="tz">เขตเวลา</label><select class="tt-select" id="tz"><option>Asia/Bangkok (UTC+7)</option></select></div>
+      <div class="tt-field"><span class="tt-label">ธีม</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">Light</button><button class="tt-seg__item">Dark</button><button class="tt-seg__item tt-seg__item--on">ตามระบบ</button></div></div>
+    </div>
+
+    <div class="ov">การแจ้งเตือน</div>
+    <div class="list">
+      <div class="row"><div class="row__main"><span class="row__t">ผิดกฎ (rule breach)</span><span class="row__s">WebSocket + Push</span></div><button class="toggle toggle--on" aria-label="Rule breach"></button></div>
+      <div class="row"><div class="row__main"><span class="row__t">ข่าว High impact</span><span class="row__s">ก่อนข่าว 15 นาที</span></div><button class="toggle toggle--on" aria-label="News"></button></div>
+      <div class="row"><div class="row__main"><span class="row__t">In-trade prompt</span><span class="row__s">เมื่อเพิ่ม risk หรือปิดก่อน TP</span></div><button class="toggle toggle--on" aria-label="In-trade prompt"></button></div>
+      <div class="row"><div class="row__main"><span class="row__t">รายงาน AI Coach รายสัปดาห์</span></div><button class="toggle toggle--on" aria-label="AI Coach"></button></div>
+    </div>
+
+    <div class="ov">ข้อมูลและความเป็นส่วนตัว</div>
+    <div class="list">
+      <div class="row"><span class="row__ic"><span class="i i-download-04"></span></span><div class="row__main"><span class="row__t">Export ข้อมูลทั้งหมด</span><span class="row__s">CSV + JSON · ส่งลิงก์ทางอีเมล</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+      <div class="row"><span class="row__ic"><span class="i i-lock-password"></span></span><div class="row__main"><span class="row__t">เปลี่ยนรหัสผ่าน</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+      <div class="row"><span class="row__ic"><span class="i i-shield-01"></span></span><div class="row__main"><span class="row__t">อุปกรณ์ที่เข้าสู่ระบบ</span><span class="row__s">2 อุปกรณ์</span></div><span class="row__end"><span class="i i-arrow-right-01"></span></span></div>
+    </div>
+
+    <div class="tt-card" style="border-color: var(--loss); display: flex; flex-direction: column; gap: 8px">
+      <span class="body-strong" style="color: var(--loss-ink)">ลบบัญชีและข้อมูลทั้งหมด</span>
+      <span class="body-sm tt-muted">ลบเทรด แผน รีวิว และไฟล์แนบทั้งหมดถาวร ไม่สามารถกู้คืนได้</span>
+      <button class="tt-btn tt-btn--danger" style="align-self: flex-start"><span class="i i-delete-02"></span>ลบบัญชี</button>
+    </div>
+    <p class="caption tt-subtle" style="text-align: center; margin: 0">TrackTrade v0.1 · MVP</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1250}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

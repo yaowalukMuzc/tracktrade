@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Market analysis</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1450px">
+  <div class="tt-appbar"><a href="Today.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">Market Analysis</h1><button class="tt-iconbtn" style="border: 0" aria-label="เพิ่มเติม"><span class="i i-more-horizontal"></span></button></div>
+  <div class="scr__body">
+    <div class="grid2">
+      <div class="tt-field"><label class="tt-label" for="sy">Symbol</label><select class="tt-select" id="sy"><option>XAUUSD</option></select></div>
+      <div class="tt-field"><label class="tt-label" for="dt">วันที่</label><input class="tt-input" id="dt" value="9 ต.ค. 2026"></div>
+    </div>
+
+    <div class="chartbox">
+      <div class="chartbar"><span class="tt-chip">M15</span><span class="tt-chip tt-chip--on">H1</span><span class="tt-chip">H4</span><span class="tt-chip">D1</span><span style="flex: 1"></span><button class="tt-iconbtn" style="width: 32px; height: 32px" aria-label="ขยายเต็มจอ"><span class="i i-sm i-layers-01"></span></button></div>
+      <div style="display: flex">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 6px 4px; border-right: 1px solid var(--border)">
+          <button class="tt-iconbtn tt-iconbtn--active" style="width: 28px; height: 28px; border: 0" aria-label="Trendline"><span class="i i-sm i-chart-line-data-01"></span></button>
+          <button class="tt-iconbtn" style="width: 28px; height: 28px; border: 0; font: 700 14px/1 var(--font-sans)" aria-label="Horizontal line">—</button>
+          <button class="tt-iconbtn" style="width: 28px; height: 28px; border: 0; font: 700 13px/1 var(--font-sans)" aria-label="Rectangle">▭</button>
+          <button class="tt-iconbtn" style="width: 28px; height: 28px; border: 0; font: 700 13px/1 var(--font-sans)" aria-label="Text">T</button>
+          <button class="tt-iconbtn" style="width: 28px; height: 28px; border: 0" aria-label="ลบ drawing"><span class="i i-sm i-delete-02"></span></button>
+        </div>
+        <div style="flex: 1; overflow: hidden"><dc-import name="Chart" mode="analysis" theme="{{theme}}" hint-size="358px,260px" style="display: block; margin-left: -12px"></dc-import></div>
+      </div>
+    </div>
+
+    <div class="tt-field"><span class="tt-label">HTF bias</span>
+      <div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on" style="color: var(--profit-ink)">Bull</button><button class="tt-seg__item">Bear</button><button class="tt-seg__item">Range</button></div>
+    </div>
+
+    <div class="tt-field"><span class="tt-label">Key levels</span>
+      <div class="list">
+        <div class="row" style="padding: 10px 12px"><i style="width: 12px; height: 3px; background: var(--warning); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,366.00</span><span class="row__s">Support · H4 swing low</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="ลบ"><span class="i i-sm i-cancel-01"></span></button></div>
+        <div class="row" style="padding: 10px 12px"><i style="width: 12px; height: 10px; background: var(--brand-100); border: 1px solid var(--brand-500); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,380 – 4,388</span><span class="row__s">Demand zone · H1</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="ลบ"><span class="i i-sm i-cancel-01"></span></button></div>
+        <div class="row" style="padding: 10px 12px"><i style="width: 12px; height: 3px; background: var(--ink-muted); border-radius: 2px"></i><div class="row__main"><span class="row__t num">4,437.50</span><span class="row__s">Resistance · previous high</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="ลบ"><span class="i i-sm i-cancel-01"></span></button></div>
+      </div>
+      <button class="tt-btn tt-btn--ghost tt-btn--sm" style="align-self: flex-start"><span class="i i-sm i-add-01"></span>เพิ่ม level</button>
+    </div>
+
+    <div class="tt-field"><span class="tt-label">Timeframes ที่ใช้</span><div class="tt-row"><span class="tt-chip">M5</span><span class="tt-chip tt-chip--on">M15</span><span class="tt-chip tt-chip--on">H1</span><span class="tt-chip tt-chip--on">H4</span><span class="tt-chip">D1</span></div></div>
+    <div class="tt-field"><span class="tt-label">Session</span><div class="tt-row"><span class="tt-chip">Asia</span><span class="tt-chip tt-chip--on"><i class="tt-chip__dot"></i>London</span><span class="tt-chip">New York</span></div></div>
+
+    <div class="tt-field"><label class="tt-label" for="nr">Narrative</label>
+      <div style="border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface); overflow: hidden">
+        <div style="display: flex; gap: 2px; padding: 6px; border-bottom: 1px solid var(--border); color: var(--ink-muted); font: 700 13px/1 var(--font-sans)"><button class="tt-iconbtn" style="width: 32px; height: 32px; border: 0; font-weight: 700">B</button><button class="tt-iconbtn" style="width: 32px; height: 32px; border: 0; font-style: italic">I</button><button class="tt-iconbtn" style="width: 32px; height: 32px; border: 0">H2</button><button class="tt-iconbtn" style="width: 32px; height: 32px; border: 0" aria-label="ใส่รูป"><span class="i i-sm i-image-01"></span></button></div>
+        <textarea class="tt-textarea" id="nr" style="border: 0; min-height: 120px">DXY อ่อนตัวหลัง FOMC minutes ทองทำ higher low ที่ 4,366 บน H4 รอ pullback เข้า demand 4,380–4,388 ช่วง London แล้วดู confirm บน M15 ก่อนเข้า Long ถ้าปิด H1 ใต้ 4,366 เปลี่ยนเป็น scenario B (Short)</textarea>
+      </div>
+    </div>
+
+    <div class="tt-field"><span class="tt-label">Confidence</span>
+      <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--fill">5</button><button class="tt-mood__step tt-mood__step--fill">6</button><button class="tt-mood__step tt-mood__step--on">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div>
+    </div>
+  </div>
+  <div class="scr__foot"><button class="tt-btn tt-btn--secondary tt-btn--lg" style="flex: 1">บันทึก</button><a href="PlanForm.dc.html" class="tt-btn tt-btn--primary tt-btn--lg" style="flex: 1.4; text-decoration: none"><span class="i i-target-02"></span>สร้างแผนจากนี้</a></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1450}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

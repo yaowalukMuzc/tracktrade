@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trade review</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.rub{display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}.rub:last-child{border-bottom:0}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="trades" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><a href="WTradeDetail.dc.html" class="crumb"><span class="i i-sm i-arrow-left-01"></span>XAUUSD LONG · 9 ต.ค.</a><h1>รีวิวเทรด <span class="tt-badge tt-badge--warning" style="vertical-align: middle">รอรีวิว</span></h1></div>
+      <button class="tt-btn tt-btn--secondary">บันทึกร่าง</button>
+      <button class="tt-btn tt-btn--primary"><span class="i i-tick-02"></span>ส่งรีวิว</button>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__a">
+          <div class="tt-card tt-stack">
+            <div class="split" style="gap: 16px">
+              <div class="tt-field"><label class="tt-label" for="w1">อะไรทำได้ดี</label><textarea class="tt-textarea" id="w1">รอให้ราคาเข้า zone ตามแผน ไม่ไล่ราคา</textarea></div>
+              <div class="tt-field"><label class="tt-label" for="w2">อะไรผิดพลาด</label><textarea class="tt-textarea" id="w2">ขยับ SL ลงเพราะกลัวโดน stop hunt แล้วปิดก่อน TP1 เพราะใกล้ข่าว</textarea></div>
+            </div>
+            <div class="tt-field"><label class="tt-label" for="w3">บทเรียน</label><textarea class="tt-textarea" id="w3" style="min-height: 72px">ถ้าไม่มั่นใจ SL ให้ลด lot ตั้งแต่ตอนวางแผน ไม่ใช่ขยับ SL ระหว่างเทรด</textarea></div>
+            <div style="display: flex; justify-content: space-between; align-items: center"><span class="body-strong">จะเข้าเทรดนี้อีกไหม (ตาม setup เดิม)?</span><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ใช่</button><button class="tt-seg__item">ไม่</button></div></div>
+          </div>
+          <div class="tt-card">
+            <div class="tt-card__head"><h2 class="tt-card__title">ให้คะแนนตัวเองตาม rubric</h2><span class="caption tt-muted">Execution · Risk · Discipline คำนวณอัตโนมัติ</span></div>
+            <div class="rub"><div><div class="body-strong"><i class="tt-dim-swatch dim-analysis"></i> Analysis</div><div class="caption tt-muted">bias และ key level ชัดเจนไหม</div></div><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25 · อ่อน</button><button class="tt-seg__item">50 · พอใช้</button><button class="tt-seg__item">75 · ดี</button><button class="tt-seg__item tt-seg__item--on">100 · ดีมาก</button></div></div>
+            <div class="rub"><div><div class="body-strong"><i class="tt-dim-swatch dim-planning"></i> Planning</div><div class="caption tt-muted">แผนครบและสมเหตุสมผลไหม</div></div><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25 · อ่อน</button><button class="tt-seg__item">50 · พอใช้</button><button class="tt-seg__item tt-seg__item--on">75 · ดี</button><button class="tt-seg__item">100 · ดีมาก</button></div></div>
+            <div class="rub"><div><div class="body-strong"><i class="tt-dim-swatch dim-emotion"></i> Emotion</div><div class="caption tt-muted">ควบคุมอารมณ์ได้ไหม</div></div><div class="tt-seg tt-seg--block"><button class="tt-seg__item">25 · อ่อน</button><button class="tt-seg__item tt-seg__item--on">50 · พอใช้</button><button class="tt-seg__item">75 · ดี</button><button class="tt-seg__item">100 · ดีมาก</button></div></div>
+          </div>
+          <div class="split">
+            <div class="tt-card tt-stack">
+              <h2 class="h3" style="margin: 0">Mistake tags</h2>
+              <div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">ขยับ SL</span><span class="tt-chip tt-chip--neg tt-chip--on">ปิดก่อน TP</span><span class="tt-chip">เข้าเร็วไป</span><span class="tt-chip">Oversize</span><span class="tt-chip">ไม่ทำ partial</span><span class="tt-chip">เทรดช่วงข่าว</span><span class="tt-chip tt-chip--add"><span class="i i-sm i-add-01"></span>Tag</span></div>
+              <span class="tt-help">ระบบติดให้แล้ว: SL widened, Early exit, Missed partial</span>
+            </div>
+            <div class="tt-card tt-stack">
+              <div class="sec__head"><h2 class="h3" style="margin: 0">อารมณ์หลังเทรด</h2><span class="tt-badge tt-badge--outline">Post-trade</span></div>
+              <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--on">5</button><button class="tt-mood__step">6</button><button class="tt-mood__step">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div>
+              <div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">เสียดาย</span><span class="tt-chip tt-chip--pos">โล่งใจ</span><span class="tt-chip tt-chip--neg">หงุดหงิด</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="split__b" style="max-width: 420px">
+          <div class="chartbox">
+            <div class="chartbar"><span class="body-strong" style="font-size: 14px">กราฟของเทรดนี้</span><span style="flex: 1"></span><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-pencil-edit-02"></span>วาด</button></div>
+            <div style="overflow: hidden"><dc-import name="Chart" mode="actual" cw="{{cw}}" ch="{{ch}}" theme="{{theme}}" hint-size="400px,300px"></dc-import></div>
+          </div>
+          <div class="tt-card">
+            <div class="kv"><span>Net P/L</span><b class="tt-pnl tt-pnl--up">+$517.30 · +0.51R</b></div>
+            <div class="kv"><span>Adherence</span><b>64%</b></div>
+            <div class="kv"><span>Pre-trade mood</span><b>7 · มั่นใจ, FOMO</b></div>
+            <div class="kv"><span>In-trade mood</span><b>4 · กลัว, หวัง</b></div>
+          </div>
+          <div class="tt-card tt-stack">
+            <h2 class="h3" style="margin: 0">ไฟล์แนบ</h2>
+            <div class="grid3">
+              <div style="aspect-ratio: 1; border-radius: var(--radius-md); background: var(--surface-sunken); border: 1px solid var(--border); display: grid; place-items: center; color: var(--ink-subtle)"><span class="i i-image-01"></span></div>
+              <button style="aspect-ratio: 1; border-radius: var(--radius-md); border: 1.5px dashed var(--border-strong); background: var(--surface); display: grid; place-items: center; color: var(--ink-muted)" aria-label="เพิ่มภาพ"><span class="i i-add-01"></span></button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light', cw: 400, ch: 300 };
+  }
+}
+</script>
+</body>
+</html>

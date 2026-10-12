@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Settings and mentorship</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.snav{display:flex;flex-direction:column;gap:2px}.snav a{display:flex;gap:10px;align-items:center;height:40px;padding:0 12px;border-radius:var(--radius-md);color:var(--ink-muted);text-decoration:none;font:500 14px/20px var(--font-sans)}.snav a.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--shadow-sm)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="settings" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar"><div class="topbar__title"><h1>ตั้งค่า</h1></div></header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <nav class="snav split__b" style="flex: 1 1 200px; max-width: 220px; gap: 2px" aria-label="หมวดตั้งค่า">
+          <a href="#profile" class="on"><span class="i i-user"></span>โปรไฟล์</a>
+          <a href="#notify"><span class="i i-notification-01"></span>การแจ้งเตือน</a>
+          <a href="#mentor"><span class="i i-teacher"></span>Mentor</a>
+          <a href="#privacy"><span class="i i-shield-01"></span>ข้อมูล &amp; ความเป็นส่วนตัว</a>
+        </nav>
+        <div class="split__a">
+          <div class="split">
+            <section class="tt-card tt-stack" id="profile">
+              <h2 class="h3" style="margin: 0">โปรไฟล์</h2>
+              <div style="display: flex; gap: 12px; align-items: center"><span class="avatar avatar--lg">NK</span><button class="tt-btn tt-btn--secondary tt-btn--sm">เปลี่ยนรูป</button></div>
+              <div class="tt-field"><label class="tt-label" for="nm">ชื่อที่แสดง</label><input class="tt-input" id="nm" value="Nook Knight"></div>
+              <div class="tt-field"><label class="tt-label" for="em">อีเมล</label><input class="tt-input" id="em" value="nook@email.com"></div>
+              <div class="grid2">
+                <div class="tt-field"><span class="tt-label">ภาษา</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on">ไทย</button><button class="tt-seg__item">EN</button></div></div>
+                <div class="tt-field"><label class="tt-label" for="tz">เขตเวลา</label><select class="tt-select" id="tz"><option>Asia/Bangkok (UTC+7)</option></select></div>
+              </div>
+              <div class="tt-field"><span class="tt-label">ธีม</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">Light</button><button class="tt-seg__item">Dark</button><button class="tt-seg__item tt-seg__item--on">ตามระบบ</button></div></div>
+            </section>
+            <section class="tt-card" id="notify">
+              <h2 class="h3" style="margin: 0 0 4px">การแจ้งเตือน</h2>
+              <div class="row" style="padding: 12px 0"><div class="row__main"><span class="row__t">ผิดกฎ (rule breach)</span><span class="row__s">In-app + Web Push</span></div><button class="toggle toggle--on" aria-label="Rule breach"></button></div>
+              <div class="row" style="padding: 12px 0"><div class="row__main"><span class="row__t">ข่าว High impact</span><span class="row__s">ก่อนข่าว 15 นาที</span></div><button class="toggle toggle--on" aria-label="News"></button></div>
+              <div class="row" style="padding: 12px 0"><div class="row__main"><span class="row__t">In-trade prompt</span><span class="row__s">เมื่อเพิ่ม risk หรือปิดก่อน TP</span></div><button class="toggle toggle--on" aria-label="In-trade prompt"></button></div>
+              <div class="row" style="padding: 12px 0"><div class="row__main"><span class="row__t">รายงาน AI Coach รายสัปดาห์</span></div><button class="toggle toggle--on" aria-label="AI Coach"></button></div>
+              <div class="row" style="padding: 12px 0; border: 0"><div class="row__main"><span class="row__t">คอมเมนต์จาก Mentor</span></div><button class="toggle" aria-label="Mentor comments"></button></div>
+            </section>
+          </div>
+          <section class="tt-card tt-stack" id="mentor">
+            <div class="sec__head"><h2 class="h3" style="margin: 0">Mentor</h2><div style="display: flex; gap: 8px"><input class="tt-input" aria-label="อีเมล mentor" placeholder="อีเมลของ mentor" style="width: 260px"><button class="tt-btn tt-btn--primary"><span class="i i-sent"></span>ส่งคำเชิญ</button></div></div>
+            <p class="body-sm tt-muted" style="margin: 0">Mentor ดูข้อมูลที่คุณแชร์ คอมเมนต์ ให้คะแนน quality และมอบหมายกฎได้ — แต่แก้ analysis / plan / เทรดของคุณไม่ได้ และทุก action ถูกบันทึกใน audit log</p>
+            <div class="tblwrap"><table class="tbl" style="min-width: 640px"><thead><tr><th>Mentor</th><th>สถานะ</th><th>การมองเห็น P/L</th><th>มอบหมายกฎ</th><th>ส่ง alert ผิดกฎ</th><th></th></tr></thead><tbody>
+              <tr><td><div style="display: flex; gap: 10px; align-items: center"><span class="avatar">KB</span><div><b>Kru Bank</b><div class="caption tt-muted">bank@mentor.co · ตั้งแต่ 14 ก.ย.</div></div></div></td><td><span class="tt-badge tt-badge--profit">Active</span></td><td><div class="tt-seg"><button class="tt-seg__item">$</button><button class="tt-seg__item tt-seg__item--on">R only</button></div></td><td><button class="toggle toggle--on" aria-label="Assign rules"></button></td><td><button class="toggle toggle--on" aria-label="Forward alerts"></button></td><td class="r"><button class="tt-btn tt-btn--ghost tt-btn--sm" style="color: var(--loss-ink)">ยกเลิกสิทธิ์</button></td></tr>
+              <tr><td><div style="display: flex; gap: 10px; align-items: center"><span class="avatar" style="background: var(--surface-sunken); color: var(--ink-muted)">PT</span><div><b>pim@trading.co</b><div class="caption tt-muted">ส่งคำเชิญ 7 ต.ค.</div></div></div></td><td><span class="tt-badge tt-badge--warning">Pending</span></td><td>—</td><td>—</td><td>—</td><td class="r"><button class="tt-btn tt-btn--ghost tt-btn--sm">ส่งอีกครั้ง</button></td></tr>
+            </tbody></table></div>
+            <div class="tt-card" style="box-shadow: none; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--warning-100); border-color: transparent"><span class="i i-shield-01" style="color: var(--warning-ink)"></span><div class="row__main" style="min-width: 240px"><span class="row__t">กฎใหม่จาก Kru Bank: Max 3 ไม้ในวันพุธ</span><span class="row__s">"ลองสัก 2 สัปดาห์ แล้วดูผล"</span></div><button class="tt-btn tt-btn--secondary tt-btn--sm">ปฏิเสธ</button><button class="tt-btn tt-btn--primary tt-btn--sm">ยอมรับกฎ</button></div>
+          </section>
+          <section class="tt-card tt-stack" id="privacy">
+            <h2 class="h3" style="margin: 0">ข้อมูล &amp; ความเป็นส่วนตัว</h2>
+            <div class="row" style="padding: 10px 0"><span class="row__ic"><span class="i i-download-04"></span></span><div class="row__main"><span class="row__t">Export ข้อมูลทั้งหมด</span><span class="row__s">CSV + JSON · ส่งลิงก์ทางอีเมล</span></div><button class="tt-btn tt-btn--secondary tt-btn--sm">Export</button></div>
+            <div class="row" style="padding: 10px 0"><span class="row__ic"><span class="i i-lock-password"></span></span><div class="row__main"><span class="row__t">รหัสผ่าน &amp; อุปกรณ์ที่เข้าสู่ระบบ</span><span class="row__s">2 อุปกรณ์</span></div><button class="tt-btn tt-btn--secondary tt-btn--sm">จัดการ</button></div>
+            <div class="row" style="padding: 10px 0; border: 0"><span class="row__ic row__ic--loss"><span class="i i-delete-02"></span></span><div class="row__main"><span class="row__t" style="color: var(--loss-ink)">ลบบัญชีและข้อมูลทั้งหมด</span><span class="row__s">ถาวร ไม่สามารถกู้คืนได้</span></div><button class="tt-btn tt-btn--danger tt-btn--sm">ลบบัญชี</button></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1050}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

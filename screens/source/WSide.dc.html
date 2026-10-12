@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Web sidebar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<nav aria-label="เมนูหลัก" style="width: 240px; min-height: 900px; box-sizing: border-box; background: var(--surface); border-right: 1px solid var(--border); padding: 20px 12px; display: flex; flex-direction: column; gap: 2px; font-family: var(--font-sans)">
+  <div style="padding: 4px 12px 12px"><span class="tt-wordmark" style="font-size: 20px">Track<b>Trade</b></span></div>
+  <button class="tt-chip" style="margin: 0 4px 12px; justify-content: space-between; height: 40px; border-radius: var(--radius-md)"><span style="display: flex; gap: 6px; align-items: center"><span class="i i-sm i-wallet-01"></span>{{account}}</span><span class="i i-sm i-arrow-down-01"></span></button>
+  <sc-for list="{{main}}" as="it" hint-placeholder-count="4">
+    <a href="{{it.href}}" class="{{it.cls}}"><span class="{{it.icon}}"></span><span style="flex: 1">{{it.label}}</span><sc-if value="{{it.badge}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--warning">{{it.badge}}</span></sc-if></a>
+  </sc-for>
+  <span class="side__group">เครื่องมือ</span>
+  <sc-for list="{{tools}}" as="it" hint-placeholder-count="4">
+    <a href="{{it.href}}" class="{{it.cls}}"><span class="{{it.icon}}"></span><span style="flex: 1">{{it.label}}</span><sc-if value="{{it.badge}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--loss">{{it.badge}}</span></sc-if></a>
+  </sc-for>
+  <span class="side__group">บัญชี</span>
+  <sc-for list="{{acct}}" as="it" hint-placeholder-count="3">
+    <a href="{{it.href}}" class="{{it.cls}}"><span class="{{it.icon}}"></span><span style="flex: 1">{{it.label}}</span></a>
+  </sc-for>
+  <div style="margin-top: auto; padding: 12px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border)"><span class="avatar">{{ini}}</span><div class="row__main"><span class="row__t">{{user}}</span><span class="row__s">{{role}}</span></div><a href="WLogin.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ออกจากระบบ"><span class="i i-logout-01"></span></a></div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["today","calendar","trades","stats","diagnosis","playbook","alerts","accounts","settings","mentor"],"default":"today"},"mode":{"editor":"enum","options":["trader","mentor"],"default":"trader"},"$preview":{"width":240,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const a = this.props.active ?? 'today';
+    const mentor = (this.props.mode ?? 'trader') === 'mentor';
+    const mk = (d) => ({ ...d, badge: d.badge || '', icon: 'i i-' + d.icon, cls: 'side__item' + (d.id === a ? ' side__item--on' : '') });
+    const main = mentor ? [
+      { id: 'mentor', label: 'Trader ของฉัน', icon: 'user-group', href: 'WMentor.dc.html' },
+      { id: 'trades', label: 'คิวรีวิว', icon: 'note-edit', href: 'WMentorTrade.dc.html', badge: '7' },
+      { id: 'alerts', label: 'Alert ผิดกฎ', icon: 'alert-02', href: 'WAlerts.dc.html' }
+    ] : [
+      { id: 'today', label: 'วันนี้', icon: 'home-01', href: 'WToday.dc.html' },
+      { id: 'calendar', label: 'ปฏิทิน', icon: 'calendar-03', href: 'WCalendar.dc.html' },
+      { id: 'trades', label: 'เทรด', icon: 'chart-candlestick', href: 'WTrades.dc.html', badge: '5' },
+      { id: 'stats', label: 'สถิติ', icon: 'analytics-01', href: 'DesktopDashboard.dc.html' }
+    ];
+    const tools = mentor ? [] : [
+      { id: 'diagnosis', label: 'Diagnosis & AI Coach', icon: 'ai-magic', href: 'WDiagnosis.dc.html' },
+      { id: 'playbook', label: 'Playbook', icon: 'book-02', href: 'WPlaybook.dc.html' },
+      { id: 'alerts', label: 'แจ้งเตือน & ข่าว', icon: 'notification-01', href: 'WAlerts.dc.html', badge: '2' }
+    ];
+    const acct = mentor ? [
+      { id: 'settings', label: 'ตั้งค่า', icon: 'settings-02', href: 'WSettings.dc.html' }
+    ] : [
+      { id: 'accounts', label: 'บัญชี & การเชื่อมต่อ', icon: 'wallet-01', href: 'WAccounts.dc.html' },
+      { id: 'settings', label: 'ตั้งค่า & Mentor', icon: 'settings-02', href: 'WSettings.dc.html' }
+    ];
+    return {
+      main: main.map(mk), tools: tools.map(mk), acct: acct.map(mk),
+      account: mentor ? 'Mentor workspace' : 'FTMO 100K',
+      ini: mentor ? 'KB' : 'NK', user: mentor ? 'Kru Bank' : 'Nook Knight', role: mentor ? 'Mentor · 4 traders' : 'Trader · Free'
+    };
+  }
+}
+</script>
+</body>
+</html>

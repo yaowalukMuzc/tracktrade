@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chart — plan vs actual</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.cu{fill:var(--chart-up)} .cd{fill:var(--chart-down)}
+.wu{stroke:var(--chart-up);stroke-width:1} .wd{stroke:var(--chart-down);stroke-width:1}
+.grid{stroke:var(--chart-grid);stroke-width:1}
+.plan{stroke:var(--chart-plan);stroke-width:1.5;stroke-dasharray:5 4}
+.sl{stroke:var(--loss);stroke-width:1.5;stroke-dasharray:5 4}
+.tp{stroke:var(--profit);stroke-width:1.5;stroke-dasharray:5 4}
+.slmoved{stroke:var(--loss);stroke-width:2;fill:none}
+.zone{fill:var(--brand-500);fill-opacity:.12;stroke:var(--brand-500);stroke-width:1}
+.lvl{stroke:var(--warning);stroke-width:1.5}
+.ax{fill:var(--ink-subtle);font:500 10px Inter,sans-serif}
+.tag{font:600 10px Inter,sans-serif}
+.tagbg-p{fill:var(--chart-plan)} .tagbg-sl{fill:var(--loss)} .tagbg-tp{fill:var(--profit)}
+.tagt{fill:#FFFFFF}
+.fill{fill:var(--surface);stroke:var(--chart-actual);stroke-width:2}
+.exit{fill:var(--chart-actual)}
+.trend{stroke:var(--ink-muted);stroke-width:1.5}
+</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: {{W}}px; height: {{H}}px; background: var(--surface); font-family: var(--font-sans)">
+<svg width="{{W}}" height="{{H}}" viewBox="0 0 {{W}} {{H}}" role="img" aria-label="{{label}}">
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="5">
+    <line class="grid" x1="0" x2="{{PW}}" y1="{{g.y}}" y2="{{g.y}}"></line>
+    <text class="ax" x="{{AX}}" y="{{g.ty}}">{{g.p}}</text>
+  </sc-for>
+  <sc-if value="{{showZone}}" hint-placeholder-val="{{false}}">
+    <rect class="zone" x="{{zoneX}}" y="{{zoneY}}" width="{{zoneW}}" height="{{zoneH}}" rx="2"></rect>
+    <line class="lvl" x1="0" x2="{{PW}}" y1="{{lvlY}}" y2="{{lvlY}}"></line>
+    <line class="trend" x1="{{trX1}}" y1="{{trY1}}" x2="{{trX2}}" y2="{{trY2}}"></line>
+  </sc-if>
+  <sc-for list="{{candles}}" as="c" hint-placeholder-count="40">
+    <line class="{{c.wc}}" x1="{{c.cx}}" x2="{{c.cx}}" y1="{{c.hy}}" y2="{{c.ly}}"></line>
+    <rect class="{{c.bc}}" x="{{c.x}}" y="{{c.y}}" width="{{cw}}" height="{{c.h}}" rx="0.5"></rect>
+  </sc-for>
+  <sc-if value="{{showPlan}}" hint-placeholder-val="{{false}}">
+    <line class="tp" x1="{{ex}}" x2="{{PW}}" y1="{{tpY}}" y2="{{tpY}}"></line>
+    <line class="plan" x1="{{ex}}" x2="{{PW}}" y1="{{enY}}" y2="{{enY}}"></line>
+    <line class="sl" x1="{{ex}}" x2="{{PW}}" y1="{{slY}}" y2="{{slY}}"></line>
+    <rect class="tagbg-tp" x="{{TX}}" y="{{tpTag}}" width="54" height="16" rx="3"></rect><text class="tag tagt" x="{{AX}}" y="{{tpTxt}}">TP {{tpP}}</text>
+    <rect class="tagbg-p" x="{{TX}}" y="{{enTag}}" width="54" height="16" rx="3"></rect><text class="tag tagt" x="{{AX}}" y="{{enTxt}}">EN {{enP}}</text>
+    <rect class="tagbg-sl" x="{{TX}}" y="{{slTag}}" width="54" height="16" rx="3"></rect><text class="tag tagt" x="{{AX}}" y="{{slTxt}}">SL {{slP}}</text>
+  </sc-if>
+  <sc-if value="{{showActual}}" hint-placeholder-val="{{false}}">
+    <polyline class="slmoved" points="{{slPath}}"></polyline>
+    <circle class="fill" cx="{{fx}}" cy="{{fy}}" r="4"></circle>
+    <rect class="exit" x="{{xx}}" y="{{xy}}" width="8" height="8" rx="1"></rect>
+  </sc-if>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["actual","plan","analysis","plain"],"default":"actual"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"cw":{"editor":"int","default":358},"ch":{"editor":"int","default":260},"$preview":{"width":358,"height":260}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.mode ?? 'actual';
+    let s = 7;
+    const rnd = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+    const N = 48, data = [];
+    let p = 4372;
+    for (let i = 0; i < N; i++) {
+      const drift = i < 16 ? -1.1 : (i < 40 ? 1.6 : -0.4);
+      const o = p, c = p + drift + (rnd() - 0.5) * 6;
+      const h = Math.max(o, c) + rnd() * 2.6, l = Math.min(o, c) - rnd() * 2.6;
+      data.push({ o, c, h, l }); p = c;
+    }
+    const ei = 18, entry = Math.round(data[ei].c * 100) / 100;
+    const sl = Math.round((entry - 9.4) * 100) / 100, tp = Math.round((entry + 24.6) * 100) / 100;
+    let mn = Math.min(sl - 2, ...data.map(d => d.l)), mx = Math.max(tp + 2, ...data.map(d => d.h));
+    const Wd = this.props.cw ?? 358, Ht = this.props.ch ?? 260, PW = Wd - 58, step6 = PW / N, cw = Math.max(3, step6 * 0.66);
+    const top = 10, H = Ht - 24;
+    const Y = (v) => Math.round((top + (mx - v) / (mx - mn) * H) * 10) / 10;
+    const candles = data.map((d, i) => {
+      const up = d.c >= d.o, x = 2 + i * step6;
+      const y1 = Y(Math.max(d.o, d.c)), y2 = Y(Math.min(d.o, d.c));
+      return { x, cx: x + cw / 2, y: y1, h: Math.max(1, y2 - y1), hy: Y(d.h), ly: Y(d.l), bc: up ? 'cu' : 'cd', wc: up ? 'wu' : 'wd' };
+    });
+    const grid = [];
+    const step = 10, g0 = Math.ceil(mn / step) * step;
+    for (let v = g0; v <= mx; v += step) grid.push({ y: Y(v), ty: Y(v) + 3, p: v.toLocaleString('en-US') });
+    const fmt = (v) => v.toFixed(1);
+    const ex = 2 + ei * step6, xi = 36, xp = data[xi].c, xs = (i) => 2 + i * step6;
+    const slMovedTo = sl - 4;
+    return {
+      theme: this.props.theme ?? 'light',
+      label: 'XAUUSD M15 chart',
+      candles, grid, ex,
+      showPlan: mode === 'plan' || mode === 'actual',
+      showActual: mode === 'actual',
+      showZone: mode === 'analysis',
+      tpY: Y(tp), enY: Y(entry), slY: Y(sl),
+      tpTag: Y(tp) - 8, tpTxt: Y(tp) + 4, enTag: Y(entry) - 8, enTxt: Y(entry) + 4, slTag: Y(sl) - 8, slTxt: Y(sl) + 4,
+      tpP: fmt(tp), enP: fmt(entry), slP: fmt(sl),
+      fx: ex + cw / 2, fy: Y(entry + 0.4),
+      xx: xs(xi) - 2, xy: Y(xp) - 4,
+      slPath: [ex + cw / 2, Y(sl), xs(24), Y(sl), xs(24), Y(slMovedTo), xs(xi), Y(slMovedTo)].join(' '),
+      zoneY: Y(data[14].h + 1), zoneH: Y(data[16].l - 2) - Y(data[14].h + 1),
+      lvlY: Y(data[8].h), trY1: Y(data[2].h), trY2: Y(data[34].h + 4),
+      W: Wd, H: Ht, PW, AX: PW + 6, TX: PW + 2, cw, zoneX: PW * 0.13, zoneW: PW * 0.87, trX1: PW * 0.07, trX2: PW * 0.77
+    };
+  }
+}
+</script>
+</body>
+</html>

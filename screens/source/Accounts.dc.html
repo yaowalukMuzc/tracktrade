@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Accounts and risk profile</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1350px">
+  <div class="tt-appbar"><a href="More.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">บัญชีเทรด</h1><button class="tt-btn tt-btn--primary tt-btn--sm"><span class="i i-sm i-add-01"></span>บัญชี</button></div>
+  <div class="scr__body">
+    <div class="list">
+      <div class="row" style="background: var(--brand-50)"><span class="row__ic row__ic--gold"><span class="i i-wallet-01"></span></span><div class="row__main"><span class="row__t">FTMO 100K Challenge</span><span class="row__s">Prop · MT5 · #5120934</span></div><div style="text-align: right"><div class="num">$101,240</div><span class="tt-badge tt-badge--profit">Synced</span></div></div>
+      <div class="row"><span class="row__ic row__ic--brand"><span class="i i-wallet-01"></span></span><div class="row__main"><span class="row__t">IC Markets Live</span><span class="row__s">Live · cTrader · #8830211</span></div><div style="text-align: right"><div class="num">$8,412</div><span class="tt-badge tt-badge--loss">Error</span></div></div>
+      <div class="row"><span class="row__ic"><span class="i i-wallet-01"></span></span><div class="row__main"><span class="row__t">Demo Practice</span><span class="row__s">Demo · Manual</span></div><div style="text-align: right"><div class="num">$10,517</div><span class="tt-badge">Manual</span></div></div>
+    </div>
+
+    <div class="sec__head"><h2 class="sec__title">Risk Profile · FTMO 100K</h2><span class="caption tt-muted">แก้ล่าสุด 2 ต.ค.</span></div>
+    <div class="tt-card tt-stack">
+      <div class="tt-meter"><div class="tt-meter__top">Daily loss วันนี้<b>$0 / $3,000</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 1%"></div></div></div>
+      <div class="tt-meter"><div class="tt-meter__top">Drawdown จาก peak<b>1.6% / 10%</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 16%"></div></div></div>
+      <div class="tt-meter"><div class="tt-meter__top">เทรดวันนี้<b>2 / 5</b></div><div class="tt-meter__track"><div class="tt-meter__fill" style="width: 40%"></div></div></div>
+    </div>
+    <div class="tt-card">
+      <div class="kv"><span>Risk ต่อเทรด</span><b>1.0%</b></div>
+      <div class="kv"><span>Max daily loss</span><b>3.0%</b></div>
+      <div class="kv"><span>Max drawdown</span><b>10.0%</b></div>
+      <div class="kv"><span>Max trades / วัน</span><b>5</b></div>
+      <div class="kv"><span>Revenge cooldown</span><b>30 นาที</b></div>
+      <div class="kv"><span>News blackout</span><b>±15 นาที</b></div>
+      <button class="tt-btn tt-btn--secondary tt-btn--block" style="margin-top: 8px"><span class="i i-edit-02"></span>แก้ Risk Profile</button>
+      <p class="tt-help" style="margin: 8px 0 0">การแก้ไขถูกบันทึกใน audit log · เทรดเก่าใช้ค่า ณ เวลาที่เทรด</p>
+    </div>
+
+    <div class="sec">
+      <div class="sec__head"><h2 class="sec__title">กฎเพิ่มเติม</h2><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-add-01"></span>กฎ</button></div>
+      <div class="list">
+        <div class="row"><span class="row__ic row__ic--loss"><span class="i i-shield-01"></span></span><div class="row__main"><span class="row__t">ห้ามเทรดศุกร์หลัง 20:00</span><span class="row__s">โดย Mentor · Kru Bank · severity สูง</span></div><button class="toggle toggle--on" aria-label="เปิดใช้"></button></div>
+        <div class="row"><span class="row__ic row__ic--warn"><span class="i i-shield-01"></span></span><div class="row__main"><span class="row__t">Lot ไม่เกิน 1.2× planned</span><span class="row__s">โดยคุณ · severity กลาง</span></div><button class="toggle toggle--on" aria-label="เปิดใช้"></button></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">Symbol mapping</h2>
+      <div class="list">
+        <div class="row"><span class="row__t" style="flex: 1">XAUUSD.m</span><span class="i i-sm i-arrow-right-01" style="color: var(--ink-subtle)"></span><span class="row__t" style="flex: 1; text-align: right">XAUUSD · 100 oz</span></div>
+        <div class="row"><span class="row__t" style="flex: 1">EURUSD.m</span><span class="i i-sm i-arrow-right-01" style="color: var(--ink-subtle)"></span><span class="row__t" style="flex: 1; text-align: right">EURUSD · 100k</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1350}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

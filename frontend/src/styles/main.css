@@ -1,0 +1,129 @@
+/* Tokens (design-system/tokens.css) are imported once in src/main.ts. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { color-scheme: light; }
+  [data-theme='dark'] { color-scheme: dark; }
+  body {
+    @apply bg-bg font-sans text-body text-ink antialiased;
+    /* Thai upper vowels and tone marks need ≥1.5 line-height (README › Typography). */
+    line-height: 1.6;
+    font-feature-settings: 'cv11', 'ss01';
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+}
+
+/* Ported from design-system/components.css + screens/source/screens.css (shell subset).
+   Base components (Field, Tabs, Card, PnL …) get ported in UI step 2. */
+@layer components {
+  .tt-wordmark { font: 700 18px/1 var(--font-sans); letter-spacing: -0.02em; color: var(--ink); }
+  .tt-wordmark b { color: var(--brand-700); font-weight: 700; }
+
+  .tt-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+    height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-md);
+    font: 600 15px/1 var(--font-sans); border: 1px solid transparent; cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s; white-space: nowrap; text-decoration: none;
+  }
+  .tt-btn--sm { height: 36px; padding: 0 var(--space-3); font-size: 13px; }
+  .tt-btn--primary { background: var(--brand-600); color: var(--on-brand); }
+  .tt-btn--primary:hover { background: var(--brand-hover); }
+  .tt-btn--secondary { background: var(--surface); color: var(--ink); border-color: var(--border-strong); }
+  .tt-btn--secondary:hover { background: var(--surface-sunken); }
+  .tt-btn--ghost { background: transparent; color: var(--brand-700); }
+  .tt-btn--ghost:hover { background: var(--brand-100); }
+
+  .tt-iconbtn {
+    position: relative; display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
+    border-radius: var(--radius-md); background: var(--surface); border: 1px solid var(--border);
+    color: var(--ink); cursor: pointer; transition: background-color 0.15s;
+  }
+  .tt-iconbtn:hover { background: var(--surface-sunken); }
+  .tt-iconbtn--bare { border-color: transparent; }
+
+  .tt-chip {
+    display: inline-flex; align-items: center; gap: var(--space-1); height: 32px; padding: 0 var(--space-3);
+    border-radius: var(--radius-full); border: 1px solid var(--border); background: var(--surface);
+    font: 500 13px/1 var(--font-sans); color: var(--ink-muted); cursor: pointer; white-space: nowrap;
+  }
+
+  .tt-badge {
+    display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: var(--radius-sm);
+    font: 600 12px/1 var(--font-sans); white-space: nowrap; background: var(--surface-sunken); color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .tt-badge--brand { background: var(--brand-100); color: var(--brand-700); }
+  .tt-badge--loss { background: var(--loss-100); color: var(--loss-ink); }
+  .tt-badge--warning { background: var(--warning-100); color: var(--warning-ink); }
+
+  .tt-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--radius-md); background: var(--surface-sunken); }
+  .tt-seg__item {
+    border: 0; background: transparent; height: 32px; padding: 0 var(--space-3); border-radius: 8px;
+    font: 500 13px/1 var(--font-sans); color: var(--ink-muted); cursor: pointer;
+  }
+  .tt-seg__item--on { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+  .tt-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4); }
+  @screen md { .tt-card { padding: var(--space-5); } }
+
+  /* App bar + bottom nav (mobile < 1024px) */
+  .tt-appbar {
+    display: flex; align-items: center; gap: var(--space-2); height: 56px; padding: 0 var(--space-4);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .tt-nav {
+    display: grid; grid-template-columns: repeat(5, 1fr); height: calc(64px + env(safe-area-inset-bottom));
+    background: var(--surface); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tt-nav__item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    font: 500 11px/14px var(--font-sans); color: var(--ink-subtle); text-decoration: none; position: relative;
+  }
+  .tt-nav__item--on { color: var(--brand-700); font-weight: 600; }
+  .tt-nav__item--on::before {
+    content: ''; position: absolute; top: 0; width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: var(--brand-700);
+  }
+  .tt-nav__dot {
+    position: absolute; top: 8px; margin-left: 18px; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--loss); border: 2px solid var(--surface);
+  }
+
+  /* Sidebar (≥ 1024px) — screens/source/WSide.dc.html */
+  .tt-side__item {
+    display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: var(--radius-md);
+    font: 500 14px/20px var(--font-sans); color: var(--ink-muted); text-decoration: none;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .tt-side__item:hover { background: var(--brand-50); color: var(--ink); }
+  .tt-side__item--on, .tt-side__item--on:hover { background: var(--brand-100); color: var(--brand-700); font-weight: 600; }
+  .tt-side__group {
+    font: 600 11px/16px var(--font-sans); letter-spacing: 0.06em; color: var(--ink-subtle);
+    padding: 16px 12px 4px; text-transform: uppercase;
+  }
+  .tt-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--brand-100); color: var(--brand-700);
+    display: grid; place-items: center; font: 600 14px/1 var(--font-sans); flex: none;
+  }
+
+  /* Menu popover (account switcher) */
+  .tt-menu {
+    position: absolute; z-index: 40; min-width: 100%; padding: 4px; border-radius: var(--radius-md);
+    background: var(--surface-raised); border: 1px solid var(--border); box-shadow: var(--shadow-md);
+  }
+  .tt-menu__item {
+    display: flex; width: 100%; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 0;
+    border-radius: 8px; background: transparent; font: 500 14px/20px var(--font-sans); color: var(--ink);
+    cursor: pointer; text-align: left;
+  }
+  .tt-menu__item:hover { background: var(--surface-sunken); }
+  .tt-menu__item--on { background: var(--brand-100); color: var(--brand-700); font-weight: 600; }
+}

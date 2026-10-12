@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Economic calendar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.imp{display:inline-flex;gap:2px}.imp i{width:4px;height:12px;border-radius:2px;background:var(--border)}.imp--h i{background:var(--loss)}.imp--m i:nth-child(-n+2){background:var(--warning)}.imp--l i:first-child{background:var(--ink-subtle)}.ev{display:grid;grid-template-columns:48px 1fr auto;gap:4px 12px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:start}.ev:last-child{border-bottom:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1100px">
+  <div class="tt-appbar"><a href="More.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">ปฏิทินข่าว</h1><button class="tt-iconbtn" style="border: 0" aria-label="ตั้งค่าแจ้งเตือน"><span class="i i-settings-02"></span></button></div>
+  <div class="scr__body">
+    <div class="tt-row"><span class="tt-chip tt-chip--on">High</span><span class="tt-chip tt-chip--on">Medium</span><span class="tt-chip">Low</span><span class="tt-chip tt-chip--on">USD · EUR · XAU</span></div>
+    <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-notification-01"></span><div><span class="tt-alert__body">แจ้งเตือนก่อนข่าว High 15 นาที · แสดงเฉพาะสกุลเงินของ symbol ที่คุณเทรด</span></div></div>
+    <div class="ov">พฤหัส 9 ต.ค. · วันนี้</div>
+    <div class="list">
+      <div class="ev"><span class="num-sm">15:00</span><div><div class="row__t">EUR · ECB Monetary Policy Accounts</div><div class="row__s">Previous —</div></div><span class="imp imp--m"><i></i><i></i><i></i></span></div>
+      <div class="ev" style="background: var(--loss-100)"><span class="num-sm">19:30</span><div><div class="row__t">USD · CPI m/m</div><div class="row__s">Forecast 0.3% · Previous 0.4%</div><span class="tt-badge tt-badge--loss" style="margin-top: 4px">Blackout 19:15–19:45</span></div><span class="imp imp--h"><i></i><i></i><i></i></span></div>
+      <div class="ev"><span class="num-sm">19:30</span><div><div class="row__t">USD · Unemployment Claims</div><div class="row__s">Forecast 228K · Previous 231K</div></div><span class="imp imp--m"><i></i><i></i><i></i></span></div>
+    </div>
+    <div class="ov">ศุกร์ 10 ต.ค.</div>
+    <div class="list">
+      <div class="ev"><span class="num-sm">13:00</span><div><div class="row__t">EUR · German Trade Balance</div><div class="row__s">Forecast 17.1B</div></div><span class="imp imp--l"><i></i><i></i><i></i></span></div>
+      <div class="ev"><span class="num-sm">21:00</span><div><div class="row__t">USD · Prelim UoM Consumer Sentiment</div><div class="row__s">Forecast 55.4</div></div><span class="imp imp--m"><i></i><i></i><i></i></span></div>
+      <div class="ev"><span class="num-sm">21:00</span><div><div class="row__t">USD · Prelim UoM Inflation Expectations</div><div class="row__s">Previous 4.7%</div></div><span class="imp imp--h"><i></i><i></i><i></i></span></div>
+    </div>
+    <div class="legend"><span><span class="imp imp--h"><i></i><i></i><i></i></span> High</span><span><span class="imp imp--m"><i></i><i></i><i></i></span> Medium</span><span><span class="imp imp--l"><i></i><i></i><i></i></span> Low</span><span>ตัวเลขตัวอย่าง [ข้อมูลจาก provider]</span></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

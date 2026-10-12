@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trade plan — draft</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1900px">
+  <div class="tt-appbar"><a href="Analysis.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">แผน A · XAUUSD</h1><span class="tt-badge">Draft</span></div>
+  <div class="scr__body">
+    <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-chart-line-data-01"></span><div><span class="tt-alert__title">จาก Analysis 9 ต.ค. · H4 Bull</span><span class="tt-alert__body">Demand 4,380–4,388 · Support 4,366</span></div></div>
+
+    <div class="tt-card tt-stack">
+      <h2 class="h3" style="margin: 0">Setup &amp; Direction</h2>
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="su">Setup <span class="tt-req">*</span></label><select class="tt-select" id="su"><option>London Breakout</option></select></div>
+        <div class="tt-field"><span class="tt-label">Scenario</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item tt-seg__item--on">A</button><button class="tt-seg__item">B</button><button class="tt-seg__item">C</button></div></div>
+      </div>
+      <div class="dirtoggle"><button class="dirbtn dirbtn--long"><span class="i i-arrow-up-right-01"></span>LONG</button><button class="dirbtn"><span class="i i-arrow-down-right-01"></span>SHORT</button></div>
+      <div class="tt-field"><span class="tt-label">Entry type</span><div class="tt-seg tt-seg--block"><button class="tt-seg__item">Market</button><button class="tt-seg__item tt-seg__item--on">Limit</button><button class="tt-seg__item">Stop</button></div></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <h2 class="h3" style="margin: 0">ราคา</h2>
+      <div class="grid2">
+        <div class="tt-field"><label class="tt-label" for="en">Entry <span class="tt-req">*</span></label><input class="tt-input tt-input--num" id="en" value="4,387.52"></div>
+        <div class="tt-field"><label class="tt-label" for="sl">Stop loss <span class="tt-req">*</span></label><input class="tt-input tt-input--num" id="sl" value="4,366.78"></div>
+      </div>
+      <div class="tt-field"><span class="tt-label">Take profit <span class="tt-req">*</span></span>
+        <div style="display: grid; grid-template-columns: 1fr 88px 32px; gap: 8px; align-items: center"><input class="tt-input tt-input--num" aria-label="TP1 price" value="4,418.00"><div class="tt-input-wrap"><input class="tt-input tt-input--num" aria-label="TP1 percent" value="50" style="padding-right: 28px"><span class="tt-suffix">%</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="ลบ TP1"><span class="i i-sm i-cancel-01"></span></button></div>
+        <div style="display: grid; grid-template-columns: 1fr 88px 32px; gap: 8px; align-items: center"><input class="tt-input tt-input--num" aria-label="TP2 price" value="4,437.51"><div class="tt-input-wrap"><input class="tt-input tt-input--num" aria-label="TP2 percent" value="50" style="padding-right: 28px"><span class="tt-suffix">%</span></div><button class="tt-iconbtn" style="border: 0; width: 32px; height: 32px" aria-label="ลบ TP2"><span class="i i-sm i-cancel-01"></span></button></div>
+        <button class="tt-btn tt-btn--ghost tt-btn--sm" style="align-self: flex-start"><span class="i i-sm i-add-01"></span>เพิ่ม TP</button>
+      </div>
+      <div class="tt-field"><label class="tt-label" for="inv">Invalidation</label><input class="tt-input" id="inv" value="ปิด H1 ต่ำกว่า 4,366"></div>
+      <div class="tt-field"><label class="tt-label" for="vu">Valid until</label><input class="tt-input" id="vu" value="วันนี้ 22:00"></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">Risk</h2><span class="caption tt-muted">FTMO 100K · Balance $101,240</span></div>
+      <div class="tt-field"><label class="tt-label" for="rk">Risk ต่อเทรด <span class="tt-req">*</span></label><div class="tt-input-wrap"><input class="tt-input tt-input--num" id="rk" value="1.0"><span class="tt-suffix">%</span></div></div>
+      <div class="calc"><div><span>Risk amount</span><b>$1,012</b></div><div><span>Planned lot</span><b>0.48</b></div><div><span>R:R (avg)</span><b>1.95</b></div></div>
+      <span class="tt-help">คำนวณจาก contract size 100 · tick value $1.00 (XAUUSD.m)</span>
+      <div class="tt-field"><span class="tt-label">Management plan</span>
+        <div class="list">
+          <div class="row" style="padding: 10px 12px"><div class="row__main"><span class="row__t">Partial 50% ที่ TP1</span></div><button class="toggle toggle--on" aria-label="Partial"></button></div>
+          <div class="row" style="padding: 10px 12px"><div class="row__main"><span class="row__t">ย้าย SL ไป BE เมื่อถึง +1R</span></div><button class="toggle toggle--on" aria-label="Break-even"></button></div>
+          <div class="row" style="padding: 10px 12px"><div class="row__main"><span class="row__t">Trailing stop</span><span class="row__s">ตาม swing low M15</span></div><button class="toggle" aria-label="Trailing"></button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tt-card" style="padding-bottom: 4px">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">Checklist · London Breakout</h2><span class="tt-badge tt-badge--warning">2 / 3</span></div>
+      <div class="tt-check tt-check--done"><span class="tt-check__box"><span class="i i-sm i-tick-02"></span></span><span class="tt-check__text">H4 bias ตรงทิศทาง <span class="tt-badge">จำเป็น</span></span></div>
+      <div class="tt-check tt-check--done"><span class="tt-check__box"><span class="i i-sm i-tick-02"></span></span><span class="tt-check__text">ราคาอยู่ใน demand / supply zone</span></div>
+      <div class="tt-check tt-check--missing"><span class="tt-check__box"></span><span class="tt-check__text">มีแท่ง confirm บน M15 <span class="tt-badge tt-badge--loss">จำเป็น</span></span></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div class="sec__head"><h2 class="h3" style="margin: 0">อารมณ์ก่อนเทรด</h2><span class="tt-badge tt-badge--outline">Pre-trade</span></div>
+      <div class="tt-mood"><span class="tt-label">Mood</span>
+        <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--fill">5</button><button class="tt-mood__step tt-mood__step--fill">6</button><button class="tt-mood__step tt-mood__step--on">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div></div>
+      <div class="tt-mood"><span class="tt-label">Confidence</span>
+        <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--fill">4</button><button class="tt-mood__step tt-mood__step--fill">5</button><button class="tt-mood__step tt-mood__step--on">6</button><button class="tt-mood__step">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div></div>
+      <div class="tt-row"><span class="tt-chip tt-chip--pos tt-chip--on">มั่นใจ</span><span class="tt-chip tt-chip--pos">อดทน</span><span class="tt-chip tt-chip--neg tt-chip--on">FOMO</span><span class="tt-chip tt-chip--neg">อยากเอาคืน</span><span class="tt-chip tt-chip--add"><span class="i i-sm i-add-01"></span>Tag</span></div>
+    </div>
+  </div>
+  <div class="scr__foot" style="flex-direction: column; gap: 6px">
+    <span class="tt-help tt-help--error" style="text-align: center">ติ๊ก checklist ข้อจำเป็นให้ครบก่อนล็อกแผน</span>
+    <div style="display: flex; gap: 8px"><button class="tt-btn tt-btn--secondary tt-btn--lg" style="flex: 1">บันทึกร่าง</button><button class="tt-btn tt-btn--lg" disabled style="flex: 1.5"><span class="i i-square-lock-02"></span>ล็อกแผน (2/3)</button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

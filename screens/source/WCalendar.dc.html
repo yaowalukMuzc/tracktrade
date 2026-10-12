@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trading calendar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.cal .tt-day{min-height:104px;padding:8px 10px;font-size:12px;line-height:18px;cursor:pointer;text-align:left;border-radius:var(--radius-md)}.cal .tt-day__pnl{font-size:15px;line-height:22px}.cal .tt-day__n{font-size:13px}.tt-day--sel{box-shadow:0 0 0 2px var(--ink) inset}.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) 120px;gap:6px}.wksum{border-radius:var(--radius-md);background:var(--surface-sunken);padding:8px 10px;display:flex;flex-direction:column;justify-content:center;font:500 12px/18px var(--font-sans);color:var(--ink-muted)}.wksum b{font:700 15px/22px var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}">
+  <div class="app__side"><dc-import name="WSide" active="calendar" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><h1>ปฏิทินการเทรด</h1></div>
+      <button class="tt-iconbtn" aria-label="เดือนก่อน"><span class="i i-arrow-left-01"></span></button>
+      <span class="body-strong">ตุลาคม 2026</span>
+      <button class="tt-iconbtn" aria-label="เดือนถัดไป"><span class="i i-arrow-right-01"></span></button>
+      <div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">รายเดือน</button><button class="tt-seg__item">รายสัปดาห์</button></div>
+      <div class="tt-seg"><button class="{{segD}}" onClick="{{setD}}">$</button><button class="{{segR}}" onClick="{{setR}}">R</button></div>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="split--main">
+        <div class="split__a cal">
+          <div class="wk"><span class="tt-cal__dow">อาทิตย์</span><span class="tt-cal__dow">จันทร์</span><span class="tt-cal__dow">อังคาร</span><span class="tt-cal__dow">พุธ</span><span class="tt-cal__dow">พฤหัส</span><span class="tt-cal__dow">ศุกร์</span><span class="tt-cal__dow">เสาร์</span><span class="tt-cal__dow">รวมสัปดาห์</span></div>
+          <sc-for list="{{weeks}}" as="w" hint-placeholder-count="5">
+            <div class="wk">
+              <sc-for list="{{w.days}}" as="d" hint-placeholder-count="7">
+                <button class="{{d.cls}}" onClick="{{d.pick}}" aria-label="{{d.aria}}">
+                  <span class="tt-day__n">{{d.n}}<sc-if value="{{d.has}}" hint-placeholder-val="{{false}}"><span class="{{d.moodIc}}"></span></sc-if></span>
+                  <sc-if value="{{d.has}}" hint-placeholder-val="{{false}}">
+                    <span class="tt-day__pnl">{{d.val}}</span>
+                    <span>{{d.count}}</span>
+                    <span class="tt-day__marks"><span class="{{d.adhCls}}">{{d.adh}}</span><span class="{{d.gradeCls}}" style="width: 20px; height: 20px; font-size: 11px">{{d.grade}}</span></span>
+                  </sc-if>
+                </button>
+              </sc-for>
+              <div class="wksum"><span>{{w.label}}</span><b>{{w.total}}</b><span>{{w.n}}</span></div>
+            </div>
+          </sc-for>
+          <div class="legend"><span>Badge % = avg adherence</span><span>A–D = quality grade</span><span><span class="i i-sm i-smile"></span><span class="i i-sm i-neutral"></span><span class="i i-sm i-sad-01"></span> daily mood</span><span>คลิกวันเพื่อดูรายละเอียด</span></div>
+        </div>
+        <aside class="split__b" style="max-width: 380px">
+          <div class="tt-card tt-stack">
+            <div class="sec__head"><div><div class="h3">{{sel.title}}</div><div class="caption tt-muted">{{sel.sub}}</div></div><span class="{{sel.pnlCls}}">{{sel.val}}</span></div>
+            <sc-if value="{{sel.has}}" hint-placeholder-val="{{true}}">
+              <div class="grid3"><div class="calc" style="grid-template-columns: 1fr"><div><span>เทรด</span><b>{{sel.count}}</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>Adherence</span><b>{{sel.adh}}</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>Quality</span><b>{{sel.grade}}</b></div></div></div>
+              <a href="WTradeDetail.dc.html" class="tt-btn tt-btn--secondary tt-btn--block" style="text-decoration: none">ดูเทรดของวันนี้</a>
+              <div class="tt-field"><span class="tt-label">Journal ของวัน</span><p class="body-sm" style="margin: 0; color: var(--ink-muted)">{{sel.note}}</p></div>
+            </sc-if>
+          </div>
+          <div class="tt-card">
+            <div class="tt-card__head" style="margin-bottom: 4px"><h2 class="tt-card__title">สรุปเดือนตุลาคม</h2><span class="caption tt-muted">1–9 ต.ค.</span></div>
+            <div class="kv"><span>Net P/L</span><b class="tt-pnl tt-pnl--up">{{monthPnl}}</b></div>
+            <div class="kv"><span>วันที่เทรด</span><b>7 วัน · 16 เทรด</b></div>
+            <div class="kv"><span>วันบวก / ลบ</span><b>4 / 3</b></div>
+            <div class="kv"><span>Avg adherence</span><b>78%</b></div>
+            <div class="kv"><span>วันที่ดีที่สุด</span><b>6 ต.ค. +$1,999</b></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1150}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { unit: '$', sel: 8 }; }
+  renderVals() {
+    const unit = this.state.unit;
+    const D = {
+      1: [842, 0.8, 3, 'A', 'smile', 92, 'เทรดตามแผนครบทุกไม้'],
+      2: [-310, -0.3, 2, 'C', 'neutral', 68, 'เข้าเร็วกว่าแผน 1 ไม้'],
+      5: [455, 0.5, 2, 'B', 'smile', 85, 'NY Reversal ทำงานดี'],
+      6: [1999, 2.0, 1, 'A', 'smile', 96, 'รอ zone ได้ดี ปล่อยวิ่งถึง TP2'],
+      7: [-61, -0.1, 4, 'C', 'sad-01', 48, 'Revenge หลังโดน SL — ผิดกฎ cooldown'],
+      8: [-1025.08, -1.0, 2, 'B', 'neutral', 91, 'ตาม SL ได้ตามแผน ไม่ revenge'],
+      9: [420, 0.4, 2, 'C', 'smile', 64, 'ขยับ SL ไม้แรก ต้องระวัง']
+    };
+    const money = (v) => (v >= 0 ? '+$' : '−$') + Math.abs(Math.round(v)).toLocaleString('en-US');
+    const rr = (v) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1) + 'R';
+    const fmt = (d) => unit === '$' ? money(d[0]) : rr(d[1]);
+    const cells = [];
+    [27, 28, 29, 30].forEach((n) => cells.push({ n, out: true }));
+    for (let n = 1; n <= 31; n++) cells.push({ n });
+    while (cells.length % 7) cells.push({ n: cells.length - 34, out: true });
+    const weeks = [];
+    for (let w = 0; w < cells.length / 7; w++) {
+      let tot = 0, totR = 0, cnt = 0;
+      const days = cells.slice(w * 7, w * 7 + 7).map((c) => {
+        const d = !c.out && D[c.n];
+        if (d) { tot += d[0]; totR += d[1]; cnt += d[2]; }
+        const adhCls = d ? 'tt-badge ' + (d[5] >= 80 ? 'tt-badge--brand' : d[5] >= 60 ? 'tt-badge--warning' : 'tt-badge--loss') : '';
+        return {
+          n: c.n, has: !!d, aria: c.n + ' ต.ค.',
+          cls: 'tt-day' + (c.out ? ' tt-day--out' : '') + (d ? (d[0] >= 0 ? ' tt-day--win' : ' tt-day--loss') : '') + (c.n === 9 && !c.out ? ' tt-day--today' : '') + (!c.out && this.state.sel === c.n ? ' tt-day--sel' : ''),
+          val: d ? fmt(d) : '', count: d ? d[2] + ' เทรด' : '', grade: d ? d[3] : '', gradeCls: d ? 'tt-grade tt-grade--' + d[3] : '',
+          moodIc: d ? 'i i-sm i-' + d[4] : '', adh: d ? d[5] + '%' : '', adhCls,
+          pick: () => { if (!c.out) this.setState({ sel: c.n }); }
+        };
+      });
+      weeks.push({ days, label: 'สัปดาห์ ' + (w + 1), total: cnt ? (unit === '$' ? money(tot) : rr(totR)) : '—', n: cnt ? cnt + ' เทรด' : 'ไม่มีเทรด' });
+    }
+    const s = this.state.sel, sd = D[s];
+    const dow = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'][(s + 3) % 7];
+    return {
+      theme: this.props.theme ?? 'light', weeks,
+      sel: {
+        title: dow + ' ' + s + ' ต.ค. 2026', sub: sd ? 'Mood ' + (sd[4] === 'smile' ? 'ดี' : sd[4] === 'neutral' ? 'กลางๆ' : 'แย่') : 'ไม่มีเทรด', has: !!sd,
+        val: sd ? fmt(sd) : '', pnlCls: 'num-lg tt-pnl ' + (sd ? (sd[0] >= 0 ? 'tt-pnl--up' : 'tt-pnl--down') : ''),
+        count: sd ? sd[2] : 0, adh: sd ? sd[5] + '%' : '', grade: sd ? sd[3] : '', note: sd ? sd[6] : ''
+      },
+      monthPnl: unit === '$' ? '+$2,319.92' : '+2.3R',
+      segD: 'tt-seg__item' + (unit === '$' ? ' tt-seg__item--on' : ''), segR: 'tt-seg__item' + (unit === 'R' ? ' tt-seg__item--on' : ''),
+      setD: () => this.setState({ unit: '$' }), setR: () => this.setState({ unit: 'R' })
+    };
+  }
+}
+</script>
+</body>
+</html>

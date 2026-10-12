@@ -1,0 +1,141 @@
+/* TrackTrade — generated from tokens.json */
+:root, [data-theme="light"] {
+  --bg: #F6F7F0;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #ECE9DF;
+  --border: #E0DADE;
+  --border-strong: #968B8D;
+  --ink: #27221F;
+  --ink-muted: #6A6260;
+  --ink-subtle: #736B69;
+  --ink-inverse: #FFFFFF;
+  --brand-50: #F8F4F5;
+  --brand-100: #E0DADE;
+  --brand-200: #D5B6B9;
+  --brand-500: #3A5CF0;
+  --brand-600: #D5B6B9;
+  --brand-700: #7A4A52;
+  --brand-hover: #CBA7AB;
+  --on-accent: #FFFFFF;
+  --on-brand: #2B2124;
+  --gold-500: #E0A100;
+  --gold-100: #FAF6EA;
+  --gold-ink: #7A5A00;
+  --profit: #08814A;
+  --profit-100: #EFF7F2;
+  --profit-ink: #067040;
+  --loss: #D92D3A;
+  --loss-100: #FCF1F2;
+  --loss-ink: #B42331;
+  --warning: #D97706;
+  --warning-100: #FBF5EA;
+  --warning-ink: #8A5300;
+  --q-good-win: var(--profit);
+  --q-good-loss: var(--brand-500);
+  --q-bad-win: var(--warning);
+  --q-bad-loss: var(--loss);
+  --dim-analysis: #1E8BC3;
+  --dim-planning: #6A4FD6;
+  --dim-execution: #0E8A7E;
+  --dim-risk: #D2690B;
+  --dim-discipline: #C03B83;
+  --dim-emotion: #B88A00;
+  --chart-up: #16A36A;
+  --chart-down: #E5484D;
+  --chart-area: #EBEFFD;
+  --chart-grid: #EEF0F3;
+  --chart-plan: var(--brand-500);
+  --chart-actual: var(--ink);
+  --focus-ring: #7A4A52;
+  --overlay: rgba(39,34,31,0.36);
+  --shadow-sm: none;
+  --shadow-md: 0 4px 12px rgba(14,23,38,0.08);
+  --shadow-lg: 0 12px 32px rgba(14,23,38,0.16);
+}
+[data-theme="dark"] {
+  --bg: #1A1718;
+  --surface: #221E20;
+  --surface-raised: #2A2527;
+  --surface-sunken: #171415;
+  --border: #3A3335;
+  --border-strong: #766C6E;
+  --ink: #EEEAE6;
+  --ink-muted: #A79FA0;
+  --ink-subtle: #8E8687;
+  --ink-inverse: #27221F;
+  --brand-50: #2A2326;
+  --brand-100: #3A2F32;
+  --brand-200: #5E4A4E;
+  --brand-500: #7C8DFF;
+  --brand-600: #D5B6B9;
+  --brand-700: #E3C7CA;
+  --brand-hover: #E0C6C9;
+  --on-accent: #221E20;
+  --on-brand: #2B2124;
+  --gold-500: #F5B83D;
+  --gold-100: #26210F;
+  --gold-ink: #FFD27A;
+  --profit: #3DD68C;
+  --profit-100: #13241B;
+  --profit-ink: #3DD68C;
+  --loss: #FF6B72;
+  --loss-100: #2A1518;
+  --loss-ink: #FF8A90;
+  --warning: #F59A45;
+  --warning-100: #2A2010;
+  --warning-ink: #FFC46B;
+  --q-good-win: var(--profit);
+  --q-good-loss: var(--brand-500);
+  --q-bad-win: var(--warning);
+  --q-bad-loss: var(--loss);
+  --dim-analysis: #4FB3E8;
+  --dim-planning: #9D88F2;
+  --dim-execution: #36C2B3;
+  --dim-risk: #F59A45;
+  --dim-discipline: #EB6FB0;
+  --dim-emotion: #E8C04A;
+  --chart-up: #3DD68C;
+  --chart-down: #FF6B72;
+  --chart-area: #1C2650;
+  --chart-grid: #1B2534;
+  --chart-plan: var(--brand-500);
+  --chart-actual: var(--ink);
+  --focus-ring: #E3C7CA;
+  --overlay: rgba(0,0,0,0.6);
+  --shadow-sm: none;
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+  --z-nav: 30;
+  --z-sheet: 40;
+  --z-toast: 50;
+  --font-sans: Inter, Anuphan, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-thai: Anuphan, Inter, system-ui, sans-serif;
+}
+.display { font-family: var(--font-sans); font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.02em; }
+.h1 { font-family: var(--font-sans); font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.01em; }
+.h2 { font-family: var(--font-sans); font-size: 20px; line-height: 30px; font-weight: 600; }
+.h3 { font-family: var(--font-sans); font-size: 16px; line-height: 24px; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 15px; line-height: 24px; font-weight: 400; }
+.body-strong { font-family: var(--font-sans); font-size: 15px; line-height: 24px; font-weight: 600; }
+.body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 20px; font-weight: 400; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 18px; font-weight: 500; }
+.overline { font-family: var(--font-sans); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; }
+.num-lg { font-family: var(--font-sans); font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.01em; }
+.num { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 600; }
+.num-sm { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; }

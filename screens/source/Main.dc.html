@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>TrackTrade — Login</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}a{color:var(--brand-700)}a:hover{color:var(--ink)}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 844px; background: var(--surface)">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px">
+    <span class="tt-wordmark" style="font-size: 22px">Track<b>Trade</b></span>
+    <div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ไทย</button><button class="tt-seg__item">EN</button></div>
+  </div>
+  <div style="flex: 1; padding: 32px 24px 24px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h1 class="h1" style="margin: 0">เข้าสู่ระบบ</h1>
+      <p class="pg-sub" style="font-size: 15px; line-height: 24px">วัดช่องว่างระหว่างแผนกับการเทรดจริง ไม่ใช่แค่กำไรขาดทุน</p>
+    </div>
+    <form style="display: flex; flex-direction: column; gap: 16px">
+      <div class="tt-field">
+        <label class="tt-label" for="em">อีเมล</label>
+        <input class="tt-input" id="em" type="email" placeholder="you@email.com">
+      </div>
+      <div class="tt-field">
+        <label class="tt-label" for="pw">รหัสผ่าน</label>
+        <div class="tt-input-wrap"><input class="tt-input" id="pw" type="password" value="password123"><button type="button" aria-label="แสดงรหัสผ่าน" style="position: absolute; right: 8px; border: 0; background: transparent; color: var(--ink-subtle); width: 32px; height: 32px; display: grid; place-items: center"><span class="i i-view"></span></button></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-muted)"><input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--brand-700)">จดจำฉันไว้</label>
+        <a href="#" style="font-size: 14px; font-weight: 600; text-decoration: none">ลืมรหัสผ่าน?</a>
+      </div>
+      <button type="submit" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block">เข้าสู่ระบบ</button>
+    </form>
+    <div style="display: flex; align-items: center; gap: 12px; color: var(--ink-subtle); font-size: 13px"><span class="divider" style="flex: 1"></span>หรือ<span class="divider" style="flex: 1"></span></div>
+    <a href="Register.dc.html" class="tt-btn tt-btn--secondary tt-btn--lg tt-btn--block" style="text-decoration: none">สร้างบัญชีใหม่</a>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px">
+      <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-shield-01"></span><div><span class="tt-alert__title">ข้อมูลเทรดของคุณเป็นของคุณ</span><span class="tt-alert__body">Mentor เห็นข้อมูลได้เฉพาะเมื่อคุณเชิญและอนุญาตเท่านั้น</span></div></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Match queue</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 900px">
+  <div class="tt-appbar"><a href="Trades.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">จับคู่เทรดกับแผน</h1><span class="tt-badge tt-badge--warning">1 / 2</span></div>
+  <div class="scr__body">
+    <p class="pg-sub">พบหลายแผนที่เข้าเงื่อนไข — เลือกแผนที่คุณตั้งใจใช้ ระบบจะคำนวณ adherence ใหม่ทันที</p>
+    <div class="tt-card" style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 8px"><span class="body-strong">XAUUSD</span><span class="tt-badge tt-badge--long">LONG</span><span class="tt-badge tt-badge--outline">MT5</span><span style="flex: 1"></span><span class="num tt-pnl tt-pnl--up">+$517.30</span></div>
+      <div class="calc"><div><span>Fill</span><b>4,387.60</b></div><div><span>Lot</span><b>0.48</b></div><div><span>เวลา</span><b>10:05</b></div></div>
+    </div>
+    <div class="ov">แผนที่เป็นไปได้</div>
+    <label class="tt-card" style="display: flex; gap: 12px; align-items: flex-start; border: 2px solid var(--brand-700); cursor: pointer">
+      <input type="radio" name="pl" checked style="width: 20px; height: 20px; accent-color: var(--brand-700); margin-top: 2px">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; gap: 6px; align-items: center"><span class="body-strong">A · Buy limit 4,387.52</span><span class="tt-badge tt-badge--solid">Locked 09:12</span></div>
+        <span class="body-sm tt-muted">ห่าง entry 0.08 (0.4% ของระยะ SL) · ภายในเวลา</span>
+        <span class="tt-badge tt-badge--profit" style="align-self: flex-start">แนะนำ · ตรงที่สุด</span>
+      </div>
+    </label>
+    <label class="tt-card" style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; box-shadow: none">
+      <input type="radio" name="pl" style="width: 20px; height: 20px; accent-color: var(--brand-700); margin-top: 2px">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; gap: 6px; align-items: center"><span class="body-strong">C · Market buy 4,392.00</span><span class="tt-badge tt-badge--solid">Locked 09:40</span></div>
+        <span class="body-sm tt-muted">ห่าง entry 4.40 (21% ของระยะ SL)</span>
+      </div>
+    </label>
+    <label class="tt-card" style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; box-shadow: none">
+      <input type="radio" name="pl" style="width: 20px; height: 20px; accent-color: var(--brand-700); margin-top: 2px">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <span class="body-strong">ไม่มีแผน (Unplanned)</span>
+        <span class="body-sm tt-muted">นับเป็น deviation ของมิติ Discipline</span>
+      </div>
+    </label>
+  </div>
+  <div class="scr__foot"><button class="tt-btn tt-btn--ghost tt-btn--lg">ข้าม</button><button class="tt-btn tt-btn--primary tt-btn--lg" style="flex: 1">ยืนยันการจับคู่</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trading calendar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1200px">
+  <div class="tt-appbar"><h1 class="tt-appbar__title">ปฏิทิน</h1><button class="tt-chip"><span class="i i-sm i-wallet-01"></span>ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></button></div>
+  <div class="scr__body">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <button class="tt-iconbtn" aria-label="เดือนก่อน"><span class="i i-arrow-left-01"></span></button>
+      <div style="flex: 1; text-align: center"><div class="body-strong">ตุลาคม 2026</div><div class="num-sm tt-pnl tt-pnl--up">{{monthPnl}}</div></div>
+      <button class="tt-iconbtn" aria-label="เดือนถัดไป"><span class="i i-arrow-right-01"></span></button>
+    </div>
+    <div style="display: flex; justify-content: space-between"><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">รายเดือน</button><button class="tt-seg__item">รายสัปดาห์</button></div><div class="tt-seg"><button class="{{segD}}" onClick="{{setD}}">$</button><button class="{{segR}}" onClick="{{setR}}">R</button></div></div>
+    <div class="tt-cal">
+      <span class="tt-cal__dow">อา</span><span class="tt-cal__dow">จ</span><span class="tt-cal__dow">อ</span><span class="tt-cal__dow">พ</span><span class="tt-cal__dow">พฤ</span><span class="tt-cal__dow">ศ</span><span class="tt-cal__dow">ส</span>
+      <sc-for list="{{days}}" as="d" hint-placeholder-count="35">
+        <a href="DaySheet.dc.html" class="{{d.cls}}" style="text-decoration: none">
+          <span class="tt-day__n">{{d.n}}<sc-if value="{{d.mood}}" hint-placeholder-val="{{false}}"><span class="{{d.moodIc}}"></span></sc-if></span>
+          <sc-if value="{{d.has}}" hint-placeholder-val="{{false}}">
+            <span class="tt-day__pnl">{{d.val}}</span>
+            <span>{{d.count}}</span>
+            <span class="tt-day__marks"><i class="tt-day__mark" style="background: var(--brand-700)"></i><b>{{d.grade}}</b></span>
+          </sc-if>
+        </a>
+      </sc-for>
+    </div>
+    <div class="legend"><span><b style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-700)"></b> Adherence ≥ 80</span><span>A–D = Quality grade</span><span><span class="i i-sm i-smile"></span> Daily mood</span></div>
+
+    <div class="tt-card">
+      <div class="sec__head" style="margin-bottom: 4px"><h2 class="h3" style="margin: 0">สรุปเดือนตุลาคม</h2><span class="caption tt-muted">1–9 ต.ค.</span></div>
+      <div class="kv"><span>Net P/L</span><b class="tt-pnl tt-pnl--up">+$2,319.92 · +2.3R</b></div>
+      <div class="kv"><span>วันที่เทรด</span><b>7 วัน · 16 เทรด</b></div>
+      <div class="kv"><span>Win rate</span><b>56.3%</b></div>
+      <div class="kv"><span>Avg adherence</span><b>78%</b></div>
+      <div class="kv"><span>วันที่ดีที่สุด / แย่ที่สุด</span><b>6 ต.ค. +$1,999 / 8 ต.ค. −$1,025</b></div>
+    </div>
+  </div>
+  <dc-import name="Nav" active="calendar" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { unit: '$' }; }
+  renderVals() {
+    const unit = this.state.unit;
+    const data = {
+      1: [842, 0.8, 3, 'A', 'smile'], 2: [-310, -0.3, 2, 'C', 'neutral'], 5: [455, 0.5, 2, 'B', 'smile'],
+      6: [1999, 2.0, 1, 'A', 'smile'], 7: [-61, -0.1, 4, 'C', 'sad-01'], 8: [-1025.08, -1.0, 2, 'B', 'neutral'], 9: [420, 0.4, 2, 'C', 'smile']
+    };
+    const days = [];
+    [27, 28, 29, 30].forEach((n) => days.push({ n, cls: 'tt-day tt-day--out', has: false, mood: false }));
+    for (let n = 1; n <= 31; n++) {
+      const d = data[n];
+      if (!d) { days.push({ n, cls: 'tt-day' + (n > 9 ? ' tt-day--future' : ''), has: false, mood: false }); continue; }
+      const up = d[0] >= 0;
+      const money = (up ? '+$' : '−$') + Math.abs(Math.round(d[0])).toLocaleString('en-US');
+      const r = (up ? '+' : '−') + Math.abs(d[1]).toFixed(1) + 'R';
+      days.push({
+        n, has: true, mood: true, moodIc: 'i i-sm i-' + d[4],
+        cls: 'tt-day ' + (up ? 'tt-day--win' : 'tt-day--loss') + (n === 9 ? ' tt-day--today' : ''),
+        val: unit === '$' ? money : r, count: d[2] + ' เทรด', grade: d[3]
+      });
+    }
+    return {
+      theme: this.props.theme ?? 'light', days,
+      monthPnl: unit === '$' ? '+$2,319.92' : '+2.3R',
+      segD: 'tt-seg__item' + (unit === '$' ? ' tt-seg__item--on' : ''),
+      segR: 'tt-seg__item' + (unit === 'R' ? ' tt-seg__item--on' : ''),
+      setD: () => this.setState({ unit: '$' }),
+      setR: () => this.setState({ unit: 'R' })
+    };
+  }
+}
+</script>
+</body>
+</html>

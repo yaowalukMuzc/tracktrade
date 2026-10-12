@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Trades</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}.tbl tbody tr:hover td{background:var(--brand-50)}.opt{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer}.opt--on{border:2px solid var(--brand-700);background:var(--brand-50)}</style>
+</helmet>
+<div class="app" data-theme="{{theme}}" style="position: relative">
+  <div class="app__side"><dc-import name="WSide" active="trades" hint-size="240px,900px"></dc-import></div>
+  <div class="app__main">
+    <header class="topbar">
+      <div class="topbar__title"><h1>เทรด</h1></div>
+      <div class="tt-input-wrap" style="width: 240px"><span class="i i-search-01" style="position: absolute; left: 12px; color: var(--ink-subtle)"></span><input class="tt-input" aria-label="ค้นหา" placeholder="Symbol, setup, tag…" style="padding-left: 40px"></div>
+      <button class="tt-btn tt-btn--secondary"><span class="i i-download-04"></span>Export CSV</button>
+      <a href="WAddTrade.dc.html" class="tt-btn tt-btn--primary" style="text-decoration: none"><span class="i i-add-01"></span>เพิ่มเทรด</a>
+    </header>
+    <div class="content" style="max-width: none">
+      <div class="tt-tabs"><span class="tt-tab tt-tab--on">ทั้งหมด 42</span><span class="tt-tab">รอรีวิว 3</span><span class="tt-tab">รอจับคู่ 2</span><span class="tt-tab">Unplanned 4</span><span class="tt-tab">เปิดอยู่ 1</span></div>
+      <div class="tt-row"><span class="tt-chip tt-chip--on"><span class="i i-sm i-calendar-03"></span>10 ก.ย. – 9 ต.ค.</span><span class="tt-chip">ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></span><span class="tt-chip">Symbol<span class="i i-sm i-arrow-down-01"></span></span><span class="tt-chip">Setup<span class="i i-sm i-arrow-down-01"></span></span><span class="tt-chip">Quadrant<span class="i i-sm i-arrow-down-01"></span></span><span class="tt-chip">Emotion tag<span class="i i-sm i-arrow-down-01"></span></span><span style="flex: 1"></span><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">$</button><button class="tt-seg__item">R</button></div></div>
+      <div class="tt-alert tt-alert--warning"><span class="i i-link-01"></span><div style="flex: 1"><span class="tt-alert__title">2 เทรดรอจับคู่กับแผน</span><span class="tt-alert__body">Adherence และ quality จะคำนวณหลังเลือกแผน</span></div><button class="tt-btn tt-btn--secondary tt-btn--sm" onClick="{{open}}">จับคู่ตอนนี้</button></div>
+      <div class="tt-card" style="padding: 0; overflow: hidden">
+        <div class="tblwrap">
+          <table class="tbl">
+            <thead><tr><th>เปิด</th><th>Symbol</th><th>Setup / แผน</th><th>Source</th><th class="r">Lot</th><th class="r">Entry → Exit</th><th class="r">Adherence</th><th>Quality</th><th>Quadrant</th><th>สถานะ</th><th class="r">P/L</th><th class="r">R</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="t" hint-placeholder-count="8">
+                <tr>
+                  <td>{{t.time}}</td>
+                  <td><a href="WTradeDetail.dc.html" style="color: var(--ink); text-decoration: none"><b>{{t.sym}}</b></a> <span class="{{t.dirCls}}">{{t.dir}}</span></td>
+                  <td>{{t.setup}}</td>
+                  <td><span class="tt-badge tt-badge--outline">{{t.src}}</span></td>
+                  <td class="r">{{t.lot}}</td>
+                  <td class="r">{{t.px}}</td>
+                  <td class="r">{{t.adh}}</td>
+                  <td><span class="{{t.gradeCls}}" style="width: 24px; height: 24px; font-size: 12px">{{t.grade}}</span></td>
+                  <td><span class="{{t.qCls}}">{{t.quad}}</span></td>
+                  <td><span class="{{t.stCls}}">{{t.st}}</span></td>
+                  <td class="r"><span class="{{t.pnlCls}}">{{t.pnl}}</span></td>
+                  <td class="r">{{t.r}}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-top: 1px solid var(--border)"><span class="caption tt-muted">แสดง 1–8 จาก 42</span><div class="tt-row"><button class="tt-iconbtn" aria-label="ก่อนหน้า"><span class="i i-arrow-left-01"></span></button><button class="tt-iconbtn" aria-label="ถัดไป"><span class="i i-arrow-right-01"></span></button></div></div>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{show}}" hint-placeholder-val="{{true}}">
+    <div class="scrim" onClick="{{close}}"></div>
+    <div class="modal" role="dialog" aria-label="จับคู่เทรดกับแผน">
+      <div class="sec__head"><div><h2 class="h3" style="margin: 0">จับคู่เทรดกับแผน</h2><span class="caption tt-muted">1 จาก 2 · พบหลายแผนที่เข้าเงื่อนไข</span></div><button class="tt-iconbtn" style="border: 0" aria-label="ปิด" onClick="{{close}}"><span class="i i-cancel-01"></span></button></div>
+      <div class="calc" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><div><span>XAUUSD</span><b style="color: var(--profit-ink)">LONG</b></div><div><span>Fill</span><b>4,387.60</b></div><div><span>Lot</span><b>0.48</b></div><div><span>เวลา</span><b>10:05</b></div></div>
+      <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+        <div class="{{o.cls}}" onClick="{{o.pick}}"><input type="radio" name="pl" checked="{{o.on}}" aria-label="{{o.title}}" style="width: 20px; height: 20px; accent-color: var(--brand-700); margin-top: 2px"><div style="flex: 1"><div class="body-strong">{{o.title}}</div><div class="body-sm tt-muted">{{o.sub}}</div></div><sc-if value="{{o.best}}" hint-placeholder-val="{{false}}"><span class="tt-badge tt-badge--profit">แนะนำ</span></sc-if></div>
+      </sc-for>
+      <div style="display: flex; justify-content: flex-end; gap: 8px"><button class="tt-btn tt-btn--ghost" onClick="{{close}}">ข้าม</button><button class="tt-btn tt-btn--primary" onClick="{{close}}">ยืนยันการจับคู่</button></div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { show: true, pick: 0 }; }
+  renderVals() {
+    const Q = { 'Good-Win': 'tt-badge tt-badge--profit', 'Good-Loss': 'tt-badge tt-badge--brand', 'Bad-Win': 'tt-badge tt-badge--warning', 'Bad-Loss': 'tt-badge tt-badge--loss', '—': 'tt-badge' };
+    const S = { 'รอจับคู่': 'tt-badge tt-badge--warning', 'รอรีวิว': 'tt-badge tt-badge--warning', 'รีวิวแล้ว': 'tt-badge tt-badge--outline', 'เปิดอยู่': 'tt-badge tt-badge--brand' };
+    const raw = [
+      ['9 ต.ค. 10:05', 'XAUUSD', 'LONG', 'London Breakout · A', 'MT5', '0.48', '4,387.60 → 4,398.40', '64%', 'C', 'Bad-Win', 'รอจับคู่', '+$517.30', '+0.51'],
+      ['9 ต.ค. 08:42', 'EURUSD', 'SHORT', '— Unplanned', 'MT5', '0.50', '1.08402 → 1.08597', '—', 'D', 'Bad-Loss', 'รอจับคู่', '−$97.30', '−0.10'],
+      ['9 ต.ค. 13:20', 'XAUUSD', 'SHORT', 'London Breakout · B', 'Manual', '0.50', '4,403.18 → —', '—', '—', '—', 'เปิดอยู่', '+$968.00', '+2.10'],
+      ['8 ต.ค. 15:00', 'XAUUSD', 'LONG', 'London Breakout · A', 'MT5', '0.48', '4,371.20 → 4,350.12', '100%', 'A', 'Good-Loss', 'รอรีวิว', '−$1,012.00', '−1.00'],
+      ['8 ต.ค. 09:30', 'GBPUSD', 'SHORT', 'NY Reversal · A', 'OCR', '0.10', '1.33410 → 1.33541', '82%', 'B', 'Good-Loss', 'รีวิวแล้ว', '−$13.08', '−0.01'],
+      ['7 ต.ค. 14:31', 'XAUUSD', 'LONG', '— Unplanned', 'MT5', '0.80', '4,352.10 → 4,355.90', '40%', 'D', 'Bad-Win', 'รีวิวแล้ว', '+$304.00', '+0.30'],
+      ['7 ต.ค. 14:20', 'XAUUSD', 'SHORT', 'News Fade · A', 'MT5', '0.80', '4,358.30 → 4,377.20', '35%', 'D', 'Bad-Loss', 'รีวิวแล้ว', '−$1,512.00', '−1.50'],
+      ['6 ต.ค. 10:12', 'XAUUSD', 'LONG', 'London Breakout · A', 'MT5', '0.45', '4,311.40 → 4,355.82', '96%', 'A', 'Good-Win', 'รีวิวแล้ว', '+$1,999.00', '+2.00']
+    ];
+    const rows = raw.map((r) => ({
+      time: r[0], sym: r[1], dir: r[2], setup: r[3], src: r[4], lot: r[5], px: r[6], adh: r[7], grade: r[8], quad: r[9], st: r[10], pnl: r[11], r: r[12],
+      dirCls: 'tt-badge ' + (r[2] === 'LONG' ? 'tt-badge--long' : 'tt-badge--short'),
+      gradeCls: r[8] === '—' ? 'tt-grade' : 'tt-grade tt-grade--' + r[8],
+      qCls: Q[r[9]], stCls: S[r[10]],
+      pnlCls: 'tt-pnl ' + (r[11].startsWith('+') ? 'tt-pnl--up' : 'tt-pnl--down')
+    }));
+    const od = [
+      { title: 'A · Buy limit 4,387.52 · Locked 09:12', sub: 'ห่าง entry 0.08 (0.4% ของระยะ SL) · ภายในเวลา', best: true },
+      { title: 'C · Market buy 4,392.00 · Locked 09:40', sub: 'ห่าง entry 4.40 (21% ของระยะ SL)', best: false },
+      { title: 'ไม่มีแผน (Unplanned)', sub: 'นับเป็น deviation ของมิติ Discipline', best: false }
+    ];
+    return {
+      theme: this.props.theme ?? 'light', rows, show: this.state.show,
+      open: () => this.setState({ show: true }), close: () => this.setState({ show: false }),
+      opts: od.map((o, i) => ({ ...o, on: this.state.pick === i, cls: 'opt' + (this.state.pick === i ? ' opt--on' : ''), pick: () => this.setState({ pick: i }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

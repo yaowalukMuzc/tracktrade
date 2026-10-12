@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>AI Coach weekly report</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}a{color:var(--brand-700)}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1500px">
+  <div class="tt-appbar"><h1 class="tt-appbar__title">สถิติ</h1><button class="tt-chip"><span class="i i-sm i-wallet-01"></span>ทุกบัญชี<span class="i i-sm i-arrow-down-01"></span></button></div>
+  <div style="padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border)"><div class="tt-tabs" style="border: 0"><a href="Performance.dc.html" class="tt-tab" style="text-decoration: none">P/L</a><a href="Behavior.dc.html" class="tt-tab" style="text-decoration: none">Behavior</a><span class="tt-tab">Diagnosis</span><span class="tt-tab tt-tab--on">AI Coach</span></div></div>
+  <div class="scr__body">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <button class="tt-iconbtn" aria-label="สัปดาห์ก่อน"><span class="i i-arrow-left-01"></span></button>
+      <div style="flex: 1; text-align: center"><div class="body-strong">สัปดาห์ 41 · 5–9 ต.ค.</div><div class="caption tt-muted">สร้างอัตโนมัติ จันทร์ 06:00</div></div>
+      <button class="tt-iconbtn" aria-label="สัปดาห์ถัดไป" disabled style="opacity: .4"><span class="i i-arrow-right-01"></span></button>
+    </div>
+
+    <div class="tt-card" style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; gap: 10px; align-items: center"><span class="row__ic row__ic--brand"><span class="i i-ai-magic"></span></span><div class="row__main"><span class="caption tt-muted">มิติหลักของสัปดาห์</span><span class="h3">Discipline</span></div><span class="tt-badge" style="background: var(--surface-sunken)"><i class="tt-dim-swatch dim-discipline"></i>−2.1R</span></div>
+      <p class="body" style="margin: 0">สัปดาห์นี้คุณทำตามแผนได้ดีในช่วงต้นสัปดาห์ (adherence 92%) แต่หลังโดน SL วันพุธ คุณเปิดเพิ่มอีก 3 ไม้ภายใน 20 นาที ทั้งที่ตั้ง cooldown ไว้ 30 นาที — 3 ไม้นี้ทำให้เสีย 2.1R จากทั้งหมด 3.0R ที่เป็น mistake cost</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">หลักฐาน</h2>
+      <div class="list">
+        <a href="TradeDetail.dc.html" class="row"><span class="tt-badge tt-badge--loss">Bad-Loss</span><div class="row__main"><span class="row__t">#T-1042 · XAUUSD SHORT</span><span class="row__s">7 ต.ค. 14:12 · revenge 8 นาทีหลัง SL</span></div><b class="num tt-pnl tt-pnl--down">−0.9R</b></a>
+        <a href="TradeDetail.dc.html" class="row"><span class="tt-badge tt-badge--loss">Bad-Loss</span><div class="row__main"><span class="row__t">#T-1043 · XAUUSD SHORT</span><span class="row__s">7 ต.ค. 14:20 · oversize 1.6×</span></div><b class="num tt-pnl tt-pnl--down">−1.5R</b></a>
+        <a href="TradeDetail.dc.html" class="row"><span class="tt-badge tt-badge--warning">Bad-Win</span><div class="row__main"><span class="row__t">#T-1044 · XAUUSD LONG</span><span class="row__s">7 ต.ค. 14:31 · unplanned</span></div><b class="num tt-pnl tt-pnl--up">+0.3R</b></a>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">คำแนะนำ 3 ข้อ</h2>
+      <div class="tt-card" style="display: flex; gap: 12px"><span class="avatar" style="width: 28px; height: 28px; font-size: 13px">1</span><div><div class="body-strong">ล็อกบัญชีหลังโดน SL</div><div class="body-sm tt-muted">เปิด rule "Revenge cooldown" เป็นแบบบังคับ — แอปจะไม่ให้ล็อกแผนใหม่ 30 นาที</div></div></div>
+      <div class="tt-card" style="display: flex; gap: 12px"><span class="avatar" style="width: 28px; height: 28px; font-size: 13px">2</span><div><div class="body-strong">ลด max trades เหลือ 3 ไม้ในวันพุธ–พฤหัส</div><div class="body-sm tt-muted">2 วันนี้มี expectancy −0.18R ตลอด 4 สัปดาห์</div></div></div>
+      <div class="tt-card" style="display: flex; gap: 12px"><span class="avatar" style="width: 28px; height: 28px; font-size: 13px">3</span><div><div class="body-strong">บันทึก in-trade emotion ทุกครั้งที่ขยับ SL</div><div class="body-sm tt-muted">ตอนนี้ตอบ prompt แค่ 2 จาก 5 ครั้ง — ข้อมูลไม่พอวิเคราะห์ pattern Emotion</div></div></div>
+    </div>
+
+    <div class="tt-alert" style="font-size: 13px; line-height: 20px"><span class="i i-shield-01"></span><div><span class="tt-alert__body">รายงานใช้เฉพาะสถิติรวมและสรุปเทรด ไม่ส่งอีเมลหรือเลขบัญชีไปยัง AI</span></div></div>
+    <button class="tt-btn tt-btn--secondary tt-btn--block"><span class="i i-refresh"></span>สร้างรายงานใหม่</button>
+  </div>
+  <dc-import name="Nav" active="stats" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

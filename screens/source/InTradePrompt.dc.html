@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>In-trade emotion prompt</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 844px">
+  <div class="tt-appbar"><span class="tt-wordmark">Track<b>Trade</b></span><span style="flex: 1"></span><button class="tt-iconbtn" aria-label="การแจ้งเตือน"><span class="i i-notification-01"></span></button></div>
+  <div class="scr__body">
+    <div class="tt-card" style="height: 160px"></div>
+    <div class="tt-card" style="height: 120px"></div>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <span class="sheet__grab"></span>
+    <div style="display: flex; gap: 12px; align-items: center"><span class="row__ic row__ic--loss"><span class="i i-alert-02"></span></span><div class="row__main"><span class="body-strong">คุณขยับ SL ออกไป</span><span class="caption tt-muted">XAUUSD LONG · 10:41 · 4,366.78 → 4,360.00 (+0.33R risk)</span></div></div>
+    <div class="tt-field"><span class="tt-label">ทำไมถึงขยับ?</span>
+      <div class="tt-row"><span class="tt-chip tt-chip--on">กลัวโดน SL ก่อนกลับตัว</span><span class="tt-chip">เห็น structure ใหม่</span><span class="tt-chip">ข่าวกำลังมา</span><span class="tt-chip tt-chip--add"><span class="i i-sm i-add-01"></span>อื่นๆ</span></div>
+    </div>
+    <div class="tt-mood"><span class="tt-label">ตอนนี้รู้สึกอย่างไร</span>
+      <div class="tt-mood__scale"><button class="tt-mood__step tt-mood__step--fill">1</button><button class="tt-mood__step tt-mood__step--fill">2</button><button class="tt-mood__step tt-mood__step--fill">3</button><button class="tt-mood__step tt-mood__step--on">4</button><button class="tt-mood__step">5</button><button class="tt-mood__step">6</button><button class="tt-mood__step">7</button><button class="tt-mood__step">8</button><button class="tt-mood__step">9</button><button class="tt-mood__step">10</button></div>
+      <div class="tt-mood__ends"><span><span class="i i-sm i-sad-01"></span> แย่มาก</span><span>ดีมาก <span class="i i-sm i-smile"></span></span></div>
+    </div>
+    <div class="tt-row"><span class="tt-chip tt-chip--neg tt-chip--on">กลัว</span><span class="tt-chip tt-chip--neg tt-chip--on">หวัง</span><span class="tt-chip tt-chip--neg">โลภ</span><span class="tt-chip tt-chip--pos">ใจเย็น</span></div>
+    <div class="tt-field"><label class="tt-label" for="nt">โน้ต (ไม่บังคับ)</label><input class="tt-input" id="nt" placeholder="สั้นๆ ก็พอ"></div>
+    <div style="display: flex; gap: 8px"><button class="tt-btn tt-btn--ghost tt-btn--lg">ภายหลัง</button><button class="tt-btn tt-btn--primary tt-btn--lg" style="flex: 1">บันทึก</button></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

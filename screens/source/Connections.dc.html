@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Connections</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1150px">
+  <div class="tt-appbar"><a href="More.dc.html" class="tt-iconbtn" style="border: 0" aria-label="ย้อนกลับ"><span class="i i-arrow-left-01"></span></a><h1 class="tt-appbar__title">การเชื่อมต่อ</h1></div>
+  <div class="scr__body">
+    <div class="tt-card tt-stack">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="row__ic row__ic--profit"><span class="i i-plug-01"></span></span><div class="row__main"><span class="row__t">FTMO 100K · MT5 EA</span><span class="row__s">Sync ล่าสุด 10 วินาทีที่แล้ว</span></div><span class="tt-badge tt-badge--profit"><span class="i i-sm i-checkmark-circle-02"></span>Connected</span></div>
+      <div class="grid3"><div class="calc" style="grid-template-columns: 1fr"><div><span>Deals วันนี้</span><b>14</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>SL/TP mods</span><b>3</b></div></div><div class="calc" style="grid-template-columns: 1fr"><div><span>ย้อนหลัง</span><b>90 วัน</b></div></div></div>
+      <div class="tt-field"><span class="tt-label">API key</span><div style="display: flex; gap: 8px"><div class="code" style="flex: 1">tt_live_9f2c••••••••a71b</div><button class="tt-iconbtn" aria-label="คัดลอก"><span class="i i-copy-01"></span></button></div></div>
+      <div class="tt-row"><button class="tt-btn tt-btn--secondary tt-btn--sm"><span class="i i-sm i-refresh"></span>Sync ตอนนี้</button><button class="tt-btn tt-btn--ghost tt-btn--sm"><span class="i i-sm i-key-01"></span>สร้าง key ใหม่</button></div>
+    </div>
+
+    <div class="tt-card tt-stack">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="row__ic row__ic--loss"><span class="i i-link-01"></span></span><div class="row__main"><span class="row__t">IC Markets · cTrader</span><span class="row__s">Sync ล่าสุด 8 ต.ค. 22:14</span></div><span class="tt-badge tt-badge--loss">Error</span></div>
+      <div class="tt-alert tt-alert--loss" style="font-size: 13px; line-height: 20px"><span class="i i-alert-02"></span><div><span class="tt-alert__title">OAuth token หมดอายุ</span><span class="tt-alert__body">401 invalid_grant · เชื่อมต่อใหม่เพื่อดึงเทรดต่อ</span></div></div>
+      <button class="tt-btn tt-btn--primary tt-btn--block"><span class="i i-link-01"></span>เชื่อมต่อ cTrader ใหม่</button>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec__title">ประวัติการนำเข้า</h2>
+      <div class="list">
+        <div class="row"><span class="row__ic row__ic--profit"><span class="i i-sm i-tick-02"></span></span><div class="row__main"><span class="row__t">Sync · MT5</span><span class="row__s">9 ต.ค. 10:05 · 2 positions</span></div></div>
+        <div class="row"><span class="row__ic row__ic--profit"><span class="i i-sm i-tick-02"></span></span><div class="row__main"><span class="row__t">OCR · IMG_4821.PNG</span><span class="row__s">8 ต.ค. 11:52 · ยืนยันแล้ว</span></div></div>
+        <div class="row"><span class="row__ic row__ic--loss"><span class="i i-sm i-cancel-01"></span></span><div class="row__main"><span class="row__t">Sync · cTrader</span><span class="row__s">8 ต.ค. 22:14 · retry 3/3 ล้มเหลว</span></div></div>
+        <div class="row"><span class="row__ic row__ic--profit"><span class="i i-sm i-tick-02"></span></span><div class="row__main"><span class="row__t">Initial import · MT5</span><span class="row__s">2 ต.ค. · 124 deals · 90 วัน</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1150}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

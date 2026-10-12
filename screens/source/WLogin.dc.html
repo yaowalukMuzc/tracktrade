@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>TrackTrade — เข้าสู่ระบบ</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}a{color:var(--brand-700)}a:hover{color:var(--ink)}</style>
+</helmet>
+<div data-theme="{{theme}}" style="width: 100%; min-height: 900px; display: flex; flex-wrap: wrap; background: var(--surface); color: var(--ink); font-family: var(--font-sans)">
+  <section style="flex: 1 1 480px; background: var(--brand-600); color: var(--on-brand); padding: 48px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box">
+    <span class="tt-wordmark" style="color: var(--on-brand); font-size: 24px">TrackTrade</span>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 16px; max-width: 480px">
+      <h2 style="margin: 0; font: 700 40px/48px var(--font-sans); letter-spacing: -0.02em">วัดช่องว่างระหว่างแผนกับการเทรดจริง</h2>
+      <p style="margin: 0; font: 400 17px/28px var(--font-sans); opacity: .9">Analysis → Plan → Execution → Outcome ใน 6 มิติ เพื่อหาว่าปัญหาของคุณอยู่ตรงไหน — ไม่ใช่แค่กำไรหรือขาดทุน</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 480px">
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Analysis</span>
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Planning</span>
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Execution</span>
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Risk</span>
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Discipline</span>
+      <span style="padding: 10px 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.12); font: 600 13px/18px var(--font-sans)">Emotion</span>
+    </div>
+  </section>
+  <section style="flex: 1 1 480px; padding: 48px 24px; display: flex; align-items: center; justify-content: center; box-sizing: border-box">
+    <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 24px">
+      <div style="display: flex; justify-content: space-between; align-items: center"><h1 class="h1" style="margin: 0">เข้าสู่ระบบ</h1><div class="tt-seg"><button class="tt-seg__item tt-seg__item--on">ไทย</button><button class="tt-seg__item">EN</button></div></div>
+      <form style="display: flex; flex-direction: column; gap: 16px">
+        <div class="tt-field"><label class="tt-label" for="em">อีเมล</label><input class="tt-input" id="em" type="email" placeholder="you@email.com"></div>
+        <div class="tt-field"><label class="tt-label" for="pw">รหัสผ่าน</label><input class="tt-input" id="pw" type="password" value="password123"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center"><label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-muted)"><input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--brand-700)">จดจำฉันไว้</label><a href="#" style="font-size: 14px; font-weight: 600; text-decoration: none">ลืมรหัสผ่าน?</a></div>
+        <a href="WToday.dc.html" class="tt-btn tt-btn--primary tt-btn--lg tt-btn--block" style="text-decoration: none">เข้าสู่ระบบ</a>
+      </form>
+      <div style="display: flex; align-items: center; gap: 12px; color: var(--ink-subtle); font-size: 13px"><span class="divider" style="flex: 1"></span>ยังไม่มีบัญชี?<span class="divider" style="flex: 1"></span></div>
+      <a href="WOnboarding.dc.html" class="tt-btn tt-btn--secondary tt-btn--lg tt-btn--block" style="text-decoration: none">สร้างบัญชีใหม่ · ฟรี</a>
+      <p class="caption tt-subtle" style="margin: 0; text-align: center">Mentor เห็นข้อมูลของคุณเฉพาะเมื่อคุณเชิญและอนุญาตเท่านั้น</p>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>

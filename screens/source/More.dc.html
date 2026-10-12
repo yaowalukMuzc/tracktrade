@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>More</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/tracktrade/tokens.css">
+<link rel="stylesheet" href="ds/tracktrade/components/bundle.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="screens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="scr" data-theme="{{theme}}" style="height: 1000px">
+  <div class="tt-appbar"><h1 class="tt-appbar__title">เพิ่มเติม</h1></div>
+  <div class="scr__body">
+    <a href="Settings.dc.html" class="tt-card" style="display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--ink)"><span class="avatar avatar--lg">NK</span><div class="row__main"><span class="h3">Nook Knight</span><span class="row__s">nook@email.com · Free</span></div><span class="i i-arrow-right-01" style="color: var(--ink-subtle)"></span></a>
+    <div class="ov">เครื่องมือ</div>
+    <div class="list">
+      <a href="Playbook.dc.html" class="row"><span class="row__ic row__ic--brand"><span class="i i-book-02"></span></span><span class="row__main row__t">Playbook</span><span class="row__end">4 setups<span class="i i-arrow-right-01"></span></span></a>
+      <a href="AICoach.dc.html" class="row"><span class="row__ic row__ic--brand"><span class="i i-ai-magic"></span></span><span class="row__main row__t">AI Coach</span><span class="row__end"><span class="tt-badge tt-badge--brand">ใหม่</span><span class="i i-arrow-right-01"></span></span></a>
+      <a href="News.dc.html" class="row"><span class="row__ic row__ic--brand"><span class="i i-news-01"></span></span><span class="row__main row__t">ปฏิทินข่าว</span><span class="row__end"><span class="i i-arrow-right-01"></span></span></a>
+      <a href="Alerts.dc.html" class="row"><span class="row__ic row__ic--brand"><span class="i i-notification-01"></span></span><span class="row__main row__t">การแจ้งเตือน</span><span class="row__end"><span class="tt-badge tt-badge--loss">2</span><span class="i i-arrow-right-01"></span></span></a>
+    </div>
+    <div class="ov">บัญชีและการเชื่อมต่อ</div>
+    <div class="list">
+      <a href="Accounts.dc.html" class="row"><span class="row__ic"><span class="i i-wallet-01"></span></span><span class="row__main row__t">บัญชีเทรด &amp; Risk</span><span class="row__end">3<span class="i i-arrow-right-01"></span></span></a>
+      <a href="Connections.dc.html" class="row"><span class="row__ic"><span class="i i-plug-01"></span></span><span class="row__main row__t">MT5 / cTrader</span><span class="row__end"><span class="tt-badge tt-badge--loss">1 error</span><span class="i i-arrow-right-01"></span></span></a>
+      <a href="MentorInvite.dc.html" class="row"><span class="row__ic"><span class="i i-teacher"></span></span><span class="row__main row__t">Mentor</span><span class="row__end">Kru Bank<span class="i i-arrow-right-01"></span></span></a>
+    </div>
+    <div class="ov">ระบบ</div>
+    <div class="list">
+      <a href="Settings.dc.html" class="row"><span class="row__ic"><span class="i i-settings-02"></span></span><span class="row__main row__t">ตั้งค่า</span><span class="row__end"><span class="i i-arrow-right-01"></span></span></a>
+      <div class="row"><span class="row__ic"><span class="i i-moon-02"></span></span><span class="row__main row__t">Dark mode</span><button class="toggle" aria-label="Dark mode"></button></div>
+      <a href="Main.dc.html" class="row" style="color: var(--loss)"><span class="row__ic row__ic--loss"><span class="i i-logout-01"></span></span><span class="row__main row__t">ออกจากระบบ</span></a>
+    </div>
+    <div class="tt-alert tt-alert--gold"><span class="i i-star"></span><div><span class="tt-alert__title">Pro กำลังมา</span><span class="tt-alert__body">Backtest replay · Missions · Live deviation alert</span></div></div>
+  </div>
+  <dc-import name="Nav" active="more" hint-size="390px,64px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'light' };
+  }
+}
+</script>
+</body>
+</html>
