@@ -181,9 +181,9 @@ users(trader) N─N users(mentor) via mentor_links
 > รูปแบบ: **F-xx ชื่อฟีเจอร์** แล้วตามด้วย AC ที่ทดสอบได้
 
 ### F-01 Authentication & Profile
-- [ ] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร
-- [ ] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้)
-- [ ] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload
+- [x] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร
+- [x] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้)
+- [x] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload
 - [ ] AC4: user คนหนึ่งเข้าถึงข้อมูลของ user อื่นไม่ได้ (API คืน 404) ยกเว้นผ่าน mentor_link ที่ active
 
 ### F-02 Trading Accounts & Risk Profile
@@ -193,7 +193,7 @@ users(trader) N─N users(mentor) via mentor_links
 - [ ] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
 
 ### F-03 Symbol Specification
-- [ ] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD
+- [x] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD
 - [ ] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี
 - [ ] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%)
 
@@ -340,14 +340,14 @@ users(trader) N─N users(mentor) via mentor_links
 ## 4. แผนการพัฒนา (8 Phases)
 
 ### Phase 1 — Foundation & Infrastructure
-- [ ] สร้าง monorepo: `frontend/`, `backend/`, `connectors/mt5-ea/`, `docs/`
-- [ ] Docker Compose: postgres17, redis, api, worker, web
-- [ ] Backend skeleton: FastAPI app factory, settings (pydantic-settings), async SQLAlchemy, Alembic init, structured logging
+- [x] สร้าง monorepo: `frontend/`, `backend/`, `connectors/mt5-ea/`, `docs/`
+- [x] Docker Compose: postgres17, redis, api, worker, web
+- [x] Backend skeleton: FastAPI app factory, settings (pydantic-settings), async SQLAlchemy, Alembic init, structured logging
 - [x] Frontend skeleton: Vue3+TS+Vite+Tailwind+Pinia+Router+vue-i18n+Vite PWA, layout แบบ mobile-first พร้อม bottom nav
-- [ ] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01)
-- [ ] ตั้ง CI: lint (ruff, eslint), type check (mypy, vue-tsc), pytest และ vitest
-- [ ] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub
-- [ ] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories`
+- [x] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01)
+- [x] ตั้ง CI: lint (ruff, eslint), type check (mypy, vue-tsc), pytest และ vitest
+- [x] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub
+- [x] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories`
 
 ### Phase 2 — Accounts, Risk & Playbook
 - [ ] CRUD trading_accounts + account_symbol_overrides (F-02, F-03)

@@ -6,14 +6,14 @@
 ## Phases (spec §4)
 
 ### Phase 1 — Foundation & Infrastructure
-- [ ] สร้าง monorepo: `frontend/`, `backend/`, `connectors/mt5-ea/`, `docs/`
-- [ ] Docker Compose: postgres17, redis, api, worker, web
-- [ ] Backend skeleton: FastAPI app factory, settings (pydantic-settings), async SQLAlchemy, Alembic init, structured logging
-- [x] Frontend skeleton: Vue3+TS+Vite+Tailwind+Pinia+Router+vue-i18n+Vite PWA, layout แบบ mobile-first พร้อม bottom nav — มีก่อน kickoff; ยังขาด: PWA icons, ธีม "ตามระบบ", eslint/vitest
-- [ ] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01)
-- [ ] ตั้ง CI: lint (ruff, eslint), type check (mypy, vue-tsc), pytest และ vitest
-- [ ] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub
-- [ ] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories`
+- [x] สร้าง monorepo: `frontend/`, `backend/`, `connectors/mt5-ea/`, `docs/` — `connectors/mt5-ea/` เป็น placeholder จนถึง Phase 4
+- [x] Docker Compose: postgres17, redis, api, worker, web — ทุก service healthy + E2E `frontend/e2e/auth.flow.spec.ts` ผ่าน (2026-10-12, ทดสอบด้วย base image ที่ cache ไว้เพราะ Docker Hub ต่อไม่ได้ — ต้อง `docker compose up --build` ด้วย image จริงอีกครั้ง)
+- [x] Backend skeleton: FastAPI app factory, settings (pydantic-settings), async SQLAlchemy, Alembic init, structured logging — `backend/tests` (35 tests)
+- [x] Frontend skeleton: Vue3+TS+Vite+Tailwind+Pinia+Router+vue-i18n+Vite PWA, layout แบบ mobile-first พร้อม bottom nav — มีก่อน kickoff; Phase 1 เติมครบ: PWA icons (ชั่วคราว), ธีม Light/Dark/ตามระบบ, eslint (no-raw-text) + vitest, `components/ui/*` 20 ตัว, `/dev/ui`
+- [x] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01) — `backend/tests/test_auth.py`, `frontend/e2e/auth.flow.spec.ts`, `docs/qa/phase-1/login-*.png`, `register-*.png`
+- [x] ตั้ง CI: lint (ruff, eslint), type check (mypy, vue-tsc), pytest และ vitest — `.github/workflows/ci.yml`; ทุกขั้นผ่านบนเครื่อง local แล้ว แต่ยังไม่ได้รันบน GitHub Actions (ยังไม่ push)
+- [x] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub — `backend/tests/test_realtime.py`
+- [x] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories` — `backend/app/seeds/*.yaml` (30 / 17 / 25)
 
 ### Phase 2 — Accounts, Risk & Playbook
 - [ ] CRUD trading_accounts + account_symbol_overrides (F-02, F-03)
@@ -79,10 +79,10 @@
 ## Acceptance Criteria (spec §3)
 
 ### F-01 Authentication & Profile
-- [ ] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร
-- [ ] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้)
-- [ ] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload
-- [ ] AC4: user คนหนึ่งเข้าถึงข้อมูลของ user อื่นไม่ได้ (API คืน 404) ยกเว้นผ่าน mentor_link ที่ active
+- [x] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร — `test_auth.py`, `docs/qa/phase-1/register-*.png`
+- [x] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้) — `test_auth.py` (rotate + reuse detection + grace 30s เมื่อ response หาย)
+- [x] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload — `test_users.py`, `e2e/login.visual.spec.ts`, หน้า `/settings`
+- [ ] AC4: user คนหนึ่งเข้าถึงข้อมูลของ user อื่นไม่ได้ (API คืน 404) ยกเว้นผ่าน mentor_link ที่ active — ส่วน 404 เสร็จแล้ว (`core/access.py` + test session ของคนอื่น = 404); ส่วน mentor_link รอ Phase 8
 
 ### F-02 Trading Accounts & Risk Profile
 - [ ] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance
@@ -91,7 +91,7 @@
 - [ ] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
 
 ### F-03 Symbol Specification
-- [ ] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD
+- [x] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD — `backend/app/seeds/symbols.yaml`, `test_platform.py`
 - [ ] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี
 - [ ] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%)
 
@@ -223,10 +223,10 @@
 
 ### Non-Functional Requirements
 - [ ] Security: HTTPS
-- [ ] Security: hash password ด้วย argon2
+- [x] Security: hash password ด้วย argon2 — `core/security.py`
 - [ ] Security: เข้ารหัส OAuth tokens (at rest)
 - [ ] Security: เก็บ API key แบบ hash
-- [ ] Security: rate limit บน auth และ ingest
+- [ ] Security: rate limit บน auth และ ingest — auth เสร็จแล้ว (429 + test); ingest รอ Phase 4
 - [ ] Privacy: ข้อมูลที่ส่งไป AI ไม่มี PII
 - [ ] Privacy: ผู้ใช้ export และลบข้อมูลตัวเองได้
 - [ ] Performance: API p95 < 300ms
