@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Home01Icon } from '@hugeicons/core-free-icons'
-import TtIcon from '@/components/TtIcon.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import PageHeader from '@/components/shell/PageHeader.vue'
 import PageContent from '@/components/shell/PageContent.vue'
 
@@ -23,7 +22,7 @@ const title = computed(() => t(route.meta.titleKey ?? 'pages.notFound'))
           {{ t('placeholder.body', { features: route.meta.features }) }}
         </p>
         <RouterLink to="/" class="tt-btn tt-btn--ghost tt-btn--sm">
-          <TtIcon :icon="Home01Icon" :size="16" />{{ t('placeholder.backHome') }}
+          <AppIcon name="today" :size="16" />{{ t('placeholder.backHome') }}
         </RouterLink>
       </section>
     </PageContent>

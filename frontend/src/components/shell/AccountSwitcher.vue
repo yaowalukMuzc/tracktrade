@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { ArrowDown01Icon, Tick02Icon, Wallet01Icon } from '@hugeicons/core-free-icons'
 import { useI18n } from 'vue-i18n'
-import TtIcon from '@/components/TtIcon.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import { useAccountsStore } from '@/stores/accounts'
 import { useSessionStore } from '@/stores/session'
 
@@ -54,23 +53,23 @@ onBeforeUnmount(() => {
       @click="open = !open"
     >
       <span class="flex min-w-0 items-center gap-1.5">
-        <TtIcon :icon="Wallet01Icon" :size="16" />
+        <AppIcon name="accounts" :size="16" />
         <span class="truncate">{{ label }}</span>
       </span>
-      <TtIcon v-if="!session.isMentor" :icon="ArrowDown01Icon" :size="16" />
+      <AppIcon v-if="!session.isMentor" name="chevronDown" :size="16" />
     </button>
 
     <ul v-if="open" class="tt-menu mt-1" :class="block ? 'left-0 right-0' : 'right-0'" role="listbox">
       <li role="option" :aria-selected="accounts.selectedId === null">
         <button type="button" class="tt-menu__item" :class="{ 'tt-menu__item--on': accounts.selectedId === null }" @click="choose(null)">
           <span class="flex-1">{{ t('shell.allAccounts') }}</span>
-          <TtIcon v-if="accounts.selectedId === null" :icon="Tick02Icon" :size="16" />
+          <AppIcon v-if="accounts.selectedId === null" name="check" :size="16" />
         </button>
       </li>
       <li v-for="a in accounts.accounts" :key="a.id" role="option" :aria-selected="accounts.selectedId === a.id">
         <button type="button" class="tt-menu__item" :class="{ 'tt-menu__item--on': accounts.selectedId === a.id }" @click="choose(a.id)">
           <span class="flex-1 whitespace-nowrap">{{ a.name }}</span>
-          <TtIcon v-if="accounts.selectedId === a.id" :icon="Tick02Icon" :size="16" />
+          <AppIcon v-if="accounts.selectedId === a.id" name="check" :size="16" />
         </button>
       </li>
     </ul>

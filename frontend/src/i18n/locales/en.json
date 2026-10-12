@@ -1,5 +1,7 @@
 {
-  "app": { "name": "TrackTrade" },
+  "app": {
+    "name": "TrackTrade"
+  },
   "nav": {
     "today": "Today",
     "calendar": "Calendar",
@@ -15,7 +17,10 @@
     "mentorQueue": "Review queue",
     "mentorAlerts": "Rule breaches",
     "mentorSettings": "Settings",
-    "groups": { "tools": "Tools", "account": "Account" }
+    "groups": {
+      "tools": "Tools",
+      "account": "Account"
+    }
   },
   "shell": {
     "mainNav": "Main menu",
@@ -35,9 +40,17 @@
     "appearance": "Theme",
     "themeLight": "Light",
     "themeDark": "Dark",
-    "role": { "trader": "Trader", "mentor": "Mentor" },
-    "tier": { "free": "Free", "pro": "Pro" },
-    "mentorTraderCount": "Mentor · {n} traders"
+    "role": {
+      "trader": "Trader",
+      "mentor": "Mentor"
+    },
+    "tier": {
+      "free": "Free",
+      "pro": "Pro"
+    },
+    "mentorTraderCount": "Mentor · {n} traders",
+    "themeSystem": "System",
+    "back": "Back"
   },
   "greeting": {
     "morning": "Good morning, {name}",
@@ -64,11 +77,93 @@
     "mentor": "Mentor dashboard",
     "mentorTrade": "Mentor trade review",
     "more": "More",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "register": "Create account"
   },
   "placeholder": {
     "title": "This screen isn't built yet",
     "body": "The shell is ready — content follows spec {features}",
     "backHome": "Back to Today"
+  },
+  "ui": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "close": "Close",
+    "dismiss": "Dismiss",
+    "grade": "Grade {grade}",
+    "gradeScore": "Grade {grade} · score {score}",
+    "loading": "Loading…",
+    "save": "Save",
+    "saved": "Saved"
+  },
+  "auth": {
+    "pitchTitle": "Measure the gap between your plan and your real trades",
+    "pitchBody": "Analysis → Plan → Execution → Outcome across 6 dimensions, to find where your problem really is — not just profit or loss",
+    "pitchShort": "Measure the gap between your plan and your real trades, not just P/L",
+    "email": "Email",
+    "emailPlaceholder": "you{'@'}email.com",
+    "password": "Password",
+    "displayName": "Display name",
+    "remember": "Remember me",
+    "forgot": "Forgot password?",
+    "forgotSoon": "Password reset by email is coming soon",
+    "login": "Log in",
+    "noAccount": "No account yet?",
+    "or": "or",
+    "createAccount": "Create an account",
+    "createAccountFree": "Create an account · free",
+    "privacyTitle": "Your trading data is yours",
+    "privacyBody": "A mentor only sees your data when you invite and allow them",
+    "privacyLine": "A mentor only sees your data when you invite and allow them",
+    "registerTitle": "Create account",
+    "registerSub": "Free during the MVP · language and timezone can be changed later",
+    "register": "Create account",
+    "haveAccount": "Already have an account?",
+    "language": "Language",
+    "timezone": "Timezone",
+    "acceptTerms": "I accept the {terms} and {privacy}",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "passwordMin": "Password must be at least 8 characters (currently {n})",
+    "strength": {
+      "label": "Password strength",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "dimensions": "The 6 dimensions TrackTrade measures",
+    "errors": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "terms": "Accept the terms to create an account",
+      "invalid_credentials": "Email or password is incorrect",
+      "email_taken": "An account with this email already exists",
+      "rate_limited": "Too many attempts — wait a moment and try again",
+      "network": "Can't reach the server — try again",
+      "generic": "Something went wrong — try again"
+    }
+  },
+  "dimensions": {
+    "analysis": "Analysis",
+    "planning": "Planning",
+    "execution": "Execution",
+    "risk": "Risk",
+    "discipline": "Discipline",
+    "emotion": "Emotion"
+  },
+  "settings": {
+    "profile": "Profile",
+    "profileSub": "Name, language and timezone (times in the app use this timezone)",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "saveProfile": "Save profile",
+    "comingLater": "Notifications, mentorship and privacy arrive in later phases"
+  },
+  "devUi": {
+    "title": "UI kit",
+    "sub": "Every component and variant — Light left / Dark right",
+    "light": "Light",
+    "dark": "Dark"
   }
 }

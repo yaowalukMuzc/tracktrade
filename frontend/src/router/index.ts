@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import type { NavId } from './nav'
+import { installGuards } from './guards'
 import AppLayout from '@/layouts/AppLayout.vue'
 
 declare module 'vue-router' {
@@ -10,6 +11,10 @@ declare module 'vue-router' {
     nav?: NavId
     /** Spec features the screen implements (shown on placeholders). */
     features?: string
+    /** Reachable without signing in. */
+    public?: boolean
+    /** Signed-in users are sent home (login/register). */
+    guestOnly?: boolean
   }
 }
 
@@ -30,21 +35,29 @@ const appRoutes: RouteRecordRaw[] = [
   { path: 'playbook', name: 'playbook', component: Placeholder, meta: { titleKey: 'pages.playbook', nav: 'playbook', features: 'F-04' } },
   { path: 'accounts', name: 'accounts', component: Placeholder, meta: { titleKey: 'pages.accounts', nav: 'accounts', features: 'F-02, F-03, F-08' } },
   { path: 'alerts', name: 'alerts', component: Placeholder, meta: { titleKey: 'pages.alerts', nav: 'alerts', features: 'F-20, F-21' } },
-  { path: 'settings', name: 'settings', component: Placeholder, meta: { titleKey: 'pages.settings', nav: 'settings', features: 'F-01, F-22' } },
+  { path: 'settings', name: 'settings', component: () => import('@/features/settings/SettingsView.vue'), meta: { titleKey: 'pages.settings', nav: 'settings', features: 'F-01, F-22' } },
   { path: 'mentor', name: 'mentor', component: Placeholder, meta: { titleKey: 'pages.mentor', nav: 'mentor', features: 'F-22 AC7' } },
   { path: 'mentor/queue', name: 'mentor-queue', component: Placeholder, meta: { titleKey: 'nav.mentorQueue', nav: 'mentorQueue', features: 'F-22' } },
   { path: 'mentor/trades/:id', name: 'mentor-trade', component: Placeholder, meta: { titleKey: 'pages.mentorTrade', nav: 'mentorQueue', features: 'F-22 AC2–AC4' } },
   { path: 'more', name: 'more', component: () => import('@/views/MoreView.vue'), meta: { titleKey: 'pages.more', nav: 'more' } },
 ]
 
+const devRoutes: RouteRecordRaw[] = import.meta.env.DEV
+  ? [{ path: '/dev/ui', name: 'dev-ui', component: () => import('@/views/DevUiView.vue'), meta: { titleKey: 'devUi.title', public: true } }]
+  : []
+
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // Full-screen flows without the app shell.
-    { path: '/login', name: 'login', component: Placeholder, meta: { titleKey: 'pages.login', features: 'F-01' } },
+    { path: '/login', name: 'login', component: () => import('@/features/auth/LoginView.vue'), meta: { titleKey: 'pages.login', public: true, guestOnly: true } },
+    { path: '/register', name: 'register', component: () => import('@/features/auth/RegisterView.vue'), meta: { titleKey: 'pages.register', public: true, guestOnly: true } },
     { path: '/onboarding', name: 'onboarding', component: Placeholder, meta: { titleKey: 'pages.onboarding', features: 'F-01, F-02, F-08' } },
+    ...devRoutes,
     { path: '/', component: AppLayout, children: appRoutes },
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: Placeholder, meta: { titleKey: 'pages.notFound' } },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: Placeholder, meta: { titleKey: 'pages.notFound', public: true } },
   ],
   scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
 })
+
+installGuards(router)

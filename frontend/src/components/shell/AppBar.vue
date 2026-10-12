@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { Notification01Icon } from '@hugeicons/core-free-icons'
-import TtIcon from '@/components/TtIcon.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import AccountSwitcher from './AccountSwitcher.vue'
 import { useInboxStore } from '@/stores/inbox'
 
@@ -16,7 +15,7 @@ const inbox = useInboxStore()
     <span class="flex-1" />
     <AccountSwitcher />
     <RouterLink to="/alerts" class="tt-iconbtn" :aria-label="t('shell.notifications')">
-      <TtIcon :icon="Notification01Icon" />
+      <AppIcon name="alerts" />
       <i v-if="inbox.unreadAlerts > 0" class="tt-nav__dot !right-1.5 !top-1.5 !m-0" />
     </RouterLink>
   </header>

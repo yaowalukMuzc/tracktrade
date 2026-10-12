@@ -1,20 +1,4 @@
-import {
-  AiMagicIcon,
-  Alert02Icon,
-  Analytics01Icon,
-  Book02Icon,
-  Calendar03Icon,
-  ChartCandlestickIcon,
-  Home01Icon,
-  Menu01Icon,
-  NoteEditIcon,
-  Notification01Icon,
-  Settings02Icon,
-  UserGroupIcon,
-  Wallet01Icon,
-} from '@hugeicons/core-free-icons'
-
-export type Icon = typeof Home01Icon
+import type { IconName } from '@/lib/icons'
 
 export type NavId =
   | 'today'
@@ -37,7 +21,7 @@ export interface NavItem {
   id: NavId
   to: string
   labelKey: string
-  icon: Icon
+  icon: IconName
   badge?: { source: BadgeSource; tone: 'warning' | 'loss' }
 }
 
@@ -50,28 +34,28 @@ export interface NavGroup {
 export const traderSideNav: NavGroup[] = [
   {
     items: [
-      { id: 'today', to: '/', labelKey: 'nav.today', icon: Home01Icon },
-      { id: 'calendar', to: '/calendar', labelKey: 'nav.calendar', icon: Calendar03Icon },
+      { id: 'today', to: '/', labelKey: 'nav.today', icon: 'today' },
+      { id: 'calendar', to: '/calendar', labelKey: 'nav.calendar', icon: 'calendar' },
       {
         id: 'trades',
         to: '/trades',
         labelKey: 'nav.trades',
-        icon: ChartCandlestickIcon,
+        icon: 'trades',
         badge: { source: 'pendingTrades', tone: 'warning' },
       },
-      { id: 'stats', to: '/stats', labelKey: 'nav.stats', icon: Analytics01Icon },
+      { id: 'stats', to: '/stats', labelKey: 'nav.stats', icon: 'performance' },
     ],
   },
   {
     titleKey: 'nav.groups.tools',
     items: [
-      { id: 'diagnosis', to: '/diagnosis', labelKey: 'nav.diagnosis', icon: AiMagicIcon },
-      { id: 'playbook', to: '/playbook', labelKey: 'nav.playbook', icon: Book02Icon },
+      { id: 'diagnosis', to: '/diagnosis', labelKey: 'nav.diagnosis', icon: 'aiCoach' },
+      { id: 'playbook', to: '/playbook', labelKey: 'nav.playbook', icon: 'playbook' },
       {
         id: 'alerts',
         to: '/alerts',
         labelKey: 'nav.alerts',
-        icon: Notification01Icon,
+        icon: 'alerts',
         badge: { source: 'unreadAlerts', tone: 'loss' },
       },
     ],
@@ -79,8 +63,8 @@ export const traderSideNav: NavGroup[] = [
   {
     titleKey: 'nav.groups.account',
     items: [
-      { id: 'accounts', to: '/accounts', labelKey: 'nav.accounts', icon: Wallet01Icon },
-      { id: 'settings', to: '/settings', labelKey: 'nav.settings', icon: Settings02Icon },
+      { id: 'accounts', to: '/accounts', labelKey: 'nav.accounts', icon: 'accounts' },
+      { id: 'settings', to: '/settings', labelKey: 'nav.settings', icon: 'settings' },
     ],
   },
 ]
@@ -88,36 +72,36 @@ export const traderSideNav: NavGroup[] = [
 export const mentorSideNav: NavGroup[] = [
   {
     items: [
-      { id: 'mentor', to: '/mentor', labelKey: 'nav.mentorTraders', icon: UserGroupIcon },
+      { id: 'mentor', to: '/mentor', labelKey: 'nav.mentorTraders', icon: 'mentorGroup' },
       {
         id: 'mentorQueue',
         to: '/mentor/queue',
         labelKey: 'nav.mentorQueue',
-        icon: NoteEditIcon,
+        icon: 'review',
         badge: { source: 'mentorQueue', tone: 'warning' },
       },
-      { id: 'mentorAlerts', to: '/alerts', labelKey: 'nav.mentorAlerts', icon: Alert02Icon },
+      { id: 'mentorAlerts', to: '/alerts', labelKey: 'nav.mentorAlerts', icon: 'ruleBreach' },
     ],
   },
   {
     titleKey: 'nav.groups.account',
-    items: [{ id: 'settings', to: '/settings', labelKey: 'nav.mentorSettings', icon: Settings02Icon }],
+    items: [{ id: 'settings', to: '/settings', labelKey: 'nav.mentorSettings', icon: 'settings' }],
   },
 ]
 
 // BottomNav: exactly five items (design-system/components/BottomNav.md).
 export const bottomNav: NavItem[] = [
-  { id: 'today', to: '/', labelKey: 'nav.today', icon: Home01Icon },
-  { id: 'calendar', to: '/calendar', labelKey: 'nav.calendar', icon: Calendar03Icon },
+  { id: 'today', to: '/', labelKey: 'nav.today', icon: 'today' },
+  { id: 'calendar', to: '/calendar', labelKey: 'nav.calendar', icon: 'calendar' },
   {
     id: 'trades',
     to: '/trades',
     labelKey: 'nav.trades',
-    icon: ChartCandlestickIcon,
+    icon: 'trades',
     badge: { source: 'pendingTrades', tone: 'loss' },
   },
-  { id: 'stats', to: '/stats', labelKey: 'nav.stats', icon: Analytics01Icon },
-  { id: 'more', to: '/more', labelKey: 'nav.more', icon: Menu01Icon },
+  { id: 'stats', to: '/stats', labelKey: 'nav.stats', icon: 'performance' },
+  { id: 'more', to: '/more', labelKey: 'nav.more', icon: 'more' },
 ]
 
 /** Destinations behind "More" on mobile = the sidebar's tools + account groups. */

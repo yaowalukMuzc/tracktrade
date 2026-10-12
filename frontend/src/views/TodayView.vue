@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Add01Icon, Notification01Icon, Search01Icon, Target02Icon } from '@hugeicons/core-free-icons'
-import TtIcon from '@/components/TtIcon.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import PageHeader from '@/components/shell/PageHeader.vue'
 import PageContent from '@/components/shell/PageContent.vue'
 import { useSessionStore } from '@/stores/session'
@@ -25,7 +24,7 @@ const greeting = computed(() => t(greetingKey(now), { name: session.firstName })
   <PageHeader :title="greeting" :overline="dateLine">
     <template #actions>
       <div class="relative hidden w-[260px] items-center xl:flex">
-        <span class="pointer-events-none absolute left-3 text-ink-subtle"><TtIcon :icon="Search01Icon" /></span>
+        <span class="pointer-events-none absolute left-3 text-ink-subtle"><AppIcon name="search" /></span>
         <input
           type="search"
           :aria-label="t('shell.search')"
@@ -34,14 +33,14 @@ const greeting = computed(() => t(greetingKey(now), { name: session.firstName })
         />
       </div>
       <RouterLink to="/alerts" class="tt-iconbtn hidden lg:inline-grid" :aria-label="t('shell.notifications')">
-        <TtIcon :icon="Notification01Icon" />
+        <AppIcon name="alerts" />
         <i v-if="inbox.unreadAlerts > 0" class="tt-nav__dot !right-1.5 !top-1.5 !m-0" />
       </RouterLink>
       <RouterLink to="/trades/new" class="tt-btn tt-btn--secondary hidden md:inline-flex">
-        <TtIcon :icon="Add01Icon" />{{ t('shell.addTrade') }}
+        <AppIcon name="add" />{{ t('shell.addTrade') }}
       </RouterLink>
       <RouterLink to="/plans/new" class="tt-btn tt-btn--primary hidden md:inline-flex">
-        <TtIcon :icon="Target02Icon" />{{ t('shell.newPlan') }}
+        <AppIcon name="plan" />{{ t('shell.newPlan') }}
       </RouterLink>
     </template>
   </PageHeader>

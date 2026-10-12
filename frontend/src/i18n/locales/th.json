@@ -1,5 +1,7 @@
 {
-  "app": { "name": "TrackTrade" },
+  "app": {
+    "name": "TrackTrade"
+  },
   "nav": {
     "today": "วันนี้",
     "calendar": "ปฏิทิน",
@@ -15,7 +17,10 @@
     "mentorQueue": "คิวรีวิว",
     "mentorAlerts": "Alert ผิดกฎ",
     "mentorSettings": "ตั้งค่า",
-    "groups": { "tools": "เครื่องมือ", "account": "บัญชี" }
+    "groups": {
+      "tools": "เครื่องมือ",
+      "account": "บัญชี"
+    }
   },
   "shell": {
     "mainNav": "เมนูหลัก",
@@ -35,9 +40,17 @@
     "appearance": "ธีม",
     "themeLight": "สว่าง",
     "themeDark": "มืด",
-    "role": { "trader": "Trader", "mentor": "Mentor" },
-    "tier": { "free": "Free", "pro": "Pro" },
-    "mentorTraderCount": "Mentor · {n} traders"
+    "role": {
+      "trader": "Trader",
+      "mentor": "Mentor"
+    },
+    "tier": {
+      "free": "Free",
+      "pro": "Pro"
+    },
+    "mentorTraderCount": "Mentor · {n} traders",
+    "themeSystem": "ตามระบบ",
+    "back": "ย้อนกลับ"
   },
   "greeting": {
     "morning": "สวัสดีตอนเช้า, {name}",
@@ -64,11 +77,93 @@
     "mentor": "Mentor dashboard",
     "mentorTrade": "รีวิวเทรด (Mentor)",
     "more": "เพิ่มเติม",
-    "notFound": "ไม่พบหน้านี้"
+    "notFound": "ไม่พบหน้านี้",
+    "register": "สร้างบัญชี"
   },
   "placeholder": {
     "title": "หน้านี้ยังไม่ได้สร้าง",
     "body": "โครงหน้าพร้อมแล้ว — เนื้อหาจะตามมาตาม spec {features}",
     "backHome": "กลับหน้าวันนี้"
+  },
+  "ui": {
+    "showPassword": "แสดงรหัสผ่าน",
+    "hidePassword": "ซ่อนรหัสผ่าน",
+    "close": "ปิด",
+    "dismiss": "ปิดข้อความ",
+    "grade": "เกรด {grade}",
+    "gradeScore": "เกรด {grade} · {score} คะแนน",
+    "loading": "กำลังโหลด…",
+    "save": "บันทึก",
+    "saved": "บันทึกแล้ว"
+  },
+  "auth": {
+    "pitchTitle": "วัดช่องว่างระหว่างแผนกับการเทรดจริง",
+    "pitchBody": "Analysis → Plan → Execution → Outcome ใน 6 มิติ เพื่อหาว่าปัญหาของคุณอยู่ตรงไหน — ไม่ใช่แค่กำไรหรือขาดทุน",
+    "pitchShort": "วัดช่องว่างระหว่างแผนกับการเทรดจริง ไม่ใช่แค่กำไรขาดทุน",
+    "email": "อีเมล",
+    "emailPlaceholder": "you{'@'}email.com",
+    "password": "รหัสผ่าน",
+    "displayName": "ชื่อที่แสดง",
+    "remember": "จดจำฉันไว้",
+    "forgot": "ลืมรหัสผ่าน?",
+    "forgotSoon": "รีเซ็ตรหัสผ่านทางอีเมลจะเปิดให้ใช้เร็วๆ นี้",
+    "login": "เข้าสู่ระบบ",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "or": "หรือ",
+    "createAccount": "สร้างบัญชีใหม่",
+    "createAccountFree": "สร้างบัญชีใหม่ · ฟรี",
+    "privacyTitle": "ข้อมูลเทรดของคุณเป็นของคุณ",
+    "privacyBody": "Mentor เห็นข้อมูลได้เฉพาะเมื่อคุณเชิญและอนุญาตเท่านั้น",
+    "privacyLine": "Mentor เห็นข้อมูลของคุณเฉพาะเมื่อคุณเชิญและอนุญาตเท่านั้น",
+    "registerTitle": "สร้างบัญชี",
+    "registerSub": "ใช้ฟรีใน MVP · ตั้งค่าภาษาและเขตเวลาได้ทีหลัง",
+    "register": "สร้างบัญชี",
+    "haveAccount": "มีบัญชีแล้ว?",
+    "language": "ภาษา",
+    "timezone": "เขตเวลา",
+    "acceptTerms": "ยอมรับ {terms} และ {privacy}",
+    "terms": "เงื่อนไขการใช้งาน",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "passwordMin": "รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร (ตอนนี้ {n})",
+    "strength": {
+      "label": "ความแข็งแรงของรหัสผ่าน",
+      "weak": "รหัสผ่านอ่อน",
+      "fair": "พอใช้",
+      "good": "ดี",
+      "strong": "แข็งแรง"
+    },
+    "dimensions": "6 มิติที่ TrackTrade วัด",
+    "errors": {
+      "required": "กรุณากรอกช่องนี้",
+      "email": "รูปแบบอีเมลไม่ถูกต้อง",
+      "terms": "กรุณายอมรับเงื่อนไขก่อนสร้างบัญชี",
+      "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+      "email_taken": "อีเมลนี้มีบัญชีอยู่แล้ว",
+      "rate_limited": "ลองบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่",
+      "network": "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง",
+      "generic": "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง"
+    }
+  },
+  "dimensions": {
+    "analysis": "Analysis",
+    "planning": "Planning",
+    "execution": "Execution",
+    "risk": "Risk",
+    "discipline": "Discipline",
+    "emotion": "Emotion"
+  },
+  "settings": {
+    "profile": "โปรไฟล์",
+    "profileSub": "ชื่อ ภาษา และเขตเวลา (เวลาในแอปแสดงตามเขตเวลานี้)",
+    "appearance": "การแสดงผล",
+    "theme": "ธีม",
+    "saveProfile": "บันทึกโปรไฟล์",
+    "comingLater": "การแจ้งเตือน, Mentorship และความเป็นส่วนตัว จะมาใน phase ถัดไป"
+  },
+  "devUi": {
+    "title": "UI kit",
+    "sub": "ทุกคอมโพเนนต์ทุก variant — ซ้าย Light / ขวา Dark",
+    "light": "Light",
+    "dark": "Dark"
   }
 }

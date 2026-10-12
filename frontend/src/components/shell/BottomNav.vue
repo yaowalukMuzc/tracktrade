@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import TtIcon from '@/components/TtIcon.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import { bottomNav, moreNav } from '@/router/nav'
 import { useInboxStore } from '@/stores/inbox'
 
@@ -24,7 +24,7 @@ const isOn = (id: string) => route.meta.nav === id || (id === 'more' && !!route.
       :class="{ 'tt-nav__item--on': isOn(item.id) }"
       :aria-current="isOn(item.id) ? 'page' : undefined"
     >
-      <TtIcon :icon="item.icon" :size="24" />
+      <AppIcon :name="item.icon" :size="24" />
       {{ t(item.labelKey) }}
       <i v-if="item.badge && inbox[item.badge.source] > 0" class="tt-nav__dot" />
     </RouterLink>
