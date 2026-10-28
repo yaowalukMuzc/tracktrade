@@ -1,0 +1,199 @@
+{
+  "accounts": {
+    "title": "Accounts & connections",
+    "titleShort": "Trading accounts",
+    "add": "Add account",
+    "addShort": "Account",
+    "showArchived": "Show archived accounts",
+    "empty": "No trading account yet — add one so lot sizes and rule checks work.",
+    "loadError": "Couldn't load your accounts",
+    "retry": "Try again",
+    "archivedBadge": "Archived",
+    "col": {
+      "account": "Account",
+      "type": "Type",
+      "platform": "Platform",
+      "balance": "Balance",
+      "equity": "Equity",
+      "dailyLoss": "Daily loss",
+      "drawdown": "Drawdown",
+      "connection": "Connection",
+      "actions": "Actions"
+    },
+    "type": {
+      "live": "Live",
+      "demo": "Demo",
+      "prop": "Prop"
+    },
+    "platform": {
+      "mt5": "MT5",
+      "ctrader": "cTrader",
+      "manual": "Manual"
+    },
+    "manualSource": "Manual / OCR",
+    "connection": {
+      "none": "Not connected",
+      "title": "Connection",
+      "cardTitle": "{platform} · {broker}",
+      "notYet": "Automatic sync from MT5 (EA) and cTrader arrives in an upcoming release. Until then, add trades by screenshot or by hand.",
+      "manual": "This account logs trades by screenshot or by hand — no connection needed."
+    },
+    "menu": "Options for {name}",
+    "edit": "Edit account",
+    "archive": "Archive account",
+    "unarchive": "Restore",
+    "archiveConfirmTitle": "Archive {name}?",
+    "archiveConfirmBody": "It disappears from the account switcher. All data and history stay, and you can restore it any time.",
+    "cancel": "Cancel",
+    "tabs": {
+      "label": "Account sections",
+      "risk": "{name} · Risk Profile",
+      "rules": "Extra rules",
+      "symbols": "Symbol mapping",
+      "connections": "Connections",
+      "audit": "Audit log"
+    },
+    "form": {
+      "createTitle": "Add trading account",
+      "editTitle": "Edit account",
+      "createSub": "Each account has its own Risk Profile (defaults 1% · 3% · 10% · 5 trades)",
+      "name": "Account name",
+      "namePlaceholder": "e.g. FTMO 100K Challenge",
+      "type": "Type",
+      "platform": "Platform",
+      "broker": "Broker",
+      "number": "Account number",
+      "numberHelp": "Optional",
+      "currency": "Currency",
+      "balance": "Initial balance",
+      "create": "Add account",
+      "save": "Save"
+    },
+    "risk": {
+      "title": "Risk Profile",
+      "edited": "Last edited {date} · older trades keep the values at trade time",
+      "defaults": "Defaults",
+      "riskPerTrade": "Risk per trade",
+      "maxDailyLoss": "Max daily loss",
+      "maxDrawdown": "Max drawdown",
+      "maxTrades": "Max trades / day",
+      "cooldown": "Revenge cooldown",
+      "blackout": "News blackout",
+      "minutes": "min",
+      "trades": "trades",
+      "blackoutValue": "±{n} min",
+      "minutesValue": "{n} min",
+      "explain": "{pct}% of {balance} = {amount} per trade",
+      "explainLimits": "Daily loss {daily} · DD limit {dd}",
+      "edit": "Edit Risk Profile",
+      "auditNote": "Edits are recorded in the audit log · older trades keep the values at trade time",
+      "saved": "Risk Profile saved",
+      "sectionTitle": "Risk Profile · {name}",
+      "editedShort": "Edited {date}"
+    },
+    "today": {
+      "title": "Today",
+      "dailyLoss": "Daily loss",
+      "dailyLossToday": "Daily loss today",
+      "drawdown": "Drawdown from peak",
+      "trades": "Trades",
+      "tradesToday": "Trades today"
+    },
+    "rules": {
+      "title": "Extra rules",
+      "add": "Add rule",
+      "addShort": "Rule",
+      "empty": "No extra rules yet — add the ones you want TrackTrade to watch.",
+      "byYou": "By you",
+      "byMentor": "Assigned by your mentor",
+      "severityLabel": "severity {level}",
+      "severity": {
+        "low": "low",
+        "medium": "medium",
+        "high": "high"
+      },
+      "toggle": "Rule on: {rule}",
+      "delete": "Delete rule: {rule}",
+      "code": {
+        "no_trading_window": "No-trading window",
+        "max_lot_vs_plan": "Lot size vs plan",
+        "max_consecutive_losses": "Stop after losing streak",
+        "custom": "Custom rule"
+      },
+      "describe": {
+        "no_trading_window": "No trading on {days} after {after}",
+        "max_lot_vs_plan": "Lot no more than {ratio}× planned",
+        "max_consecutive_losses": "Stop after {n} losses in a row"
+      },
+      "weekday": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "dialogTitle": "Add rule",
+      "kind": "Rule type",
+      "days": "Days",
+      "after": "From",
+      "ratio": "Max lot (× planned)",
+      "losses": "Losses in a row",
+      "text": "Rule",
+      "textPlaceholder": "e.g. No trading on less than 6 hours of sleep",
+      "severityField": "Severity",
+      "save": "Add rule",
+      "customNote": "Custom rules show up as a checklist for you; they aren't checked automatically."
+    },
+    "symbols": {
+      "title": "Symbol mapping",
+      "help": "Map your broker's symbol names (e.g. XAUUSD.m) to standard symbols so lots and P/L are calculated correctly.",
+      "empty": "No mappings yet — names that only add a suffix (XAUUSD.m → XAUUSD) are matched automatically.",
+      "add": "Add mapping",
+      "brokerSymbol": "Broker symbol",
+      "standard": "Standard symbol",
+      "contractSize": "Contract size",
+      "tickValue": "Tick value",
+      "optional": "Optional — standard value when empty",
+      "delete": "Delete mapping {symbol}",
+      "spec": "{code} · {size}",
+      "save": "Save mapping",
+      "oz": "{n} oz",
+      "units": "{n}"
+    },
+    "audit": {
+      "title": "Audit log",
+      "empty": "No changes yet",
+      "action": {
+        "create": "Created",
+        "update": "Edited",
+        "archive": "Archived",
+        "unarchive": "Restored",
+        "delete": "Deleted"
+      },
+      "entity": {
+        "trading_account": "Account",
+        "risk_profile": "Risk Profile",
+        "trading_rule": "Rule",
+        "account_symbol_override": "Symbol mapping"
+      },
+      "change": "{field}: {before} → {after}",
+      "showAll": "Show all"
+    },
+    "errors": {
+      "required": "Required",
+      "positive": "Must be greater than 0",
+      "range": "Must be between {min} and {max}",
+      "integer": "Must be a whole number",
+      "dailyOverDd": "Max daily loss can't exceed max drawdown",
+      "riskOverDaily": "Risk per trade can't exceed max daily loss",
+      "currency": "Use a 3-letter code such as USD",
+      "time": "Use HH:MM",
+      "days": "Pick at least one day",
+      "symbol": "No spaces",
+      "exists": "This symbol is already mapped",
+      "generic": "Couldn't save. Please try again."
+    }
+  }
+}

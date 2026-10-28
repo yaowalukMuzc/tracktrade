@@ -1,0 +1,199 @@
+{
+  "accounts": {
+    "title": "บัญชี & การเชื่อมต่อ",
+    "titleShort": "บัญชีเทรด",
+    "add": "เพิ่มบัญชี",
+    "addShort": "บัญชี",
+    "showArchived": "แสดงบัญชีที่ archive",
+    "empty": "ยังไม่มีบัญชีเทรด — เพิ่มบัญชีแรกเพื่อให้ระบบคำนวณ lot และตรวจกฎได้",
+    "loadError": "โหลดข้อมูลบัญชีไม่สำเร็จ",
+    "retry": "ลองใหม่",
+    "archivedBadge": "Archived",
+    "col": {
+      "account": "บัญชี",
+      "type": "ประเภท",
+      "platform": "แพลตฟอร์ม",
+      "balance": "Balance",
+      "equity": "Equity",
+      "dailyLoss": "Daily loss",
+      "drawdown": "Drawdown",
+      "connection": "การเชื่อมต่อ",
+      "actions": "การจัดการ"
+    },
+    "type": {
+      "live": "Live",
+      "demo": "Demo",
+      "prop": "Prop"
+    },
+    "platform": {
+      "mt5": "MT5",
+      "ctrader": "cTrader",
+      "manual": "Manual"
+    },
+    "manualSource": "Manual / OCR",
+    "connection": {
+      "none": "ไม่เชื่อมต่อ",
+      "title": "การเชื่อมต่อ",
+      "cardTitle": "{platform} · {broker}",
+      "notYet": "การซิงก์อัตโนมัติจาก MT5 (EA) และ cTrader จะเปิดให้ใช้ในเวอร์ชันถัดไป ระหว่างนี้บันทึกเทรดด้วย screenshot หรือกรอกเองได้",
+      "manual": "บัญชีนี้บันทึกเทรดด้วย screenshot หรือกรอกเอง ไม่ต้องเชื่อมต่อ"
+    },
+    "menu": "ตัวเลือกของ {name}",
+    "edit": "แก้ไขบัญชี",
+    "archive": "Archive บัญชี",
+    "unarchive": "นำกลับมาใช้",
+    "archiveConfirmTitle": "Archive {name}?",
+    "archiveConfirmBody": "บัญชีจะถูกซ่อนจากตัวเลือกบัญชี ข้อมูลและประวัติทั้งหมดยังอยู่ และนำกลับมาใช้ได้ทุกเมื่อ",
+    "cancel": "ยกเลิก",
+    "tabs": {
+      "label": "ส่วนของบัญชี",
+      "risk": "{name} · Risk Profile",
+      "rules": "กฎเพิ่มเติม",
+      "symbols": "Symbol mapping",
+      "connections": "การเชื่อมต่อ",
+      "audit": "Audit log"
+    },
+    "form": {
+      "createTitle": "เพิ่มบัญชีเทรด",
+      "editTitle": "แก้ไขบัญชี",
+      "createSub": "แต่ละบัญชีมี Risk Profile ของตัวเอง (ค่าเริ่มต้น 1% · 3% · 10% · 5 เทรด)",
+      "name": "ชื่อบัญชี",
+      "namePlaceholder": "เช่น FTMO 100K Challenge",
+      "type": "ประเภท",
+      "platform": "แพลตฟอร์ม",
+      "broker": "Broker",
+      "number": "เลขบัญชี",
+      "numberHelp": "ไม่บังคับ",
+      "currency": "สกุลเงิน",
+      "balance": "Initial balance",
+      "create": "เพิ่มบัญชี",
+      "save": "บันทึก"
+    },
+    "risk": {
+      "title": "Risk Profile",
+      "edited": "แก้ล่าสุด {date} · เทรดเก่าใช้ค่า ณ เวลาที่เทรด",
+      "defaults": "ค่าเริ่มต้น",
+      "riskPerTrade": "Risk ต่อเทรด",
+      "maxDailyLoss": "Max daily loss",
+      "maxDrawdown": "Max drawdown",
+      "maxTrades": "Max trades / วัน",
+      "cooldown": "Revenge cooldown",
+      "blackout": "News blackout",
+      "minutes": "นาที",
+      "trades": "ไม้",
+      "blackoutValue": "±{n} นาที",
+      "minutesValue": "{n} นาที",
+      "explain": "{pct}% ของ {balance} = {amount} ต่อเทรด",
+      "explainLimits": "Daily loss {daily} · DD limit {dd}",
+      "edit": "แก้ Risk Profile",
+      "auditNote": "การแก้ไขถูกบันทึกใน audit log · เทรดเก่าใช้ค่า ณ เวลาที่เทรด",
+      "saved": "บันทึก Risk Profile แล้ว",
+      "sectionTitle": "Risk Profile · {name}",
+      "editedShort": "แก้ล่าสุด {date}"
+    },
+    "today": {
+      "title": "วันนี้",
+      "dailyLoss": "Daily loss",
+      "dailyLossToday": "Daily loss วันนี้",
+      "drawdown": "Drawdown จาก peak",
+      "trades": "เทรด",
+      "tradesToday": "เทรดวันนี้"
+    },
+    "rules": {
+      "title": "กฎเพิ่มเติม",
+      "add": "เพิ่มกฎ",
+      "addShort": "กฎ",
+      "empty": "ยังไม่มีกฎเพิ่มเติม — เพิ่มกฎที่คุณอยากให้ระบบช่วยเตือน",
+      "byYou": "โดยคุณ",
+      "byMentor": "มอบหมายโดย Mentor",
+      "severityLabel": "severity {level}",
+      "severity": {
+        "low": "ต่ำ",
+        "medium": "กลาง",
+        "high": "สูง"
+      },
+      "toggle": "เปิดใช้กฎ: {rule}",
+      "delete": "ลบกฎ: {rule}",
+      "code": {
+        "no_trading_window": "ห้ามเทรดช่วงเวลา",
+        "max_lot_vs_plan": "จำกัดขนาด lot เทียบแผน",
+        "max_consecutive_losses": "หยุดเมื่อแพ้ติดกัน",
+        "custom": "กฎที่เขียนเอง"
+      },
+      "describe": {
+        "no_trading_window": "ห้ามเทรด{days}หลัง {after}",
+        "max_lot_vs_plan": "Lot ไม่เกิน {ratio}× planned",
+        "max_consecutive_losses": "หยุดเทรดเมื่อแพ้ติดกัน {n} ไม้"
+      },
+      "weekday": [
+        "จันทร์",
+        "อังคาร",
+        "พุธ",
+        "พฤหัส",
+        "ศุกร์",
+        "เสาร์",
+        "อาทิตย์"
+      ],
+      "dialogTitle": "เพิ่มกฎ",
+      "kind": "ประเภทกฎ",
+      "days": "วัน",
+      "after": "ตั้งแต่เวลา",
+      "ratio": "Lot สูงสุด (เท่าของ planned)",
+      "losses": "แพ้ติดกัน (ไม้)",
+      "text": "กฎ",
+      "textPlaceholder": "เช่น ไม่เทรดเมื่อนอนน้อยกว่า 6 ชั่วโมง",
+      "severityField": "ความรุนแรง",
+      "save": "เพิ่มกฎ",
+      "customNote": "กฎที่เขียนเองจะแสดงเป็น checklist ให้คุณตรวจเอง ระบบไม่ตรวจอัตโนมัติ"
+    },
+    "symbols": {
+      "title": "Symbol mapping",
+      "help": "จับคู่ชื่อ symbol ของ broker (เช่น XAUUSD.m) กับ symbol มาตรฐาน เพื่อให้คำนวณ lot และ P/L ถูกต้อง",
+      "empty": "ยังไม่มี mapping — symbol ที่ชื่อตรงกับมาตรฐาน (เช่น XAUUSD.m → XAUUSD) ระบบจับคู่ให้อัตโนมัติ",
+      "add": "เพิ่ม mapping",
+      "brokerSymbol": "Symbol ของ broker",
+      "standard": "Symbol มาตรฐาน",
+      "contractSize": "Contract size",
+      "tickValue": "Tick value",
+      "optional": "ไม่บังคับ — ใช้ค่ามาตรฐานถ้าเว้นว่าง",
+      "delete": "ลบ mapping {symbol}",
+      "spec": "{code} · {size}",
+      "save": "บันทึก mapping",
+      "oz": "{n} oz",
+      "units": "{n}"
+    },
+    "audit": {
+      "title": "Audit log",
+      "empty": "ยังไม่มีการเปลี่ยนแปลง",
+      "action": {
+        "create": "สร้าง",
+        "update": "แก้ไข",
+        "archive": "Archive",
+        "unarchive": "นำกลับมาใช้",
+        "delete": "ลบ"
+      },
+      "entity": {
+        "trading_account": "บัญชี",
+        "risk_profile": "Risk Profile",
+        "trading_rule": "กฎ",
+        "account_symbol_override": "Symbol mapping"
+      },
+      "change": "{field}: {before} → {after}",
+      "showAll": "ดูทั้งหมด"
+    },
+    "errors": {
+      "required": "กรุณากรอกช่องนี้",
+      "positive": "ต้องมากกว่า 0",
+      "range": "ต้องอยู่ระหว่าง {min} ถึง {max}",
+      "integer": "ต้องเป็นจำนวนเต็ม",
+      "dailyOverDd": "Max daily loss ต้องไม่เกิน Max drawdown",
+      "riskOverDaily": "Risk ต่อเทรดต้องไม่เกิน Max daily loss",
+      "currency": "ใช้รหัส 3 ตัวอักษร เช่น USD",
+      "time": "รูปแบบเวลา HH:MM",
+      "days": "เลือกอย่างน้อย 1 วัน",
+      "symbol": "ห้ามมีช่องว่าง",
+      "exists": "symbol นี้ถูกจับคู่แล้ว",
+      "generic": "บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง"
+    }
+  }
+}

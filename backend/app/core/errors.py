@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 log = structlog.get_logger(__name__)
@@ -85,7 +86,8 @@ async def http_error_handler(_: Request, exc: Exception) -> JSONResponse:
 
 
 async def validation_error_handler(_: Request, exc: Exception) -> JSONResponse:
-    assert isinstance(exc, RequestValidationError)
+    """Request body/query errors, and pydantic errors raised by services (nested JSON fields)."""
+    assert isinstance(exc, RequestValidationError | ValidationError)
     details = [
         {
             "loc": list(err.get("loc", ())),
@@ -109,4 +111,5 @@ def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppError, app_error_handler)
     app.add_exception_handler(StarletteHTTPException, http_error_handler)
     app.add_exception_handler(RequestValidationError, validation_error_handler)
+    app.add_exception_handler(ValidationError, validation_error_handler)
     app.add_exception_handler(Exception, unhandled_error_handler)

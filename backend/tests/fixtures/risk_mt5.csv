@@ -1,0 +1,14 @@
+# Loss at SL in the account currency, as MT5 computes it for Forex/CFD symbols:
+#   loss = |entry - sl| x contract_size x lot x (quote->account rate)
+# quote_rate empty = derived (quote == account -> 1, base == account -> 1/entry).
+case,symbol,account_ccy,direction,entry,sl,lot,quote_rate,expected_loss
+eurusd_1lot_50pips,EURUSD,USD,long,1.08500,1.08000,1,,500.00
+eurusd_short_partial_lot,EURUSD,USD,short,1.08500,1.08750,0.37,,92.50
+xauusd_1lot_10usd,XAUUSD,USD,long,4387.52,4377.52,1,,1000.00
+xauusd_short_half_lot,XAUUSD,USD,short,4387.52,4392.20,0.5,,234.00
+xagusd_contract_5000,XAGUSD,USD,long,32.500,32.300,0.1,,100.00
+usdjpy_base_is_account,USDJPY,USD,long,150.000,149.500,1,,333.33
+usdjpy_short_02,USDJPY,USD,short,151.250,151.750,0.2,,66.12
+gbpjpy_cross_needs_rate,GBPJPY,USD,long,190.000,189.500,1,0.00666667,333.33
+eurgbp_cross_gbpusd_rate,EURGBP,USD,short,0.85000,0.85200,1,1.27,254.00
+eurusd_on_eur_account,EURUSD,EUR,long,1.08500,1.08000,1,,460.83

@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
           <AppIcon v-if="accounts.selectedId === null" name="check" :size="16" />
         </button>
       </li>
-      <li v-for="a in accounts.accounts" :key="a.id" role="option" :aria-selected="accounts.selectedId === a.id">
+      <li v-for="a in accounts.active" :key="a.id" role="option" :aria-selected="accounts.selectedId === a.id">
         <button type="button" class="tt-menu__item" :class="{ 'tt-menu__item--on': accounts.selectedId === a.id }" @click="choose(a.id)">
           <span class="flex-1 whitespace-nowrap">{{ a.name }}</span>
           <AppIcon v-if="accounts.selectedId === a.id" name="check" :size="16" />

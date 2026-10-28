@@ -1,21 +1,22 @@
-# TrackTrade dev stack: postgres 17, redis 7, api (FastAPI), worker (arq), web (Vue PWA behind nginx).
+# TrackTrade dev stack: postgres 17, redis 7, auth (Better Auth), api (FastAPI), worker (arq),
+# web (Vue PWA behind nginx), mailpit (catches reset-password emails).
 #   cp .env.example .env   # optional — defaults below work for local use
 #   docker compose up --build
-#   open http://localhost:8080
-# For hot-reload frontend work run `npm run dev` in frontend/ instead (Vite proxies /api to localhost:8000).
+#   open http://localhost:8080          (emails: http://localhost:8025)
+# For hot-reload frontend work run `npm run dev` in frontend/ instead
+# (Vite proxies /api/auth to localhost:3000 and /api to localhost:8000).
 name: tracktrade
 
 x-backend-env: &backend-env
   ENV: ${ENV:-dev}
   DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-tracktrade}:${POSTGRES_PASSWORD:-tracktrade}@postgres:5432/${POSTGRES_DB:-tracktrade}
   REDIS_URL: redis://redis:6379/0
-  JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me-0123456789abcdef}
-  ACCESS_TOKEN_TTL_MIN: ${ACCESS_TOKEN_TTL_MIN:-15}
-  REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
-  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
-  COOKIE_SECURE: ${COOKIE_SECURE:-false}
-  RATE_LIMIT_AUTH: ${RATE_LIMIT_AUTH:-10/min}
+  AUTH_JWKS_URL: http://auth:3000/api/auth/jwks
+  JWT_ISSUER: ${JWT_ISSUER:-tracktrade-auth}
+  JWT_AUDIENCE: ${JWT_AUDIENCE:-tracktrade-api}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5178}
   LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  MEDIA_ROOT: /data/media
 
 services:
   postgres:
@@ -44,9 +45,41 @@ services:
       timeout: 3s
       retries: 20
 
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+
+  auth:
+    build: ./auth
+    environment:
+      ENV: ${ENV:-dev}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-tracktrade}:${POSTGRES_PASSWORD:-tracktrade}@postgres:5432/${POSTGRES_DB:-tracktrade}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-dev-only-better-auth-secret-change-me-0123456789}
+      BETTER_AUTH_URL: ${PUBLIC_URL:-http://localhost:8080}
+      TRUSTED_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5178}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      JWT_ISSUER: ${JWT_ISSUER:-tracktrade-auth}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-tracktrade-api}
+      RATE_LIMIT_AUTH: ${RATE_LIMIT_AUTH:-10/min}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-TrackTrade <no-reply@tracktrade.local>}
+    depends_on:
+      api: { condition: service_healthy } # api applies the migrations that create auth_* tables
+      mailpit: { condition: service_started }
+    ports:
+      - "${AUTH_PORT:-3000}:3000"
+
   api:
     build: ./backend
     environment: *backend-env
+    volumes:
+      - media:/data/media # uploaded images (playbook examples, later reviews/OCR)
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -79,6 +112,7 @@ services:
       dockerfile: frontend/Dockerfile
     depends_on:
       api: { condition: service_healthy }
+      auth: { condition: service_healthy }
     ports:
       - "${WEB_PORT:-8080}:80"
     healthcheck:
@@ -89,3 +123,4 @@ services:
 
 volumes:
   pgdata:
+  media:

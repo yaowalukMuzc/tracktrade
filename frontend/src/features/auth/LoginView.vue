@@ -13,7 +13,7 @@ import { useSessionStore } from '@/stores/session'
 import { safeRedirect } from '@/router/guards'
 import { authErrorKey, isEmail } from './errors'
 
-// screens/web/01-WLogin.png + screens/mobile/01-Main.png (F-01 AC2).
+// screens/web/01-WLogin.png + screens/mobile/01-Main.png (F-01 AC2 via Better Auth; "remember me" = rememberMe).
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -22,7 +22,6 @@ const session = useSessionStore()
 const form = reactive({ email: '', password: '', remember: true })
 const errors = reactive<{ email?: string; password?: string }>({})
 const formError = ref('')
-const notice = ref('')
 const busy = ref(false)
 
 function validate() {
@@ -65,7 +64,6 @@ async function submit() {
 
       <form class="flex flex-col gap-4" novalidate @submit.prevent="submit">
         <TtAlert v-if="formError" variant="loss" :title="formError" />
-        <TtAlert v-if="notice" variant="info" :body="notice" dismissible @dismiss="notice = ''" />
         <TtField :label="t('auth.email')" :error="errors.email">
           <TtInput v-model="form.email" type="email" autocomplete="email" :placeholder="t('auth.emailPlaceholder')" />
         </TtField>
@@ -74,9 +72,9 @@ async function submit() {
         </TtField>
         <div class="flex items-center justify-between gap-3">
           <TtCheckbox v-model="form.remember">{{ t('auth.remember') }}</TtCheckbox>
-          <button type="button" class="tt-link border-0 bg-transparent p-0 text-[14px]" @click="notice = t('auth.forgotSoon')">
+          <RouterLink :to="{ name: 'forgot-password', query: form.email ? { email: form.email.trim() } : {} }" class="tt-link text-[14px]">
             {{ t('auth.forgot') }}
-          </button>
+          </RouterLink>
         </div>
         <TtButton type="submit" variant="primary" size="lg" block :loading="busy">{{ t('auth.login') }}</TtButton>
       </form>

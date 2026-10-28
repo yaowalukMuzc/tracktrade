@@ -1,10 +1,13 @@
 /**
  * Fetch wrapper for the FastAPI backend (`/api/v1`).
- * - Access token lives in memory only; the refresh token is an httpOnly cookie scoped to `/api/v1/auth`.
- * - A 401 triggers one (single-flight) refresh and a single retry; if refresh fails the session handler logs out.
+ * - The bearer token is a 15-minute JWT from Better Auth (`GET /api/auth/token`, authorised by the httpOnly
+ *   session cookie). It lives in memory only.
+ * - A 401 fetches a new JWT once (single-flight) and retries once; if that fails the session is gone
+ *   (signed out, revoked, password reset) and the session handler sends the user to /login.
  * - Errors are normalised to `ApiError {status, code, message, details}` from the backend's `{code, message, details}`.
  */
 export const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined) ?? '/api/v1'
+export const AUTH_BASE = '/api/auth'
 
 export class ApiError extends Error {
   constructor(
@@ -26,7 +29,7 @@ export const getAccessToken = () => accessToken
 export function setAccessToken(token: string | null) {
   accessToken = token
 }
-/** Called when the session can't be refreshed any more (expired / revoked / reused refresh token). */
+/** Called when no JWT can be obtained any more (session expired / signed out / revoked). */
 export function onSessionLost(handler: () => void) {
   onAuthLost = handler
 }
@@ -41,13 +44,14 @@ async function toError(res: Response): Promise<ApiError> {
   return new ApiError(res.status, body.code ?? `http_${res.status}`, body.message ?? res.statusText, body.details ?? null)
 }
 
-/** POST /auth/refresh with the cookie. Concurrent callers share one request. Resolves false on failure. */
+/** GET /api/auth/token with the session cookie. Concurrent callers share one request. Resolves false on failure. */
 export function refreshAccessToken(): Promise<boolean> {
-  refreshing ??= fetch(`${API_BASE}/auth/refresh`, { method: 'POST', credentials: 'same-origin' })
+  refreshing ??= fetch(`${AUTH_BASE}/token`, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
     .then(async (res) => {
       if (!res.ok) return false
-      const data = (await res.json()) as { access_token: string }
-      setAccessToken(data.access_token)
+      const data = (await res.json()) as { token?: string }
+      if (!data.token) return false
+      setAccessToken(data.token)
       return true
     })
     .catch(() => false)

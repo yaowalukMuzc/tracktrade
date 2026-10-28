@@ -78,7 +78,9 @@
     "mentorTrade": "Mentor trade review",
     "more": "More",
     "notFound": "Page not found",
-    "register": "Create account"
+    "register": "Create account",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password"
   },
   "placeholder": {
     "title": "This screen isn't built yet",
@@ -106,7 +108,6 @@
     "displayName": "Display name",
     "remember": "Remember me",
     "forgot": "Forgot password?",
-    "forgotSoon": "Password reset by email is coming soon",
     "login": "Log in",
     "noAccount": "No account yet?",
     "or": "or",
@@ -141,8 +142,26 @@
       "email_taken": "An account with this email already exists",
       "rate_limited": "Too many attempts — wait a moment and try again",
       "network": "Can't reach the server — try again",
-      "generic": "Something went wrong — try again"
-    }
+      "generic": "Something went wrong — try again",
+      "password_short": "Password must be at least 8 characters",
+      "reset_link_invalid": "This reset link is not valid",
+      "password_mismatch": "Passwords don't match"
+    },
+    "forgotTitle": "Forgot password",
+    "forgotSub": "Enter the email you signed up with and we'll send you a link to set a new password.",
+    "sendResetLink": "Send reset link",
+    "resetSentTitle": "Check your email",
+    "resetSentBody": "If {email} has a TrackTrade account, a link is on its way. It works once, within 1 hour.",
+    "backToLogin": "Back to log in",
+    "resetTitle": "Set a new password",
+    "resetSub": "Use at least 8 characters. Saving signs you out on every device.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "setNewPassword": "Save new password",
+    "resetDoneTitle": "Password updated",
+    "resetDoneBody": "Every device has been signed out. Log in again with your new password.",
+    "resetLinkInvalidBody": "The link may have expired (1 hour) or already been used. Request a new one.",
+    "requestNewLink": "Request a new link"
   },
   "dimensions": {
     "analysis": "Analysis",

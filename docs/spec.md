@@ -1,6 +1,6 @@
 # TrackTrade — Product & Technical Specification (v0.1)
 
-> สถานะ: Draft · อัปเดต: 2026-10-08 · ขอบเขต: MVP
+> สถานะ: Draft · อัปเดต: 2026-10-22 (เพิ่ม Better Auth, ปรับ Scope) · ขอบเขต: MVP
 
 ## 1. ภาพรวมระบบ (System Overview)
 
@@ -29,7 +29,12 @@ TrackTrade คือระบบ Trading Journal & Trade Lifecycle ที่ไ�
 - **บัญชี:** หลายบัญชีต่อ user (Live/Demo/Prop) โดยแต่ละบัญชีมี Risk Profile ของตัวเอง
 - **ภาษา:** ไทย / อังกฤษ (i18n)
 - **Monetization:** MVP ใช้ฟรี แต่เตรียม feature flag/plan ไว้สำหรับ Free/Pro
+- **Authentication:** ใช้ **Better Auth** แบบ email/password ครอบคลุม register, login, logout, forgot-password และ reset-password (ส่งลิงก์ทาง email)
+  - ทุกหน้า (ยกเว้น login/register/forgot/reset) ต้องผ่าน auth guard ทั้งฝั่ง frontend (route guard) และ backend (ทุก endpoint ตรวจ session)
+  - การแยกสิทธิ์ใน MVP มีแค่ **ownership** (user เห็นเฉพาะข้อมูลของตัวเอง) และ **การแชร์ให้ mentor ผ่าน `mentor_links`** (F-22) ซึ่งเป็นสิทธิ์ระดับข้อมูล ไม่ใช่ระบบ role
 - **Out of scope (Phase หลัง MVP):**
+  - **Roles/permissions:** RBAC, admin role/admin panel, organization/team, permission matrix ที่ตั้งค่าได้ (`users.is_mentor` เป็นเพียง flag สำหรับเปิดหน้า mentor dashboard)
+  - Social login (Google/Apple), 2FA/passkey, magic link
   - Missions/XP/Trophy
   - Backtest replay
   - Live plan-deviation alert
@@ -44,6 +49,7 @@ TrackTrade คือระบบ Trading Journal & Trade Lifecycle ที่ไ�
 |---|---|
 | Frontend | Vue 3 + TypeScript, Vite, Tailwind CSS, Pinia, Vite PWA, vue-i18n, TradingView Lightweight Charts |
 | Backend | FastAPI, Python 3.12+, Pydantic v2, SQLAlchemy 2 (async), Alembic |
+| Auth | Better Auth (Node/TypeScript service) — email/password, session, forgot/reset password; FastAPI ตรวจ session ผ่าน JWT/JWKS ของ Better Auth; ส่ง email ผ่าน SMTP (dev: Mailpit) |
 | Data | PostgreSQL 17, Redis (cache, pub/sub, job queue) |
 | Realtime | WebSocket (FastAPI) + Redis pub/sub fan-out, Web Push (PWA) |
 | Background jobs | arq (Redis-based worker) |
@@ -53,6 +59,9 @@ TrackTrade คือระบบ Trading Journal & Trade Lifecycle ที่ไ�
 
 ### 1.6 Architecture
 ```
+[Vue PWA] ⇄ /api/auth/* ⇄ [Better Auth service] ── PostgreSQL 17 (ตาราง auth)
+    │                              │ JWKS
+    ▼                              ▼
 [Vue PWA] ⇄ REST/WebSocket ⇄ [FastAPI API] ── PostgreSQL 17
                                   │  └─ Redis (cache / pub-sub / queue)
                                   ▼
@@ -89,7 +98,8 @@ Plan states: `draft → locked → triggered → closed`, หรือ `skipped 
 | Entity | ฟิลด์สำคัญ | หมายเหตุ |
 |---|---|---|
 | **users** | email (unique), password_hash, display_name, locale (th/en), timezone, plan_tier (free/pro), is_mentor | |
-| **refresh_tokens** | user_id, token_hash, expires_at, revoked_at | |
+| **refresh_tokens** | user_id, token_hash, expires_at, revoked_at | เลิกใช้หลังย้ายไป Better Auth |
+| **auth_sessions / auth_accounts / auth_verifications** | ตาม schema ของ Better Auth (session token, expires_at, password hash, reset-password token) | Better Auth จัดการ; ผูกกับ `users.id` |
 | **mentor_links** | trader_id, mentor_id, status (pending/active/revoked), pnl_visibility (`currency`/`r_only`), can_assign_rules, invited_at, accepted_at | unique(trader_id, mentor_id) |
 | **push_subscriptions** | user_id, endpoint, keys(jsonb) | Web Push |
 
@@ -185,21 +195,27 @@ users(trader) N─N users(mentor) via mentor_links
 - [x] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้)
 - [x] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload
 - [ ] AC4: user คนหนึ่งเข้าถึงข้อมูลของ user อื่นไม่ได้ (API คืน 404) ยกเว้นผ่าน mentor_link ที่ active
+- [x] AC5: **Forgot password:** กรอก email แล้วระบบส่งลิงก์ reset (หมดอายุใน 1 ชั่วโมง, ใช้ได้ครั้งเดียว) และตอบข้อความเดียวกันไม่ว่า email จะมีในระบบหรือไม่
+- [x] AC6: **Reset password:** ตั้งรหัสใหม่ (≥ 8 ตัวอักษร) จากลิงก์ได้ และทุก session เดิมของ user ถูก revoke
+- [x] AC7: **Guard:** ทุกหน้าที่ไม่ใช่ login/register/forgot/reset ต้อง login ก่อน (redirect ไป `/login?redirect=…`); ทุก API endpoint ยกเว้น health/auth คืน 401 เมื่อไม่มี session ที่ valid
+- [x] AC8: Auth ทั้งหมดใช้ Better Auth; user และข้อมูลเดิมจาก Phase 1 ย้ายมาได้โดยไม่ต้องสมัครใหม่
+
+> หมายเหตุ: AC1–AC3 ทำเสร็จแล้วด้วย auth ที่เขียนเองบน FastAPI (Phase 1) — ทดสอบซ้ำบน Better Auth แล้ว (Phase 2, 2026-10-28)
 
 ### F-02 Trading Accounts & Risk Profile
-- [ ] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance
-- [ ] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5)
+- [x] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance
+- [x] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5)
 - [ ] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี
-- [ ] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
+- [x] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
 
 ### F-03 Symbol Specification
 - [x] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD
-- [ ] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี
-- [ ] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%)
+- [x] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี
+- [x] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%)
 
 ### F-04 Playbook (Structured Setups)
-- [ ] AC1: สร้าง setup ที่มี checklist, TF, session, default risk, management rules และภาพตัวอย่างได้
-- [ ] AC2: setup ที่ถูกใช้แล้วลบไม่ได้ ทำได้เพียง archive
+- [x] AC1: สร้าง setup ที่มี checklist, TF, session, default risk, management rules และภาพตัวอย่างได้
+- [x] AC2: setup ที่ถูกใช้แล้วลบไม่ได้ ทำได้เพียง archive
 - [ ] AC3: หน้า setup แสดงสถิติ: จำนวนเทรด, win rate, expectancy (R), avg adherence และ avg quality
 
 ### F-05 Market Analysis
@@ -326,7 +342,7 @@ users(trader) N─N users(mentor) via mentor_links
 ### Non-Functional Requirements
 - **Security:**
   - ใช้ HTTPS
-  - hash password ด้วย argon2
+  - hash password ด้วย argon2 (ตั้ง custom hash ใน Better Auth แทนค่า default)
   - เข้ารหัส OAuth tokens (at rest)
   - เก็บ API key แบบ hash
   - rate limit บน auth และ ingest
@@ -349,13 +365,19 @@ users(trader) N─N users(mentor) via mentor_links
 - [x] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub
 - [x] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories`
 
-### Phase 2 — Accounts, Risk & Playbook
-- [ ] CRUD trading_accounts + account_symbol_overrides (F-02, F-03)
-- [ ] Risk profile + trading_rules พร้อมค่า default และ snapshot ต่อเทรด
-- [ ] Risk calculator service (lot ↔ risk amount ↔ R:R) พร้อม unit tests เทียบกับค่า MT5
-- [ ] Playbook: setups, checklist items, examples (upload attachments) (F-04)
-- [ ] หน้า UI: Accounts, Risk Settings, Playbook list/detail
-- [ ] Audit log middleware สำหรับ entity สำคัญ
+### Phase 2 — Auth (Better Auth), Accounts, Risk & Playbook
+- [x] ระบบ Auth (Better Auth): login/register/forgot-password/reset-password + guard ทุกหน้า (F-01 AC5–AC8)
+  - [x] ตั้ง Better Auth service (email/password, argon2, rate limit) + เพิ่มเข้า Docker Compose
+  - [x] ส่ง email reset password ผ่าน SMTP (dev: Mailpit)
+  - [x] FastAPI ตรวจ session/JWT จาก Better Auth แทน JWT ที่เขียนเอง; endpoint ที่ไม่ใช่ health/auth คืน 401
+  - [x] Frontend: หน้า Forgot/Reset password, ใช้ Better Auth client, route guard ทุกหน้า
+  - [x] Migration user เดิม + ถอด auth เดิม (`refresh_tokens`, `/auth/*` ของ FastAPI)
+- [x] CRUD trading_accounts + account_symbol_overrides (F-02, F-03)
+- [x] Risk profile + trading_rules พร้อมค่า default และ snapshot ต่อเทรด
+- [x] Risk calculator service (lot ↔ risk amount ↔ R:R) พร้อม unit tests เทียบกับค่า MT5
+- [x] Playbook: setups, checklist items, examples (upload attachments) (F-04)
+- [x] หน้า UI: Accounts, Risk Settings, Playbook list/detail
+- [x] Audit log middleware สำหรับ entity สำคัญ
 
 ### Phase 3 — Analysis, Plan & Plan Lock
 - [ ] Market analysis CRUD + narrative rich text editor (F-05)
@@ -416,3 +438,5 @@ users(trader) N─N users(mentor) via mentor_links
 - Tolerance ของ matching (ราคา/เวลา): ค่า default ต้อง validate กับข้อมูลจริง
 - MT5 bridge ใช้ EA (MQL5) หรือ Python `MetaTrader5` package บน Windows VPS
 - Storage ของ attachments (local volume vs S3-compatible)
+- ~~Better Auth: แยกเป็น Node service หรือรวมกับ web container, และ FastAPI ตรวจ session แบบ JWT/JWKS หรือถาม Better Auth ทุก request~~ → ตัดสินแล้ว: Node service แยก + JWT/JWKS + เช็ก `auth_sessions` (PLAN §5.3)
+- Email provider สำหรับ production (SMTP / Resend / SES)

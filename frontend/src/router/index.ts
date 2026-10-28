@@ -32,8 +32,10 @@ const appRoutes: RouteRecordRaw[] = [
   { path: 'calendar', name: 'calendar', component: Placeholder, meta: { titleKey: 'pages.calendar', nav: 'calendar', features: 'F-17' } },
   { path: 'stats', name: 'stats', component: Placeholder, meta: { titleKey: 'pages.stats', nav: 'stats', features: 'F-18' } },
   { path: 'diagnosis', name: 'diagnosis', component: Placeholder, meta: { titleKey: 'pages.diagnosis', nav: 'diagnosis', features: 'F-15, F-16' } },
-  { path: 'playbook', name: 'playbook', component: Placeholder, meta: { titleKey: 'pages.playbook', nav: 'playbook', features: 'F-04' } },
-  { path: 'accounts', name: 'accounts', component: Placeholder, meta: { titleKey: 'pages.accounts', nav: 'accounts', features: 'F-02, F-03, F-08' } },
+  { path: 'playbook', name: 'playbook', component: () => import('@/features/playbook/PlaybookView.vue'), meta: { titleKey: 'pages.playbook', nav: 'playbook', features: 'F-04' } },
+  // Mobile setup detail (screens/mobile/22-SetupDetail.png). ≥1024px shows the same setup inside /playbook (split view).
+  { path: 'playbook/:id', name: 'setup-detail', component: () => import('@/features/playbook/SetupDetailView.vue'), meta: { titleKey: 'pages.playbook', nav: 'playbook', features: 'F-04' } },
+  { path: 'accounts', name: 'accounts', component: () => import('@/features/accounts/AccountsView.vue'), meta: { titleKey: 'pages.accounts', nav: 'accounts', features: 'F-02, F-03, F-08' } },
   { path: 'alerts', name: 'alerts', component: Placeholder, meta: { titleKey: 'pages.alerts', nav: 'alerts', features: 'F-20, F-21' } },
   { path: 'settings', name: 'settings', component: () => import('@/features/settings/SettingsView.vue'), meta: { titleKey: 'pages.settings', nav: 'settings', features: 'F-01, F-22' } },
   { path: 'mentor', name: 'mentor', component: Placeholder, meta: { titleKey: 'pages.mentor', nav: 'mentor', features: 'F-22 AC7' } },
@@ -52,10 +54,13 @@ export const router = createRouter({
     // Full-screen flows without the app shell.
     { path: '/login', name: 'login', component: () => import('@/features/auth/LoginView.vue'), meta: { titleKey: 'pages.login', public: true, guestOnly: true } },
     { path: '/register', name: 'register', component: () => import('@/features/auth/RegisterView.vue'), meta: { titleKey: 'pages.register', public: true, guestOnly: true } },
-    { path: '/onboarding', name: 'onboarding', component: Placeholder, meta: { titleKey: 'pages.onboarding', features: 'F-01, F-02, F-08' } },
+    { path: '/forgot-password', name: 'forgot-password', component: () => import('@/features/auth/ForgotPasswordView.vue'), meta: { titleKey: 'pages.forgotPassword', public: true, guestOnly: true } },
+    // Not guest-only: a signed-in user may open a reset link too (resetting signs every device out).
+    { path: '/reset-password', name: 'reset-password', component: () => import('@/features/auth/ResetPasswordView.vue'), meta: { titleKey: 'pages.resetPassword', public: true } },
+    { path: '/onboarding', name: 'onboarding', component: () => import('@/features/onboarding/OnboardingView.vue'), meta: { titleKey: 'pages.onboarding', features: 'F-01, F-02, F-08' } },
     ...devRoutes,
     { path: '/', component: AppLayout, children: appRoutes },
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: Placeholder, meta: { titleKey: 'pages.notFound', public: true } },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: Placeholder, meta: { titleKey: 'pages.notFound' } },
   ],
   scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
 })

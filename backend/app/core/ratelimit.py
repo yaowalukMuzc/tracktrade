@@ -2,10 +2,11 @@
 
 Usage as a router/endpoint dependency::
 
-    router = APIRouter(dependencies=[Depends(rate_limit("auth"))])
+    router = APIRouter(dependencies=[Depends(rate_limit("ingest"))])
 
-The limit for a bucket is resolved from settings at request time, so tests can
-build an app with a tiny limit without monkeypatching.
+The limit of bucket `x` is the setting `RATE_LIMIT_X` (e.g. `"120/min"`), resolved
+at request time so tests can build an app with a tiny limit without monkeypatching.
+Sign-in / sign-up limits live in the Better Auth service (`auth/`).
 """
 
 from __future__ import annotations
@@ -16,7 +17,7 @@ from collections.abc import Awaitable, Callable
 from fastapi import Request
 from redis.asyncio import Redis
 
-from app.core.config import Settings
+from app.core.config import Settings, parse_rate
 from app.core.errors import AppError
 
 KEY_PREFIX = "rl"
@@ -47,9 +48,10 @@ async def hit(redis: Redis, key: str, limit: int, window: int) -> tuple[bool, in
 
 
 def _limit_for(settings: Settings, bucket: str) -> tuple[int, int]:
-    if bucket == "auth":
-        return settings.auth_rate
-    raise ValueError(f"unknown rate-limit bucket {bucket!r}")
+    value = getattr(settings, f"RATE_LIMIT_{bucket.upper()}", None)
+    if not isinstance(value, str):
+        raise ValueError(f"unknown rate-limit bucket {bucket!r}")
+    return parse_rate(value)
 
 
 def rate_limit(bucket: str) -> Callable[[Request], Awaitable[None]]:

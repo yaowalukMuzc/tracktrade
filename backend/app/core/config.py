@@ -6,7 +6,7 @@ import re
 from functools import lru_cache
 from typing import Annotated, Literal
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 _RATE_RE = re.compile(r"^\s*(\d+)\s*/\s*(sec|second|s|min|minute|m|hour|h)\s*$")
@@ -22,9 +22,6 @@ def parse_rate(value: str) -> tuple[int, int]:
     return int(match.group(1)), _PERIOD_SECONDS[match.group(2)]
 
 
-DEV_JWT_SECRET = "dev-insecure-change-me-0123456789abcdef"
-
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
 
@@ -32,18 +29,19 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://tracktrade:tracktrade@localhost:5432/tracktrade"
     REDIS_URL: str = "redis://localhost:6379/0"
 
-    JWT_SECRET: str = Field(default=DEV_JWT_SECRET, min_length=32)
-    ACCESS_TOKEN_TTL_MIN: int = 15
-    REFRESH_TOKEN_TTL_DAYS: int = 30
-    # A token replayed within this many seconds of its own rotation is treated as a lost
-    # response (reload/navigation aborted the refresh), not theft — see auth.service.refresh.
-    REFRESH_REUSE_GRACE_SEC: int = 30
+    # Better Auth service (auth/) — JWT verification (PLAN §5.3).
+    AUTH_JWKS_URL: str = "http://localhost:3000/api/auth/jwks"
+    JWT_ISSUER: str = "tracktrade-auth"
+    JWT_AUDIENCE: str = "tracktrade-api"
+    JWKS_CACHE_SEC: int = 300
+
+    # Attachments (PLAN §8.1 S5): local disk for now; an S3 backend plugs into core/storage.py.
+    MEDIA_ROOT: str = "var/media"
+    MAX_UPLOAD_MB: int = 10
 
     CORS_ORIGINS: Annotated[list[str], NoDecode] = Field(
-        default_factory=lambda: ["http://localhost:5173"]
+        default_factory=lambda: ["http://localhost:5178"]
     )
-    COOKIE_SECURE: bool = False
-    RATE_LIMIT_AUTH: str = "10/min"
     LOG_LEVEL: str = "INFO"
 
     @field_validator("CORS_ORIGINS", mode="before")
@@ -52,22 +50,6 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             return [o.strip() for o in value.split(",") if o.strip()]
         return value
-
-    @field_validator("RATE_LIMIT_AUTH")
-    @classmethod
-    def _check_rate(cls, value: str) -> str:
-        parse_rate(value)
-        return value
-
-    @model_validator(mode="after")
-    def _prod_guards(self) -> Settings:
-        if self.ENV == "prod" and self.JWT_SECRET == DEV_JWT_SECRET:
-            raise ValueError("JWT_SECRET must be set in prod")
-        return self
-
-    @property
-    def auth_rate(self) -> tuple[int, int]:
-        return parse_rate(self.RATE_LIMIT_AUTH)
 
 
 @lru_cache

@@ -1,39 +1,25 @@
-"""Password hashing (argon2), access JWTs and opaque refresh tokens."""
+"""Verification of the JWTs issued by the Better Auth service (PLAN §5.3).
+
+The browser gets a 15-minute EdDSA JWT from `GET /api/auth/token`; FastAPI checks
+its signature with the public keys from `GET /api/auth/jwks` (cached by `kid`),
+plus issuer/audience/expiry. Whether the session behind the token (`sid`) is still
+alive is checked against the database by the caller (`modules/auth/deps.py`).
+FastAPI never issues tokens or handles passwords.
+"""
 
 from __future__ import annotations
 
-import hashlib
-import secrets
+import asyncio
+import time
 import uuid
+from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, Protocol
 
+import httpx
 import jwt
-from argon2 import PasswordHasher
-from argon2.exceptions import InvalidHashError, VerificationError
 
-JWT_ALGORITHM = "HS256"
-ACCESS_TOKEN_TYPE = "access"
-
-_hasher = PasswordHasher()
-# Pre-computed hash used to keep login timing constant for unknown emails.
-_DUMMY_HASH = _hasher.hash("tracktrade-dummy-password")
-
-
-def hash_password(password: str) -> str:
-    return _hasher.hash(password)
-
-
-def verify_password(password_hash: str | None, password: str) -> bool:
-    try:
-        return _hasher.verify(password_hash or _DUMMY_HASH, password) and password_hash is not None
-    except (VerificationError, InvalidHashError):
-        return False
-
-
-def password_needs_rehash(password_hash: str) -> bool:
-    return _hasher.check_needs_rehash(password_hash)
+ALLOWED_ALGORITHMS = ("EdDSA",)
 
 
 class InvalidToken(Exception):
@@ -43,53 +29,119 @@ class InvalidToken(Exception):
 @dataclass(frozen=True, slots=True)
 class AccessClaims:
     user_id: uuid.UUID
-    session_id: uuid.UUID | None  # refresh-token family that minted this token
+    session_id: uuid.UUID
 
 
-def create_access_token(
-    user_id: uuid.UUID,
-    *,
-    secret: str,
-    ttl: timedelta,
-    session_id: uuid.UUID | None = None,
-    now: datetime | None = None,
-) -> str:
-    issued = now or datetime.now(UTC)
-    payload: dict[str, Any] = {
-        "sub": str(user_id),
-        "type": ACCESS_TOKEN_TYPE,
-        "iat": int(issued.timestamp()),
-        "exp": int((issued + ttl).timestamp()),
-        "jti": uuid.uuid4().hex,
-    }
-    if session_id is not None:
-        payload["sid"] = str(session_id)
-    return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
+class JwksProvider(Protocol):
+    async def get_key(self, kid: str) -> jwt.PyJWK | None: ...
+
+    async def aclose(self) -> None: ...
 
 
-def decode_access_token(token: str, *, secret: str) -> AccessClaims:
-    """Validate an access token and return its claims, else raise InvalidToken."""
+def _parse_jwks(document: Mapping[str, Any]) -> dict[str, jwt.PyJWK]:
+    keys: dict[str, jwt.PyJWK] = {}
+    for jwk in document.get("keys", []):
+        kid = jwk.get("kid")
+        if not kid:
+            continue
+        try:
+            keys[kid] = jwt.PyJWK(dict(jwk))
+        except jwt.PyJWTError:
+            continue  # unsupported key type — skip it rather than fail every request
+    return keys
+
+
+class StaticJwks:
+    """Fixed key set (tests, or a JWKS mounted from a file)."""
+
+    def __init__(self, document: Mapping[str, Any]) -> None:
+        self._keys = _parse_jwks(document)
+
+    async def get_key(self, kid: str) -> jwt.PyJWK | None:
+        return self._keys.get(kid)
+
+    async def aclose(self) -> None:
+        return None
+
+
+class RemoteJwks:
+    """JWKS fetched over HTTP and cached.
+
+    Refetched when the cache is older than `ttl` or when an unknown `kid` shows up
+    (key rotation) — but at most once per `min_refetch` seconds so garbage tokens
+    cannot hammer the auth service.
+    """
+
+    def __init__(
+        self,
+        url: str,
+        *,
+        ttl: float = 300,
+        min_refetch: float = 10,
+        client: httpx.AsyncClient | None = None,
+    ) -> None:
+        self._url = url
+        self._ttl = ttl
+        self._min_refetch = min_refetch
+        self._client = client or httpx.AsyncClient(timeout=5.0)
+        self._keys: dict[str, jwt.PyJWK] = {}
+        self._fetched_at = float("-inf")
+        self._lock = asyncio.Lock()
+
+    async def _refresh(self) -> None:
+        res = await self._client.get(self._url)
+        res.raise_for_status()
+        self._keys = _parse_jwks(res.json())
+        self._fetched_at = time.monotonic()
+
+    async def get_key(self, kid: str) -> jwt.PyJWK | None:
+        age = time.monotonic() - self._fetched_at
+        if kid in self._keys and age < self._ttl:
+            return self._keys[kid]
+        async with self._lock:
+            age = time.monotonic() - self._fetched_at
+            stale = age >= self._ttl
+            unknown = kid not in self._keys and age >= self._min_refetch
+            if stale or unknown:
+                try:
+                    await self._refresh()
+                except (httpx.HTTPError, ValueError):
+                    # Auth service unreachable: keep serving cached keys.
+                    self._fetched_at = time.monotonic() - self._ttl + self._min_refetch
+        return self._keys.get(kid)
+
+    async def aclose(self) -> None:
+        await self._client.aclose()
+
+
+async def decode_access_token(
+    token: str, *, jwks: JwksProvider, issuer: str, audience: str
+) -> AccessClaims:
+    """Validate a Better Auth JWT and return its claims, else raise InvalidToken."""
+    try:
+        header = jwt.get_unverified_header(token)
+    except jwt.PyJWTError as exc:
+        raise InvalidToken("malformed token") from exc
+    if header.get("alg") not in ALLOWED_ALGORITHMS:
+        raise InvalidToken("algorithm not allowed")
+    kid = header.get("kid")
+    key = await jwks.get_key(kid) if isinstance(kid, str) else None
+    if key is None:
+        raise InvalidToken("unknown signing key")
     try:
         payload = jwt.decode(
-            token, secret, algorithms=[JWT_ALGORITHM], options={"require": ["exp", "sub"]}
+            token,
+            key=key,
+            algorithms=list(ALLOWED_ALGORITHMS),
+            issuer=issuer,
+            audience=audience,
+            options={"require": ["exp", "iat", "sub", "iss", "aud"]},
         )
     except jwt.PyJWTError as exc:
         raise InvalidToken(str(exc)) from exc
-    if payload.get("type") != ACCESS_TOKEN_TYPE:
-        raise InvalidToken("wrong token type")
     try:
-        user_id = uuid.UUID(str(payload["sub"]))
-        sid = payload.get("sid")
-        session_id = uuid.UUID(str(sid)) if sid else None
-    except ValueError as exc:
-        raise InvalidToken("bad subject") from exc
-    return AccessClaims(user_id=user_id, session_id=session_id)
-
-
-def new_refresh_token() -> str:
-    """Opaque, URL-safe random token (only its sha256 is stored)."""
-    return secrets.token_urlsafe(48)
-
-
-def hash_refresh_token(token: str) -> str:
-    return hashlib.sha256(token.encode()).hexdigest()
+        return AccessClaims(
+            user_id=uuid.UUID(str(payload["sub"])), session_id=uuid.UUID(str(payload["sid"]))
+        )
+    except (KeyError, ValueError) as exc:
+        raise InvalidToken("bad subject or session") from exc

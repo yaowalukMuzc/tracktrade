@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import th from './locales/th.json'
-import en from './locales/en.json'
+import { messages } from './messages'
+
+const { th, en } = messages
 
 function keys(obj: object, prefix = ''): string[] {
   return Object.entries(obj).flatMap(([k, v]) =>

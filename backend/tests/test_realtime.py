@@ -17,23 +17,23 @@ from redis.asyncio import Redis
 from starlette.websockets import WebSocketDisconnect
 
 from app.core.pubsub import publish, user_channel
+from app.core.security import StaticJwks
 from app.main import create_app
 from app.realtime.router import WS_UNAUTHORIZED
 from app.worker import jobs
-from tests.conftest import TEST_REDIS_URL, make_settings, register_payload
+from tests.conftest import TEST_JWKS, TEST_REDIS_URL, make_settings, signup
 
 
 @pytest.fixture
 def ws_client() -> Iterator[TestClient]:
-    app = create_app(make_settings())
+    app = create_app(make_settings(), jwks=StaticJwks(TEST_JWKS))
     with TestClient(app) as tc:
         yield tc
 
 
 def _register(tc: TestClient, email: str = "ws@example.com") -> tuple[str, str]:
-    res = tc.post("/api/v1/auth/register", json=register_payload(email))
-    assert res.status_code == 201, res.text
-    body = res.json()
+    assert tc.portal is not None
+    body = tc.portal.call(signup, tc.app, email)
     return body["user"]["id"], body["access_token"]
 
 

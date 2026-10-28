@@ -8,7 +8,7 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from redis.asyncio import Redis
 
@@ -16,10 +16,16 @@ from app.core.config import Settings, get_settings
 from app.core.db import create_engine, create_sessionmaker
 from app.core.errors import register_error_handlers
 from app.core.logging import RequestContextMiddleware, configure_logging
+from app.core.security import JwksProvider, RemoteJwks
+from app.core.storage import LocalStorage, Storage
 from app.health import router as health_router
-from app.modules.auth.router import router as auth_router
+from app.modules.accounts.router import router as accounts_router
+from app.modules.attachments.router import router as attachments_router
+from app.modules.auth.deps import get_current
 from app.modules.diagnosis.router import router as mistake_categories_router
 from app.modules.emotions.router import router as emotion_tags_router
+from app.modules.playbook.router import router as setups_router
+from app.modules.risk.router import router as risk_router
 from app.modules.symbols.router import router as symbols_router
 from app.modules.users.router import router as users_router
 from app.realtime.hub import Hub
@@ -28,22 +34,37 @@ from app.realtime.router import router as ws_router
 API_PREFIX = "/api/v1"
 
 
+# Every HTTP router here requires a valid Better Auth session (F-01 AC7). The only public
+# HTTP route is /health; sign-in/up/reset live in the auth service under /api/auth/*.
+# The WebSocket authenticates its own handshake (`?token=`).
+PROTECTED_ROUTERS = (
+    users_router,
+    symbols_router,
+    emotion_tags_router,
+    mistake_categories_router,
+    accounts_router,
+    risk_router,
+    setups_router,
+    attachments_router,
+)
+
+
 def _api_router() -> APIRouter:
     api = APIRouter(prefix=API_PREFIX)
-    for router in (
-        health_router,
-        auth_router,
-        users_router,
-        symbols_router,
-        emotion_tags_router,
-        mistake_categories_router,
-        ws_router,
-    ):
-        api.include_router(router)
+    api.include_router(health_router)
+    for router in PROTECTED_ROUTERS:
+        api.include_router(router, dependencies=[Depends(get_current)])
+    api.include_router(ws_router)
     return api
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    *,
+    jwks: JwksProvider | None = None,
+    storage: Storage | None = None,
+) -> FastAPI:
+    """`jwks` / `storage` override the remote key set and the file store (tests)."""
     settings = settings or get_settings()
     configure_logging(settings.LOG_LEVEL)
 
@@ -57,9 +78,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.sessionmaker = create_sessionmaker(engine)
         app.state.redis = redis
         app.state.hub = hub
+        app.state.jwks = jwks or RemoteJwks(settings.AUTH_JWKS_URL, ttl=settings.JWKS_CACHE_SEC)
+        app.state.storage = storage or LocalStorage(settings.MEDIA_ROOT)
         try:
             yield
         finally:
+            await app.state.jwks.aclose()
             await hub.stop()
             await redis.aclose()
             await engine.dispose()
@@ -76,7 +100,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
-        allow_credentials=True,  # refresh cookie
+        allow_credentials=False,  # bearer JWT only; auth cookies belong to /api/auth
         allow_methods=["*"],
         allow_headers=["*"],
         expose_headers=["X-Request-ID"],

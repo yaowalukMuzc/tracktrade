@@ -46,6 +46,40 @@ jobs:
       - name: pytest
         run: uv run pytest -q
 
+  auth:
+    # Better Auth service: type check + integration tests on Postgres (schema from the backend's Alembic).
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: tracktrade
+          POSTGRES_PASSWORD: tracktrade
+          POSTGRES_DB: tracktrade_auth_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U tracktrade" --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      AUTH_TEST_DATABASE_URL: postgresql://tracktrade:tracktrade@localhost:5432/tracktrade_auth_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: backend venv (runs the migrations)
+        working-directory: backend
+        run: uv sync --frozen
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: auth/package-lock.json
+      - working-directory: auth
+        run: |
+          npm ci
+          npm run type-check
+          npm test
+
   frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -69,24 +103,24 @@ jobs:
         run: npm test
       - name: build
         run: npx vite build
-      - name: playwright (login visual + i18n)
+      - name: playwright (auth screens visual + i18n)
         run: |
           npx playwright install --with-deps chromium
-          npx playwright test login.visual
+          npx playwright test login.visual password-reset.visual
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: qa-screenshots
-          path: docs/qa/phase-1/
+          path: docs/qa/
           if-no-files-found: ignore
 
   e2e:
-    # Full stack: docker compose up, then the register → login → logout flow.
+    # Full stack: docker compose up (auth + api + web + mailpit), then register/login/logout and forgot/reset.
     runs-on: ubuntu-latest
-    needs: [backend, frontend]
+    needs: [backend, auth, frontend]
     steps:
       - uses: actions/checkout@v4
-      # Both Playwright projects reload pages (each reload hits /auth/refresh), so relax the auth limit here.
+      # Both Playwright projects sign in many times from one IP, so relax the auth limit here.
       - run: RATE_LIMIT_AUTH=300/min docker compose up -d --build --wait
       - uses: actions/setup-node@v4
         with:
@@ -97,6 +131,12 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps chromium
-          E2E_BASE_URL=http://localhost:8080 npx playwright test auth.flow
+          E2E_BASE_URL=http://localhost:8080 E2E_MAIL_API=http://localhost:8025 npx playwright test auth.flow password-reset.spec onboarding.visual accounts.visual playbook.visual
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-screenshots-full-stack
+          path: docs/qa/
+          if-no-files-found: ignore
       - if: failure()
         run: docker compose logs --no-color

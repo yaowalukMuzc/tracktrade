@@ -3,7 +3,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AuthLayout from './AuthLayout.vue'
-import AppIcon from '@/components/AppIcon.vue'
+import AuthMobileBar from './AuthMobileBar.vue'
 import TtAlert from '@/components/ui/TtAlert.vue'
 import TtButton from '@/components/ui/TtButton.vue'
 import TtCheckbox from '@/components/ui/TtCheckbox.vue'
@@ -15,10 +15,9 @@ import { useUiStore } from '@/stores/ui'
 import { safeRedirect } from '@/router/guards'
 import { timezoneOptions, browserTimezone } from '@/lib/timezones'
 import type { Locale } from '@/i18n'
-import { authErrorKey, isEmail, passwordStrength } from './errors'
+import { authErrorKey, isEmail, MIN_PASSWORD, passwordStrength } from './errors'
 
 // screens/mobile/02-Register.png; desktop reuses the Login split layout (PLAN §8.2). F-01 AC1, AC3.
-const MIN_PASSWORD = 8
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -68,7 +67,13 @@ async function submit() {
   if (!validate()) return
   busy.value = true
   try {
-    await session.register({ ...form, email: form.email.trim(), display_name: form.display_name.trim() })
+    await session.register({
+      email: form.email.trim(),
+      password: form.password,
+      display_name: form.display_name.trim(),
+      locale: form.locale,
+      timezone: form.timezone,
+    })
     await router.replace(safeRedirect(route.query.redirect))
   } catch (e) {
     formError.value = t(authErrorKey(e))
@@ -80,16 +85,7 @@ async function submit() {
 
 <template>
   <AuthLayout>
-    <!-- Mobile app bar: back + centered wordmark -->
-    <div class="tt-appbar border-0 lg:hidden">
-      <RouterLink :to="{ name: 'login', query: route.query }" class="tt-iconbtn tt-iconbtn--bare" :aria-label="t('shell.back')">
-        <AppIcon name="back" />
-      </RouterLink>
-      <span class="flex-1" />
-      <span class="tt-wordmark">Track<b>Trade</b></span>
-      <span class="flex-1" />
-      <span class="w-10" />
-    </div>
+    <AuthMobileBar :query="route.query" />
 
     <form class="flex w-full flex-1 flex-col gap-5 px-6 pb-6 pt-4 lg:max-w-[400px] lg:flex-none lg:p-0" novalidate @submit.prevent="submit">
       <div class="flex flex-col gap-1.5">

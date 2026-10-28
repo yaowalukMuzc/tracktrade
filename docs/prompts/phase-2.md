@@ -1,6 +1,15 @@
-# Phase 2 — Accounts, Risk, Symbol spec, Playbook + Onboarding
+# Phase 2 — Auth (Better Auth), Accounts, Risk, Symbol spec, Playbook + Onboarding
 
-ก่อนเริ่ม: อ่าน `CLAUDE.md`, `docs/PLAN.md`, `docs/PROGRESS.md`, spec §2.2–2.4, F-02, F-03, F-04, §4 Phase 2
+ก่อนเริ่ม: อ่าน `CLAUDE.md`, `docs/PLAN.md` (โดยเฉพาะ §5.3), `docs/PROGRESS.md`, spec §1.4–1.6, §2.1–2.4, F-01, F-02, F-03, F-04, §4 Phase 2
+
+## Auth — Better Auth (ทำก่อน, F-01 AC5–AC8)
+- Service `auth/` (Node/TS, Better Auth) + เพิ่ม `auth` และ `mailpit` ใน Docker Compose; nginx/Vite proxy `/api/auth/*` → auth
+- email/password, argon2 (custom hash เข้ากับ hash เดิม), rate limit, `rememberMe`
+- Forgot/Reset password ส่งอีเมลผ่าน SMTP (dev: Mailpit); ลิงก์หมดอายุ 1 ชม. ใช้ครั้งเดียว; reset แล้ว revoke ทุก session
+- FastAPI ตรวจ JWT ของ Better Auth ผ่าน JWKS + เช็ก session ยังอยู่; ทุก endpoint ยกเว้น health คืน 401 เมื่อไม่มี session
+- Alembic: ตาราง `auth_*`, ย้าย password hash เดิมไป `auth_accounts`, ถอด `refresh_tokens` และ `/api/v1/auth/*`
+- Frontend: Better Auth client, หน้า `/forgot-password`, `/reset-password`, guard ทุกหน้า, Settings อุปกรณ์ที่ login
+- ทดสอบซ้ำ F-01 AC1–AC3 หลังย้าย
 
 ## Backend
 - CRUD `trading_accounts` (archive แทนลบ) + `account_symbol_overrides` (map `XAUUSD.m` → `XAUUSD`) — F-02 AC1, F-03 AC2

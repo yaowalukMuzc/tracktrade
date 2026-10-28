@@ -48,3 +48,21 @@ export function formatR(value: number, digits = 1) {
 export function formatPct(value: number, digits = 1, signed = false) {
   return (signed ? signOf(value) : value < 0 ? MINUS : '') + Math.abs(value).toFixed(digits) + '%'
 }
+
+/** Unsigned amount (balances, limits — not a P/L): `$100,000`, `$1,000.50`. Decimals only when present. */
+export function formatAmount(value: number | string, currency = 'USD', maxDigits = 2) {
+  const n = typeof value === 'string' ? Number(value) : value
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    currencyDisplay: 'narrowSymbol',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: maxDigits,
+  }).format(n)
+}
+
+/** Plain number with separators for inputs/labels: `100,000`, `1.5`. */
+export function formatNumber(value: number | string, maxDigits = 2) {
+  const n = typeof value === 'string' ? Number(value) : value
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: maxDigits }).format(n)
+}

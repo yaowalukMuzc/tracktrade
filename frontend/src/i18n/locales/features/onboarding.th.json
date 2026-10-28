@@ -1,0 +1,93 @@
+{
+  "onboarding": {
+    "stepOf": "ขั้นตอน {n} จาก {total}",
+    "stepCount": "{n} / {total}",
+    "skip": "ข้ามไปก่อน",
+    "progress": "ขั้นตอนการตั้งค่า",
+    "done": "เสร็จแล้ว",
+    "steps": {
+      "user": "สร้างบัญชีผู้ใช้",
+      "account": "บัญชีเทรด & Risk",
+      "accountSub": "ใช้คำนวณ lot และตรวจกฎ",
+      "broker": "เชื่อมต่อ Broker",
+      "brokerSub": "MT5 · cTrader · Screenshot"
+    },
+    "title": "ตั้งค่าบัญชีเทรดแรก",
+    "mobileTitle": "ตั้งค่าบัญชีเทรด",
+    "mobileHeading": "บัญชีแรกของคุณ",
+    "sub": "แยกบัญชี Live / Demo / Prop ได้ — แต่ละบัญชีมี Risk Profile ของตัวเอง",
+    "account": {
+      "title": "บัญชี",
+      "name": "ชื่อบัญชี",
+      "namePlaceholder": "เช่น FTMO 100K Challenge",
+      "type": "ประเภทบัญชี",
+      "types": {
+        "live": "Live",
+        "demo": "Demo",
+        "prop": "Prop"
+      },
+      "platform": "แพลตฟอร์ม",
+      "platforms": {
+        "mt5": "MT5",
+        "ctrader": "cTrader",
+        "manual": "กรอกเอง"
+      },
+      "broker": "Broker",
+      "brokerPlaceholder": "เช่น FTMO",
+      "currency": "สกุลเงิน",
+      "balance": "Initial balance"
+    },
+    "risk": {
+      "title": "Risk Profile",
+      "defaults": "ค่าเริ่มต้น",
+      "sub": "ใช้คำนวณ lot อัตโนมัติและตรวจการผิดกฎ — แก้ทีหลังได้ เทรดเก่าใช้ค่า ณ เวลาที่เทรด",
+      "perTrade": "Risk ต่อเทรด",
+      "dailyLoss": "Max daily loss",
+      "drawdown": "Max drawdown",
+      "maxTrades": "Max trades / วัน",
+      "cooldown": "Revenge cooldown",
+      "blackout": "News blackout",
+      "unitMin": "นาที",
+      "unitTrades": "ไม้",
+      "previewTitle": "{pct}% ของ {balance} = {amount} ต่อเทรด",
+      "previewBody": "Daily loss {daily} · DD limit {dd}",
+      "previewEmpty": "กรอก Initial balance เพื่อดูวงเงินเสี่ยงต่อเทรด"
+    },
+    "import": {
+      "title": "ถัดไป: นำเข้าเทรด",
+      "hint": "เปลี่ยนได้ทีหลังที่หน้าบัญชี",
+      "mobileTitle": "นำเข้าเทรด",
+      "heading": "เลือกวิธีบันทึกเทรด",
+      "sub": "เลือกวิธีหลักที่คุณจะบันทึกเทรด — เปลี่ยนได้ทีหลังที่หน้าบัญชี",
+      "label": "วิธีนำเข้าเทรด",
+      "later": "เร็ว ๆ นี้",
+      "mt5": "MT5 (EA)",
+      "mt5Sub": "ติดตั้ง EA แล้ววาง API key",
+      "ctrader": "cTrader",
+      "ctraderSub": "OAuth · real-time",
+      "manual": "Screenshot / กรอกเอง",
+      "manualSub": "ไม่ต้องเชื่อมต่อ",
+      "laterTitle": "การซิงก์อัตโนมัติจะเปิดในอัปเดตถัดไป",
+      "laterBody": "ระหว่างนี้เพิ่มเทรดด้วย Screenshot หรือกรอกเองได้เลย แล้วค่อยเชื่อมต่อที่หน้าบัญชีเมื่อพร้อม"
+    },
+    "next": "ถัดไป: เชื่อมต่อ Broker",
+    "save": "บันทึกและเริ่มใช้งาน",
+    "start": "เริ่มใช้งาน",
+    "errors": {
+      "required": "กรุณากรอกช่องนี้",
+      "tooLong": "ยาวได้ไม่เกิน {max} ตัวอักษร",
+      "number": "กรอกเป็นตัวเลข",
+      "positive": "ต้องมากกว่า 0",
+      "decimals": "ทศนิยมไม่เกิน 2 ตำแหน่ง",
+      "integer": "กรอกเป็นจำนวนเต็ม",
+      "range": "ต้องอยู่ระหว่าง {min}–{max}",
+      "rangePct": "ต้องมากกว่า 0 และไม่เกิน {max}%",
+      "riskVsDaily": "Risk ต่อเทรดต้องไม่เกิน Max daily loss",
+      "dailyVsDrawdown": "Max daily loss ต้องไม่เกิน Max drawdown",
+      "riskConsistency": "Risk ต่อเทรด ≤ Max daily loss ≤ Max drawdown",
+      "invalid": "ค่านี้ไม่ถูกต้อง",
+      "fixFields": "ตรวจสอบช่องที่มีข้อความแจ้งเตือน",
+      "saveFailed": "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+    }
+  }
+}

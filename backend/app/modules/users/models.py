@@ -1,8 +1,14 @@
-"""users table (spec §2.1 + PLAN M19 `theme`)."""
+"""users table (spec §2.1 + PLAN M19 `theme`).
+
+Shared with the Better Auth service, which creates users and maps its `name`
+field to `display_name` (PLAN §5.3). Passwords live in `auth_accounts`.
+"""
 
 from __future__ import annotations
 
-from sqlalchemy import Boolean, CheckConstraint, String, text
+import uuid
+
+from sqlalchemy import Boolean, CheckConstraint, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.models_base import Base
@@ -21,9 +27,15 @@ class User(Base):
         CheckConstraint("email = lower(email)", name="email_lowercase"),
     )
 
-    # Always stored lower-cased (normalised in the schema layer) -> plain unique index.
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True, server_default=text("gen_random_uuid()")
+    )
+    # Always stored lower-cased (Better Auth normalises) -> plain unique index.
     email: Mapped[str] = mapped_column(String(320), unique=True)
-    password_hash: Mapped[str] = mapped_column(String(255))
+    email_verified: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default=text("false")
+    )
+    image: Mapped[str | None] = mapped_column(Text)
     display_name: Mapped[str] = mapped_column(String(100))
     locale: Mapped[str] = mapped_column(String(2), default="th", server_default="th")
     timezone: Mapped[str] = mapped_column(

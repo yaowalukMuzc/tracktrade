@@ -24,7 +24,8 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY . .
 RUN sed -i 's/\r$//' scripts/*.sh && chmod +x scripts/*.sh \
     && useradd --create-home --uid 10001 --shell /usr/sbin/nologin app \
-    && chown -R app:app /app
+    && mkdir -p /data/media \
+    && chown -R app:app /app /data/media
 
 USER app
 EXPOSE 8000

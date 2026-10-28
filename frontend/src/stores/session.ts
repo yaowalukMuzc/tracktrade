@@ -1,15 +1,28 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { authApi, type RegisterInput, type User } from '@/api/auth'
+import { authApi, type User } from '@/api/auth'
+import { authClient, unwrap } from '@/api/authClient'
 import { onSessionLost, refreshAccessToken, setAccessToken } from '@/api/client'
 import { realtime } from '@/api/ws'
 import { router } from '@/router'
+import { useAccountsStore } from './accounts'
 import { useUiStore, type ThemePref } from './ui'
 import type { Locale } from '@/i18n'
 
 type Status = 'unknown' | 'authenticated' | 'anonymous'
 
-/** Signed-in user (F-01). Access token stays in memory (api/client); a reload restores it via the refresh cookie. */
+export interface RegisterInput {
+  email: string
+  password: string
+  display_name: string
+  locale: Locale
+  timezone: string
+}
+
+/**
+ * Signed-in user (F-01, Better Auth). The session is an httpOnly cookie of the auth service; the JWT used for
+ * FastAPI stays in memory (api/client) and a reload gets a fresh one from that cookie.
+ */
 export const useSessionStore = defineStore('session', () => {
   const user = ref<User | null>(null)
   const status = ref<Status>('unknown')
@@ -29,8 +42,7 @@ export const useSessionStore = defineStore('session', () => {
   const isMentor = computed(() => false)
 
   /** The user's saved locale/theme win over this device's defaults once known (syncs settings across devices). */
-  function signedIn(u: User, token?: string) {
-    if (token) setAccessToken(token)
+  function signedIn(u: User) {
     user.value = u
     status.value = 'authenticated'
     const ui = useUiStore()
@@ -41,12 +53,13 @@ export const useSessionStore = defineStore('session', () => {
 
   function signedOut() {
     setAccessToken(null)
+    useAccountsStore().reset()
     user.value = null
     status.value = 'anonymous'
     realtime.disconnect()
   }
 
-  /** Runs once per page load (router guard awaits it): refresh cookie → access token → /me. */
+  /** Runs once per page load (router guard awaits it): session cookie → JWT → /me. */
   function restore() {
     restoring ??= (async () => {
       try {
@@ -59,19 +72,47 @@ export const useSessionStore = defineStore('session', () => {
     return restoring
   }
 
+  /** After Better Auth set the session cookie: get a JWT and load the profile from FastAPI. */
+  async function startSession() {
+    restoring = Promise.resolve()
+    if (!(await refreshAccessToken())) throw new Error('no token after sign-in')
+    signedIn(await authApi.me())
+  }
+
   async function login(email: string, password: string, remember: boolean) {
-    const res = await authApi.login({ email, password, remember })
-    signedIn(res.user, res.access_token)
+    await unwrap(authClient.signIn.email({ email, password, rememberMe: remember }))
+    await startSession()
   }
 
   async function register(input: RegisterInput) {
-    const res = await authApi.register(input)
-    signedIn(res.user, res.access_token)
+    await unwrap(
+      authClient.signUp.email({
+        email: input.email,
+        password: input.password,
+        name: input.display_name,
+        locale: input.locale,
+        timezone: input.timezone,
+      }),
+    )
+    await startSession()
+  }
+
+  /** F-01 AC5: always resolves the same way whether or not the email exists. */
+  async function requestPasswordReset(email: string) {
+    await unwrap(authClient.requestPasswordReset({ email, redirectTo: '/reset-password' }))
+  }
+
+  /** F-01 AC6: the auth service revokes every session of the user. */
+  async function resetPassword(token: string, newPassword: string) {
+    await unwrap(authClient.resetPassword({ token, newPassword }))
+    if (status.value === 'authenticated') signedOut()
   }
 
   async function logout() {
     try {
-      await authApi.logout()
+      await unwrap(authClient.signOut())
+    } catch {
+      /* already signed out on the server */
     } finally {
       signedOut()
       await router.push({ name: 'login' })
@@ -94,5 +135,19 @@ export const useSessionStore = defineStore('session', () => {
     void router.push({ name: 'login', query: { redirect: current.fullPath } })
   })
 
-  return { user, status, isAuthenticated, initials, firstName, isMentor, restore, login, register, logout, updateProfile }
+  return {
+    user,
+    status,
+    isAuthenticated,
+    initials,
+    firstName,
+    isMentor,
+    restore,
+    login,
+    register,
+    requestPasswordReset,
+    resetPassword,
+    logout,
+    updateProfile,
+  }
 })

@@ -1,0 +1,93 @@
+{
+  "onboarding": {
+    "stepOf": "Step {n} of {total}",
+    "stepCount": "{n} / {total}",
+    "skip": "Skip for now",
+    "progress": "Setup progress",
+    "done": "done",
+    "steps": {
+      "user": "Create your login",
+      "account": "Trading account & risk",
+      "accountSub": "Used for lot sizing and rule checks",
+      "broker": "Connect your broker",
+      "brokerSub": "MT5 · cTrader · Screenshot"
+    },
+    "title": "Set up your first trading account",
+    "mobileTitle": "Set up trading account",
+    "mobileHeading": "Your first account",
+    "sub": "Keep Live / Demo / Prop apart — each account has its own risk profile",
+    "account": {
+      "title": "Account",
+      "name": "Account name",
+      "namePlaceholder": "e.g. FTMO 100K Challenge",
+      "type": "Account type",
+      "types": {
+        "live": "Live",
+        "demo": "Demo",
+        "prop": "Prop"
+      },
+      "platform": "Platform",
+      "platforms": {
+        "mt5": "MT5",
+        "ctrader": "cTrader",
+        "manual": "Manual"
+      },
+      "broker": "Broker",
+      "brokerPlaceholder": "e.g. FTMO",
+      "currency": "Currency",
+      "balance": "Initial balance"
+    },
+    "risk": {
+      "title": "Risk profile",
+      "defaults": "Defaults",
+      "sub": "Used for automatic lot sizing and rule checks — you can change it later; past trades keep the values in force when they were taken",
+      "perTrade": "Risk per trade",
+      "dailyLoss": "Max daily loss",
+      "drawdown": "Max drawdown",
+      "maxTrades": "Max trades / day",
+      "cooldown": "Revenge cooldown",
+      "blackout": "News blackout",
+      "unitMin": "min",
+      "unitTrades": "trades",
+      "previewTitle": "{pct}% of {balance} = {amount} per trade",
+      "previewBody": "Daily loss {daily} · DD limit {dd}",
+      "previewEmpty": "Enter the initial balance to see your risk per trade"
+    },
+    "import": {
+      "title": "Next: import trades",
+      "hint": "You can change this later in Accounts",
+      "mobileTitle": "Import trades",
+      "heading": "How will you log trades?",
+      "sub": "Pick your main way of recording trades — you can change it later in Accounts",
+      "label": "Trade import method",
+      "later": "Coming soon",
+      "mt5": "MT5 (EA)",
+      "mt5Sub": "Install the EA and paste an API key",
+      "ctrader": "cTrader",
+      "ctraderSub": "OAuth · real-time",
+      "manual": "Screenshot / manual",
+      "manualSub": "No connection needed",
+      "laterTitle": "Automatic sync arrives in a later update",
+      "laterBody": "Meanwhile add trades by screenshot or manual entry, then connect from Accounts when it is ready"
+    },
+    "next": "Next: connect broker",
+    "save": "Save and get started",
+    "start": "Get started",
+    "errors": {
+      "required": "This field is required",
+      "tooLong": "Up to {max} characters",
+      "number": "Enter a number",
+      "positive": "Must be greater than 0",
+      "decimals": "At most 2 decimal places",
+      "integer": "Enter a whole number",
+      "range": "Must be between {min} and {max}",
+      "rangePct": "Must be above 0 and at most {max}%",
+      "riskVsDaily": "Risk per trade cannot exceed max daily loss",
+      "dailyVsDrawdown": "Max daily loss cannot exceed max drawdown",
+      "riskConsistency": "Risk per trade ≤ max daily loss ≤ max drawdown",
+      "invalid": "This value is not valid",
+      "fixFields": "Check the highlighted fields",
+      "saveFailed": "Could not save. Please try again."
+    }
+  }
+}

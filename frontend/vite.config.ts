@@ -4,9 +4,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Dev server proxies the API so the refresh cookie (path /api/v1/auth) stays same-origin.
-// In docker compose the web container points this at http://api:8000.
+// Dev server proxies both backends on the same origin, so the Better Auth session cookie is first-party:
+//   /api/auth/* -> auth service (Better Auth), everything else under /api -> FastAPI (+ WebSocket).
 const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:8000'
+const authTarget = process.env.AUTH_PROXY_TARGET ?? 'http://localhost:3000'
 
 export default defineConfig({
   plugins: [
@@ -46,8 +47,12 @@ export default defineConfig({
   },
   server: {
     host: true,
+    port: 5178,
+    strictPort: true,
     fs: { allow: ['..'] },
     proxy: {
+      // Host header is kept (no changeOrigin): Better Auth checks Origin against its trusted origins.
+      '/api/auth': { target: authTarget },
       '/api': { target: apiTarget, changeOrigin: true, ws: true },
     },
   },

@@ -26,28 +26,28 @@ describe('api client', () => {
   it('refreshes once on 401 and retries with the new token', async () => {
     fetchMock
       .mockResolvedValueOnce(json(401, { code: 'token_expired', message: 'expired' }))
-      .mockResolvedValueOnce(json(200, { access_token: 'new' }))
+      .mockResolvedValueOnce(json(200, { token: 'new' }))
       .mockResolvedValueOnce(json(200, { id: 'u1' }))
     await expect(api('/me')).resolves.toEqual({ id: 'u1' })
-    expect(fetchMock.mock.calls[1][0]).toBe('/api/v1/auth/refresh')
+    expect(fetchMock.mock.calls[1][0]).toBe('/api/auth/token')
     expect((fetchMock.mock.calls[2][1]!.headers as Record<string, string>).Authorization).toBe('Bearer new')
     expect(getAccessToken()).toBe('new')
   })
 
   it('shares one refresh between concurrent 401s', async () => {
     fetchMock.mockImplementation(async (url, init) => {
-      if (String(url).endsWith('/auth/refresh')) return json(200, { access_token: 'new' })
+      if (String(url).endsWith('/api/auth/token')) return json(200, { token: 'new' })
       const auth = (init!.headers as Record<string, string>).Authorization
       return auth === 'Bearer new' ? json(200, {}) : json(401, {})
     })
     await Promise.all([api('/a'), api('/b')])
-    expect(fetchMock.mock.calls.filter(([u]) => String(u).endsWith('/auth/refresh'))).toHaveLength(1)
+    expect(fetchMock.mock.calls.filter(([u]) => String(u).endsWith('/api/auth/token'))).toHaveLength(1)
   })
 
   it('reports session loss when refresh fails', async () => {
     const lost = vi.fn()
     onSessionLost(lost)
-    fetchMock.mockResolvedValueOnce(json(401, {})).mockResolvedValueOnce(json(401, { code: 'token_reused' }))
+    fetchMock.mockResolvedValueOnce(json(401, {})).mockResolvedValueOnce(json(401, { code: 'UNAUTHORIZED' }))
     await expect(api('/me')).rejects.toBeInstanceOf(ApiError)
     expect(lost).toHaveBeenCalledOnce()
     expect(getAccessToken()).toBeNull()
@@ -55,7 +55,7 @@ describe('api client', () => {
 
   it('normalises {code, message, details} errors', async () => {
     fetchMock.mockResolvedValueOnce(json(422, { code: 'validation_error', message: 'bad', details: [{ field: 'password' }] }))
-    const err = (await api('/auth/register', { method: 'POST', body: {}, auth: false }).catch((e) => e)) as ApiError
+    const err = (await api('/me', { method: 'PATCH', body: {}, auth: false }).catch((e) => e)) as ApiError
     expect(err).toMatchObject({ status: 422, code: 'validation_error', message: 'bad', details: [{ field: 'password' }] })
   })
 })

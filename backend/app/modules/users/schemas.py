@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
 from typing import Annotated, Literal
 from zoneinfo import available_timezones
 
@@ -43,15 +42,3 @@ class UserUpdate(BaseModel):
     locale: Locale | None = None
     timezone: Timezone | None = None
     theme: Theme | None = None
-
-
-class SessionOut(BaseModel):
-    """One signed-in device = one refresh-token family."""
-
-    id: uuid.UUID
-    user_agent: str | None
-    ip: str | None
-    created_at: datetime
-    last_used_at: datetime | None
-    expires_at: datetime
-    current: bool

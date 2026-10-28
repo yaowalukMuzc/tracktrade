@@ -1,6 +1,7 @@
 # TrackTrade — Implementation Plan
 
 > เขียนจาก kickoff (2026-10-12) หลังอ่าน `CLAUDE.md`, `docs/spec.md` ทั้งไฟล์, `design-system/*`, ภาพใน `screens/web` (18) + `screens/mobile` (31) และ `screens/source/WSide|WToday|WPlan.dc.html`
+> อัปเดต 2026-10-28: เปลี่ยน auth เป็น **Better Auth** ตาม spec (2026-10-22) — ดู §5.3, §6 auth, §8.1 S6–S7
 > เอกสารนี้คือแผนอ้างอิงของทุก phase — prompt ใน `docs/prompts/phase-N.md` สั่งให้อ่านก่อนเริ่มงาน ถ้าตัดสินใจอะไรเปลี่ยนไป ให้แก้ที่นี่ก่อนแล้วค่อยแก้โค้ด
 
 ## 0. สถานะตอนเริ่ม
@@ -30,12 +31,13 @@ tracktrade/
 │  └─ qa/phase-N/          ← screenshot Playwright เทียบแบบ
 ├─ frontend/               ← Vue PWA (มีอยู่แล้ว)
 ├─ backend/                ← FastAPI + arq worker (image เดียว รันได้ 2 command)
+├─ auth/                   ← Better Auth (Node/TypeScript) — `/api/auth/*`, JWKS, email reset password
 ├─ connectors/
 │  └─ mt5-ea/              ← TrackTrade.mq5 + include/*.mqh + README ติดตั้ง
 ├─ infra/
 │  ├─ nginx/               ← config web (prod) + reverse proxy /api, /ws
 │  └─ backup/              ← script pg_dump รายวัน + restore drill
-├─ docker-compose.yml      ← dev: postgres:17, redis:7, api, worker, web, mailpit, minio
+├─ docker-compose.yml      ← dev: postgres:17, redis:7, auth, api, worker, web, mailpit, minio
 ├─ docker-compose.prod.yml ← override prod (nginx build, ไม่มี mailpit, HTTPS ผ่าน Caddy/Traefik)
 ├─ .env.example
 └─ .github/workflows/ci.yml
@@ -83,7 +85,8 @@ src/
 │  └─ mentor/              ← MentorDashboardView, ReviewQueue, MentorTradeView
 │     (แต่ละ feature: views/, components/, api.ts, queries.ts, types.ts)
 ├─ api/
-│  ├─ client.ts            ← fetch wrapper: base URL, access token ใน memory, auto-refresh เมื่อ 401 ครั้งเดียว, error `{code,message,details}`
+│  ├─ authClient.ts        ← Better Auth client (`better-auth/vue` + jwtClient) — signIn/signUp/signOut/requestPasswordReset/resetPassword
+│  ├─ client.ts            ← fetch wrapper FastAPI: JWT ของ Better Auth ใน memory (ขอจาก `/api/auth/token`), ขอใหม่เมื่อ 401 ครั้งเดียว, error `{code,message,details}`
 │  ├─ schema.d.ts          ← generate จาก OpenAPI ของ backend (`openapi-typescript`) — ห้ามเขียน type ซ้ำมือ
 │  └─ ws.ts                ← WebSocket client: reconnect + backoff, dispatch event → query invalidation / toast
 ├─ stores/                 ← state ข้ามหน้าเท่านั้น: session, ui (theme/locale/unit $/R), accounts (บัญชีที่เลือก), inbox (badge counts)
@@ -304,7 +307,7 @@ backend/
 │  │  ├─ config.py           ← Settings(BaseSettings): DATABASE_URL, REDIS_URL, JWT_SECRET, FERNET_KEY, ANTHROPIC_API_KEY, S3_*, SMTP_*, VAPID_*, CORS_ORIGINS, MATCH_TOLERANCE_SL=0.3, QUALITY_WEIGHTS …
 │  │  ├─ db.py               ← async engine, async_sessionmaker, get_session dependency (unit of work ต่อ request)
 │  │  ├─ models_base.py      ← Base: id uuid7, created_at, updated_at; type Money=Numeric(18,2), Price=Numeric(18,6)
-│  │  ├─ security.py         ← argon2 hash/verify, JWT access 15m, refresh 30d (opaque random, hash ใน DB, rotate + reuse detection)
+│  │  ├─ security.py         ← ตรวจ JWT ของ Better Auth ด้วย JWKS (cache ตาม `kid`) — FastAPI ไม่ออก token / ไม่ hash password แล้ว
 │  │  ├─ access.py           ← AccessContext(user, trader_id, link) + policy: owner / active mentor (read-only, r_only) → 404 / 403
 │  │  ├─ errors.py           ← AppError(code, message, details) + handlers → `{code,message,details}`
 │  │  ├─ logging.py          ← structlog JSON, request_id, user_id
@@ -345,20 +348,50 @@ backend/
 
 ---
 
+### 5.3 Authentication — Better Auth (Phase 2)
+
+ตัดสิน open question spec §5 (2026-10-28):
+
+| เรื่อง | ตัดสิน | เหตุผล |
+|---|---|---|
+| ที่รัน | **Node service แยก** `auth/` (Better Auth + `better-auth/node` handler บน `node:http`) container `auth` port 3000 | web เป็น static nginx ไม่มี Node runtime; แยก deploy/scale ได้ |
+| Routing | browser เรียก `/api/auth/*` (same-origin ผ่าน nginx / Vite proxy) → `auth`; `/api/v1/*` → FastAPI | session cookie httpOnly + SameSite=Lax ไม่ต้องทำ CORS |
+| FastAPI ตรวจ session | **JWT (jwt plugin, EdDSA) + JWKS** จาก `AUTH_JWKS_URL` cache ตาม `kid`; payload มี `sub=user.id`, `sid=session.id`; FastAPI เช็กแถว `auth_sessions` (ยังไม่หมดอายุ) ทุก request | ตรวจลายเซ็นได้โดยไม่เรียก auth service ทุกครั้ง แต่ revoke/reset password มีผลทันที (F-01 AC6) — เป็น PK lookup ในฐานข้อมูลเดียวกัน |
+| JWT ฝั่ง browser | frontend ขอ `GET /api/auth/token` (อายุ 15 นาที) เก็บใน memory; 401 → ขอใหม่ 1 ครั้ง → ไม่ได้ = session หลุด → `/login?redirect=` | เหมือน access token เดิม แต่ต่ออายุด้วย session cookie ของ Better Auth |
+| WebSocket | `/api/v1/ws?token=<jwt>` ตรวจแบบเดียวกัน | |
+| Schema | Alembic เป็นเจ้าของ schema ทั้งหมด; Better Auth map ด้วย `modelName` + `fields` เป็น snake_case: `users` (name→`display_name`, + `email_verified`, `image`, additionalFields `locale`, `timezone`, `theme`, `plan_tier`, `is_mentor`), `auth_sessions`, `auth_accounts`, `auth_verifications`, `auth_jwks`; id = uuid | schema เดียว ไม่ต้องรัน migration 2 ระบบ; FastAPI ใช้ `users` ต่อได้ทันที |
+| Password | argon2id (`@node-rs/argon2`, พารามิเตอร์เท่า argon2-cffi default) ผ่าน `emailAndPassword.password.hash/verify`; min 8 ตัวอักษร | hash เดิมจาก Phase 1 (PHC string) verify ได้เลย → AC8 ไม่ต้องสมัครใหม่ |
+| Migration | Alembic ย้าย `users.password_hash` → `auth_accounts(provider_id='credential')` แล้ว drop `password_hash`, `refresh_tokens` | AC8 |
+| Forgot/Reset | `requestPasswordReset` → email ลิงก์ `/reset-password?token=` (อายุ 1 ชม., ใช้ครั้งเดียว, ตอบเหมือนกันทุกกรณี), `resetPassword` + `revokeSessionsOnPasswordReset` | AC5–AC6 |
+| Email | nodemailer SMTP; dev = **Mailpit** (UI :8025) | |
+| Rate limit | Better Auth `rateLimit` (window/max ตาม env, sign-in/sign-up/reset เข้มกว่า) | NFR |
+| Sessions/อุปกรณ์ | `authClient.listSessions()/revokeSession()` (Settings) | แทน `/me/sessions` เดิม |
+| Guard | frontend: ทุก route ยกเว้น `/login`, `/register`, `/forgot-password`, `/reset-password` (meta `public`); backend: ทุก router ยกเว้น health ต้องมี session + test ที่ไล่ทุก route ใน OpenAPI ว่าได้ 401 | AC7 |
+
+---
+
 ## 6. API contract draft (`/api/v1`)
 
 รูปแบบทั่วไป: list ใช้ cursor pagination `?cursor=&limit=` → `{items, next_cursor}`; ทุก list รับ `account_id` (ไม่ส่ง = ทุกบัญชี); error `{code, message, details}`; เวลาเป็น ISO-8601 UTC; เงิน/ราคาเป็น string
 
-### auth / users
+### auth (Better Auth service — `/api/auth/*`, ไม่อยู่ใต้ `/api/v1`)
 | Method | Path | Request → Response |
 |---|---|---|
-| POST | `/auth/register` | `{email, password(≥8), display_name, locale, timezone, accept_terms}` → `{user, access_token}` + refresh cookie (httpOnly, Secure, SameSite=Strict, path=/api/v1/auth) |
-| POST | `/auth/login` | `{email, password, remember}` → `{user, access_token}` + refresh cookie |
-| POST | `/auth/refresh` | cookie → `{access_token}` + cookie ใหม่ (rotate; ใช้ token เก่าซ้ำ = revoke ทั้ง family) |
-| POST | `/auth/logout` | → 204 (revoke) |
+| POST | `/api/auth/sign-up/email` | `{email, password(≥8), name, locale, timezone}` → `{user, token}` + session cookie |
+| POST | `/api/auth/sign-in/email` | `{email, password, rememberMe}` → `{user}` + session cookie (rememberMe=false → cookie หมดเมื่อปิด browser) |
+| POST | `/api/auth/sign-out` | → ลบ session |
+| GET | `/api/auth/get-session` | → `{session, user}` |
+| GET | `/api/auth/token` | → `{token}` JWT 15 นาที สำหรับเรียก FastAPI |
+| GET | `/api/auth/jwks` | public keys (FastAPI ใช้ตรวจ JWT) |
+| POST | `/api/auth/request-password-reset` | `{email, redirectTo}` → `{status:true}` เสมอ |
+| POST | `/api/auth/reset-password` | `{newPassword, token}` → revoke ทุก session |
+| POST | `/api/auth/change-password` | `{currentPassword, newPassword, revokeOtherSessions}` |
+| GET / POST | `/api/auth/list-sessions`, `/api/auth/revoke-session` | อุปกรณ์ที่ login |
+
+### users (`/api/v1`)
+| Method | Path | Request → Response |
+|---|---|---|
 | GET / PATCH | `/me` | `{display_name, locale, timezone, theme}` |
-| PUT | `/me/password` | `{current, new}` |
-| GET / DELETE | `/me/sessions`, `/me/sessions/{id}` | อุปกรณ์ที่ login (จาก refresh_tokens) |
 | GET / PUT | `/me/notification-preferences` | `{rule_breach, news_high, news_lead_min, in_trade_prompt, coach_weekly, mentor_comment}` |
 | POST / DELETE | `/me/push-subscriptions` | `{endpoint, keys}` |
 | POST | `/me/export` | → 202 `{job_id}` (zip CSV+JSON, ลิงก์ทางอีเมล) |
@@ -502,7 +535,8 @@ backend/
   - Final score priority mentor > self > auto + weights, grade boundary, quadrant
   - Anonymizer ของ AI Coach ไม่มี email/account_number/display_name (F-16 AC2)
 - **Integration (Postgres + Redis จริงใน docker)**
-  - Auth: register/login/refresh rotate/reuse detection/logout, password < 8 → 422, rate limit
+  - Auth (FastAPI): JWT ผิด/หมดอายุ/ไม่มี/kid ไม่รู้จัก/session ถูก revoke → 401; ทุก route ยกเว้น health → 401 เมื่อไม่มี token (F-01 AC7)
+  - Auth (Better Auth, `auth/` vitest + Postgres): sign-up (<8 → error), sign-in ด้วย hash argon2 เดิมจาก Phase 1 (AC8), reset password ใช้ซ้ำไม่ได้/revoke session (AC5–AC6), forgot ตอบเหมือนกันทั้งมี/ไม่มี email
   - **Ownership matrix**: ทุก endpoint ที่มี `{id}` — user B เรียกของ user A ได้ 404 (generate test จาก route table อัตโนมัติ) (F-01 AC4)
   - Mentor: write endpoints → 403, `r_only` → ไม่มี key เงินใน JSON ทุก response (walk JSON หา field ต้องห้าม) (F-22 AC2, AC6), audit log ถูกเขียน
   - Ingest idempotent: deal เดิม 2 ครั้ง = 1 record (F-08 AC3); latency ingest → alert ใน WS < 5s (F-20 AC1)
@@ -543,7 +577,9 @@ backend/
 | S2 | Quality weights + rubric | weight เท่ากัน 6 มิติ (1/6) ใน config; rubric 4 ระดับ 25/50/75/100 ตามแบบ; grade A ≥ 85, B ≥ 70, C ≥ 55, D < 55 (สอดคล้องกับภาพ: 58 = C, 71/74 = B) | Phase 6 |
 | S3 | Matching tolerance | ราคา ≤ 0.3×ระยะ SL, เวลา: entry อยู่ระหว่าง `locked_at` – `valid_until`; เก็บค่าใน config ต่อ user ปรับได้ภายหลัง; log distance จริงไว้ validate | Phase 4 |
 | S4 | MT5 bridge | **EA (MQL5)** — แบบ (`04-ConnectBroker`, `14-WAccounts`) ออกแบบรอบ EA + API key; Python package ต้องมี Windows VPS ต่อ user | Phase 4 |
-| S5 | Attachment storage | **S3-compatible** ตั้งแต่แรก (MinIO ใน docker compose, prod ใช้ R2/S3) — โค้ดเส้นเดียว | Phase 2 |
+| S5 | Attachment storage | **S3-compatible** ตั้งแต่แรก (MinIO ใน docker compose, prod ใช้ R2/S3) — โค้ดเส้นเดียว · **Phase 2 (2026-10-28):** เริ่มด้วย `LocalStorage` (disk, volume `media`) หลัง interface `core/storage.py` เพราะ pull image MinIO ไม่ได้; ไฟล์ส่งผ่าน API ที่ตรวจ owner (`GET /attachments/{id}/content`) ไม่ใช้ public URL — เพิ่ม S3 adapter ก่อน production | Phase 2 / 8 |
+| S6 | Better Auth: แยก Node service หรือรวมกับ web; FastAPI ตรวจแบบ JWT/JWKS หรือถาม Better Auth ทุก request | **ตัดสินแล้ว:** Node service แยก + JWT/JWKS + เช็ก `auth_sessions` (§5.3) | Phase 2 ✅ |
+| S7 | Email provider production | dev = Mailpit; prod = SMTP ผ่าน env (Resend/SES ใช้ SMTP ได้ทั้งคู่) | Phase 8 |
 
 ### 8.2 สิ่งที่ภาพออกแบบไม่ครอบคลุม — default
 
@@ -585,8 +621,8 @@ backend/
 | M17 | Alerts ในแบบมี mentor comment, sync ล้มเหลว, รายงาน AI พร้อม, งานมอบหมาย — spec มีแค่ `rule_breach/news` | ขยาย `alerts.type` = `rule_breach \| news \| mentor \| system` + `subtype` |
 | M18 | สิทธิ์ "ส่ง alert ผิดกฎให้ Mentor" ต่อ mentor (F-20 AC4 "ตั้งค่าได้") ไม่มีฟิลด์ | เพิ่ม `mentor_links.forward_alerts` |
 | M19 | Settings การแจ้งเตือน 5 toggle + นาทีก่อนข่าว, ธีม, รูปโปรไฟล์ | เพิ่ม `users.theme`, `users.notification_prefs (jsonb)`, avatar ผ่าน `attachments(owner_type=user)` |
-| M20 | "รหัสผ่าน & อุปกรณ์ที่เข้าสู่ระบบ (2 อุปกรณ์)" | เพิ่ม `refresh_tokens.family_id, user_agent, ip, last_used_at`; endpoint sessions |
-| M21 | Login มี "จดจำฉันไว้" + "ลืมรหัสผ่าน?", Register มี "ยอมรับเงื่อนไข/นโยบาย" — ไม่มีใน spec | remember = refresh 30 วัน, ไม่ติ๊ก = session cookie; forgot password ต้องมีระบบส่งอีเมล → Q3 |
+| M20 | "รหัสผ่าน & อุปกรณ์ที่เข้าสู่ระบบ (2 อุปกรณ์)" | ~~refresh_tokens family~~ → ใช้ `auth_sessions` ของ Better Auth (`user_agent`, `ip_address`) + `listSessions/revokeSession` |
+| M21 | Login มี "จดจำฉันไว้" + "ลืมรหัสผ่าน?", Register มี "ยอมรับเงื่อนไข/นโยบาย" | remember = Better Auth `rememberMe` (ไม่ติ๊ก = session cookie); forgot password = F-01 AC5 (Phase 2) |
 | M22 | ช่องค้นหา (Today topbar, Trades) ไม่มีใน spec | ค้นหาใน `/trades` (symbol/setup/tag) ใน Phase 4; ช่องค้นหาบน Today เปิดหน้า Trades พร้อม query |
 | M23 | ปุ่ม "แชร์ให้ Mentor" ใน Trade detail แต่ spec ให้ mentor เห็นข้อมูลทั้งหมดผ่าน link | เสนอให้ปุ่มนี้ = "ขอรีวิว" → ใส่ `positions.review_requested_at` และคิวรีวิว mentor = เทรดที่ขอ + เทรดที่ trader รีวิวแล้วแต่ mentor ยังไม่ให้คะแนน → Q7 |
 | M24 | Goal จาก mentor ("Adherence ≥ 85% ในเดือน ต.ค.", แสดงบน Today) — spec มี `mentor_assignments.kind=goal` แต่ไม่กำหนดรูปแบบ | `payload = {metric: adherence\|quality\|unplanned_pct\|max_trades, op, target, period}`; progress คำนวณจาก stats |
@@ -619,7 +655,7 @@ backend/
 |---|---|---|
 | Q1 | `git init` ที่ root + ใช้ GitHub (remote ไหน) สำหรับ CI? | init local, CI file พร้อมแต่รอ remote |
 | Q2 | Token: import ตรงจาก `design-system/` (ปัจจุบัน) หรือ copy ไป `frontend/src/styles` ตาม phase-1 prompt? | import ตรง (แหล่งเดียว) |
-| Q3 | ระบบส่งอีเมล (จำเป็นสำหรับ invite mentor F-22 AC1, export data, forgot password) — ใช้ SMTP/provider ไหน? ทำ forgot password ใน MVP ไหม? | SMTP ผ่าน env (dev ใช้ Mailpit), ทำ forgot password ใน Phase 1 |
+| Q3 | ระบบส่งอีเมล (จำเป็นสำหรับ invite mentor F-22 AC1, export data, forgot password) — ใช้ SMTP/provider ไหน? ทำ forgot password ใน MVP ไหม? | **ตอบแล้วใน spec (2026-10-22):** forgot/reset password ทำใน Phase 2 ด้วย Better Auth, SMTP (dev Mailpit) |
 | Q4 | Attachment storage S3-compatible (MinIO dev) โอเคไหม? | ใช่ |
 | Q5 | Design docs ให้แก้ได้ไหม (M1, M4, M11) หรือถือว่า read-only? | แก้เฉพาะ `.md` ให้ตรงกับ `components.css` |
 | Q6 | "วัน" สำหรับ max daily loss / max trades / calendar ใช้ timezone ไหน (prop firm อย่าง FTMO ใช้เวลา server CE(S)T)? | ตั้งได้ต่อบัญชี (`trading_accounts.day_timezone`) default = timezone ของ user |

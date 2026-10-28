@@ -10,18 +10,29 @@
 - [x] Docker Compose: postgres17, redis, api, worker, web — ทุก service healthy + E2E `frontend/e2e/auth.flow.spec.ts` ผ่าน (2026-10-12, ทดสอบด้วย base image ที่ cache ไว้เพราะ Docker Hub ต่อไม่ได้ — ต้อง `docker compose up --build` ด้วย image จริงอีกครั้ง)
 - [x] Backend skeleton: FastAPI app factory, settings (pydantic-settings), async SQLAlchemy, Alembic init, structured logging — `backend/tests` (35 tests)
 - [x] Frontend skeleton: Vue3+TS+Vite+Tailwind+Pinia+Router+vue-i18n+Vite PWA, layout แบบ mobile-first พร้อม bottom nav — มีก่อน kickoff; Phase 1 เติมครบ: PWA icons (ชั่วคราว), ธีม Light/Dark/ตามระบบ, eslint (no-raw-text) + vitest, `components/ui/*` 20 ตัว, `/dev/ui`
-- [x] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01) — `backend/tests/test_auth.py`, `frontend/e2e/auth.flow.spec.ts`, `docs/qa/phase-1/login-*.png`, `register-*.png`
+- [x] Auth: register/login/refresh/logout, argon2, JWT, route guard ฝั่ง frontend (F-01) — `backend/tests/test_auth.py`, `frontend/e2e/auth.flow.spec.ts`, `docs/qa/phase-1/login-*.png`, `register-*.png` · **หมายเหตุ:** auth ชุดนี้เขียนเองบน FastAPI และจะถูกแทนด้วย Better Auth ใน Phase 2 (spec อัปเดต 2026-10-22)
 - [x] ตั้ง CI: lint (ruff, eslint), type check (mypy, vue-tsc), pytest และ vitest — `.github/workflows/ci.yml`; ทุกขั้นผ่านบนเครื่อง local แล้ว แต่ยังไม่ได้รันบน GitHub Actions (ยังไม่ push)
 - [x] ตั้งค่า arq worker และ WebSocket endpoint พื้นฐาน + Redis pub/sub — `backend/tests/test_realtime.py`
 - [x] สร้าง seed `symbols`, `emotion_tags` และ `mistake_categories` — `backend/app/seeds/*.yaml` (30 / 17 / 25)
 
-### Phase 2 — Accounts, Risk & Playbook
-- [ ] CRUD trading_accounts + account_symbol_overrides (F-02, F-03)
-- [ ] Risk profile + trading_rules พร้อมค่า default และ snapshot ต่อเทรด
-- [ ] Risk calculator service (lot ↔ risk amount ↔ R:R) พร้อม unit tests เทียบกับค่า MT5
-- [ ] Playbook: setups, checklist items, examples (upload attachments) (F-04)
-- [ ] หน้า UI: Accounts, Risk Settings, Playbook list/detail
-- [ ] Audit log middleware สำหรับ entity สำคัญ
+### Phase 2 — Auth (Better Auth), Accounts, Risk & Playbook
+- [x] ระบบ Auth (Better Auth): login/register/forgot-password/reset-password + guard ทุกหน้า (F-01 AC5–AC8) — 2026-10-28
+  - [x] ตั้ง Better Auth service (email/password, argon2, rate limit) + เพิ่มเข้า Docker Compose — `auth/` (`src/auth.ts`, `auth/test/*.spec.ts` 13 tests), `auth/Dockerfile`, service `auth` + `mailpit` ใน `docker-compose.yml`, nginx `/api/auth/` · ⚠️ ยัง build docker ไม่ได้เพราะ Docker Hub ต่อไม่ได้ (TLS timeout) — ทดสอบทั้ง stack แบบ native แทน ต้อง `docker compose up --build` อีกครั้ง
+  - [x] ส่ง email reset password ผ่าน SMTP (dev: Mailpit) — `auth/src/mailer.ts` (TH/EN ตาม locale), `auth/test/auth.spec.ts`, `frontend/e2e/password-reset.spec.ts` (อ่านอีเมลผ่าน Mailpit API)
+  - [x] FastAPI ตรวจ session/JWT จาก Better Auth แทน JWT ที่เขียนเอง; endpoint ที่ไม่ใช่ health/auth คืน 401 — `core/security.py` (JWKS), `modules/auth/deps.py` (+ เช็ก `auth_sessions`), `backend/tests/test_auth.py` (ไล่ทุก route ใน OpenAPI)
+  - [x] Frontend: หน้า Forgot/Reset password, ใช้ Better Auth client, route guard ทุกหน้า — `api/authClient.ts`, `features/auth/ForgotPasswordView.vue`, `ResetPasswordView.vue`, `docs/qa/phase-2/forgot-*.png`, `reset-*.png`, e2e `auth.flow` + `password-reset` ผ่านทั้ง desktop/mobile
+  - [x] Migration user เดิม + ถอด auth เดิม (`refresh_tokens`, `/auth/*` ของ FastAPI) — `alembic/versions/20261028_0002_better_auth.py`, `backend/tests/test_migrations.py`, `auth/test` (login ด้วย hash argon2 จาก Phase 1)
+- [x] CRUD trading_accounts + account_symbol_overrides (F-02, F-03) — `modules/accounts/*`, `tests/test_accounts.py` (CRUD, archive/unarchive, mapping + resolve `XAUUSD.m`, ownership 404)
+- [x] Risk profile + trading_rules พร้อมค่า default และ snapshot ต่อเทรด — default 1/3/10/5 + cooldown 30 / blackout 15; snapshot = ตาราง `risk_profile_versions` (append-only) + `risk_profile_at(account, time)`; เทรดจะเก็บ version id ใน Phase 4; rules 4 แบบ (`no_trading_window`, `max_lot_vs_plan`, `max_consecutive_losses`, `custom`)
+- [x] Risk calculator service (lot ↔ risk amount ↔ R:R) พร้อม unit tests เทียบกับค่า MT5 — `modules/risk/calculator.py`, `POST /risk/calc`, `tests/test_risk_calculator.py` + `tests/fixtures/risk_mt5.csv` (EURUSD, XAUUSD, XAGUSD, USDJPY, GBPJPY, EURGBP, บัญชี EUR) · ⚠️ ค่า golden คำนวณจากสูตร profit ของ MT5 (Forex/CFD calc mode) ไม่ได้ export จาก terminal จริง — ควรเทียบกับ MT5 จริงเมื่อมี EA (Phase 4) และ broker override `tick_value` จะใช้แทนเมื่อ EA ส่งมา
+- [x] Playbook: setups, checklist items, examples (upload attachments) (F-04) — `modules/playbook/*`, `modules/attachments/*`, `tests/test_playbook.py` (checklist เรียง/คง id, archive, ลบได้เฉพาะที่ไม่ถูกใช้ → 409 `setup_in_use`, รูปตรวจจาก bytes ≤10MB) · storage = disk (`core/storage.py`, volume `media`) แทน MinIO ไว้ก่อน (Docker Hub ใช้ไม่ได้) — interface พร้อมต่อ S3
+- [x] หน้า UI: Accounts, Risk Settings, Playbook list/detail — `features/accounts`, `features/playbook`, `features/onboarding` (+ `/onboarding` guard เมื่อยังไม่มีบัญชี), account switcher ใช้ข้อมูลจริง; e2e `accounts.visual`, `playbook.visual`, `onboarding.visual` (desktop/mobile × light/dark) → `docs/qa/phase-2/*.png` · ส่วนที่ยังไม่มีข้อมูลแสดง "—"/empty state: สถิติ setup (Phase 7), balance/usage จริง + สถานะเชื่อมต่อ (Phase 4)
+- [x] Audit log middleware สำหรับ entity สำคัญ — `modules/audit/*` (ตาราง `audit_logs` before/after เฉพาะ field ที่เปลี่ยน) บันทึกจาก service ของ account / risk profile / rules / symbol mapping / setup; `GET /accounts/{id}/audit-log`
+
+> **การตัดสินใจ Better Auth (spec §5 — ตัดสินตอนเริ่ม Phase 2, 2026-10-28):** ดูรายละเอียดใน `docs/PLAN.md` §5.3
+> - แยกเป็น Node service `auth/` (container `auth`) — nginx/Vite proxy `/api/auth/*` → auth, `/api/v1/*` → FastAPI (same-origin, cookie httpOnly)
+> - FastAPI ตรวจ **JWT ของ Better Auth (jwt plugin) ผ่าน JWKS** + เช็กว่า session (`sid`) ยังอยู่ใน `auth_sessions` เพื่อให้ revoke มีผลทันที (AC6)
+> - ตาราง auth ใช้ Alembic เป็นเจ้าของ schema เดียว (`users` + `auth_sessions/auth_accounts/auth_verifications/auth_jwks`)
 
 ### Phase 3 — Analysis, Plan & Plan Lock
 - [ ] Market analysis CRUD + narrative rich text editor (F-05)
@@ -79,26 +90,32 @@
 ## Acceptance Criteria (spec §3)
 
 ### F-01 Authentication & Profile
-- [x] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร — `test_auth.py`, `docs/qa/phase-1/register-*.png`
-- [x] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้) — `test_auth.py` (rotate + reuse detection + grace 30s เมื่อ response หาย)
-- [x] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload — `test_users.py`, `e2e/login.visual.spec.ts`, หน้า `/settings`
+- [x] AC1: สมัครด้วย email/password ได้ และ password ต้องยาวอย่างน้อย 8 ตัวอักษร — `test_auth.py`, `docs/qa/phase-1/register-*.png` · Better Auth: `auth/test/auth.spec.ts` (sign-up)
+- [x] AC2: Login แล้วได้ access token (15 นาที) และ refresh token (30 วัน, rotate ทุกครั้งที่ใช้) — Phase 1: `test_auth.py` · Better Auth: JWT 15 นาที (`/api/auth/token`) + session cookie 30 วัน (refresh ทุก 1 วัน) แทน refresh token; `auth/test/auth.spec.ts`, e2e `auth.flow`
+- [x] AC3: ตั้ง locale (th/en) และ timezone ได้ UI เปลี่ยนภาษาทันทีโดยไม่ต้อง reload — `test_users.py`, `e2e/login.visual.spec.ts`, หน้า `/settings` · sign-up ส่ง locale/timezone ให้ Better Auth (validate แล้ว)
 - [ ] AC4: user คนหนึ่งเข้าถึงข้อมูลของ user อื่นไม่ได้ (API คืน 404) ยกเว้นผ่าน mentor_link ที่ active — ส่วน 404 เสร็จแล้ว (`core/access.py` + test session ของคนอื่น = 404); ส่วน mentor_link รอ Phase 8
+- [x] AC5: **Forgot password:** กรอก email แล้วระบบส่งลิงก์ reset (หมดอายุใน 1 ชั่วโมง, ใช้ได้ครั้งเดียว) และตอบข้อความเดียวกันไม่ว่า email จะมีในระบบหรือไม่ — `auth/test/auth.spec.ts`, e2e `password-reset`
+- [x] AC6: **Reset password:** ตั้งรหัสใหม่ (≥ 8 ตัวอักษร) จากลิงก์ได้ และทุก session เดิมของ user ถูก revoke — `auth/test/auth.spec.ts`, `backend/tests/test_auth.py::test_revoked_session_stops_jwt_immediately`, e2e `password-reset`
+- [x] AC7: **Guard:** ทุกหน้าที่ไม่ใช่ login/register/forgot/reset ต้อง login ก่อน (redirect ไป `/login?redirect=…`); ทุก API endpoint ยกเว้น health/auth คืน 401 เมื่อไม่มี session ที่ valid — `router/index.ts` (public เฉพาะ 4 หน้า), `backend/tests/test_auth.py::test_every_api_route_requires_a_session`
+- [x] AC8: Auth ทั้งหมดใช้ Better Auth; user และข้อมูลเดิมจาก Phase 1 ย้ายมาได้โดยไม่ต้องสมัครใหม่ — migration 0002 + `test_migrations.py`, `auth/test/auth.spec.ts` (AC8)
+
+> หมายเหตุ: AC1–AC3 ทำเสร็จแล้วด้วย auth ที่เขียนเองบน FastAPI (Phase 1) — ทดสอบซ้ำบน Better Auth แล้ว (2026-10-28)
 
 ### F-02 Trading Accounts & Risk Profile
-- [ ] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance
-- [ ] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5)
-- [ ] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี
-- [ ] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
+- [x] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance — `test_accounts.py`, e2e `accounts.visual` (archive), onboarding
+- [x] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5) — `test_accounts.py::test_create_account_gets_default_risk_profile`, e2e onboarding (ค่าที่กรอกถูกบันทึก)
+- [ ] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี — ⚠️ บางส่วน: account switcher + store (`accountParam`) ใช้งานได้และมี test (`stores/accounts.spec.ts`); รอหน้า dashboard/รายการที่ใช้ filter (Phase 4–7)
+- [x] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด) — `test_accounts.py::test_risk_profile_update_versions_and_audit` (Phase 4 ต้องผูก position กับ version id)
 
 ### F-03 Symbol Specification
 - [x] AC1: มี seed symbol ของ FX majors/minors และ XAUUSD/XAGUSD — `backend/app/seeds/symbols.yaml`, `test_platform.py`
-- [ ] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี
-- [ ] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%)
+- [x] AC2: map broker symbol (เช่น `XAUUSD.m`) กับ symbol มาตรฐานได้ต่อบัญชี — `test_accounts.py::test_symbol_mapping_and_resolve`
+- [x] AC3: คำนวณ risk amount จาก (entry, SL, lot) ได้ถูกต้องเทียบกับ MT5 (คลาดเคลื่อนไม่เกิน 1%) — `test_risk_calculator.py` (ดูหมายเหตุใน Phase 2)
 
 ### F-04 Playbook (Structured Setups)
-- [ ] AC1: สร้าง setup ที่มี checklist, TF, session, default risk, management rules และภาพตัวอย่างได้
-- [ ] AC2: setup ที่ถูกใช้แล้วลบไม่ได้ ทำได้เพียง archive
-- [ ] AC3: หน้า setup แสดงสถิติ: จำนวนเทรด, win rate, expectancy (R), avg adherence และ avg quality
+- [x] AC1: สร้าง setup ที่มี checklist, TF, session, default risk, management rules และภาพตัวอย่างได้ — `test_playbook.py`, e2e `playbook.visual`
+- [x] AC2: setup ที่ถูกใช้แล้วลบไม่ได้ ทำได้เพียง archive — `test_playbook.py::test_used_setup_cannot_be_deleted_only_archived` (FK RESTRICT; trade_plans ใน Phase 3 ต้องอ้าง setups ด้วย ON DELETE RESTRICT)
+- [ ] AC3: หน้า setup แสดงสถิติ: จำนวนเทรด, win rate, expectancy (R), avg adherence และ avg quality — UI + `GET /setups/{id}/stats` พร้อมแล้วแต่แสดง "—" จนกว่าจะมีเทรด (Phase 7)
 
 ### F-05 Market Analysis
 - [ ] AC1: สร้าง analysis ต่อ symbol/วัน ได้ โดยใส่ HTF bias, key levels, TF, session, narrative และ confidence
@@ -223,10 +240,10 @@
 
 ### Non-Functional Requirements
 - [ ] Security: HTTPS
-- [x] Security: hash password ด้วย argon2 — `core/security.py`
+- [x] Security: hash password ด้วย argon2 — Better Auth custom hash argon2id (`auth/src/password.ts`) พารามิเตอร์เท่า Phase 1
 - [ ] Security: เข้ารหัส OAuth tokens (at rest)
 - [ ] Security: เก็บ API key แบบ hash
-- [ ] Security: rate limit บน auth และ ingest — auth เสร็จแล้ว (429 + test); ingest รอ Phase 4
+- [ ] Security: rate limit บน auth และ ingest — auth เสร็จแล้ว (Better Auth `rateLimit`, `auth/test/rate-limit.spec.ts`); ingest รอ Phase 4
 - [ ] Privacy: ข้อมูลที่ส่งไป AI ไม่มี PII
 - [ ] Privacy: ผู้ใช้ export และลบข้อมูลตัวเองได้
 - [ ] Performance: API p95 < 300ms

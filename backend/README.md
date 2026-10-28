@@ -2,6 +2,9 @@
 
 FastAPI + async SQLAlchemy 2 + Alembic + arq (Redis) — Python 3.12, managed with [uv](https://docs.astral.sh/uv/).
 Architecture: `docs/PLAN.md` §5. API contract: `docs/PLAN.md` §6 (all routes under `/api/v1`).
+Authentication is the Better Auth service in `../auth` (PLAN §5.3): this API only verifies its JWTs
+(JWKS from `AUTH_JWKS_URL`) and checks that the session is still alive in `auth_sessions`.
+Alembic owns every table, including Better Auth's `auth_*` tables.
 
 ```
 app/
@@ -9,7 +12,7 @@ app/
   health.py          GET /api/v1/health (DB + Redis)
   core/              config, db, models_base, security, access (owner filter -> 404),
                      errors ({code,message,details}), logging (structlog JSON), ratelimit, pubsub
-  modules/<name>/    models · schemas · repo · service · router   (auth, users, symbols, emotions, diagnosis)
+  modules/<name>/    models · schemas · repo · service · router   (auth = Better Auth tables + JWT deps, users, symbols, …)
   realtime/          WS /api/v1/ws + per-process hub (Redis pub/sub `user:{id}` fan-out)
   worker/            arq WorkerSettings + jobs
   seeds/             *.yaml + `python -m app.seeds` (idempotent upsert)
@@ -22,12 +25,11 @@ tests/               pytest integration tests (real Postgres + Redis)
 ```sh
 cd backend
 uv sync                      # creates .venv with runtime + dev deps from uv.lock
-cp .env.example .env         # then edit DATABASE_URL / REDIS_URL / JWT_SECRET
+cp .env.example .env         # then edit DATABASE_URL / REDIS_URL / AUTH_JWKS_URL
 ```
 
-Settings (env vars, see `.env.example`): `ENV`, `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`,
-`ACCESS_TOKEN_TTL_MIN`, `REFRESH_TOKEN_TTL_DAYS`, `CORS_ORIGINS`, `COOKIE_SECURE`,
-`RATE_LIMIT_AUTH`, `LOG_LEVEL`.
+Settings (env vars, see `.env.example`): `ENV`, `DATABASE_URL`, `REDIS_URL`, `AUTH_JWKS_URL`,
+`JWT_ISSUER`, `JWT_AUDIENCE`, `JWKS_CACHE_SEC`, `CORS_ORIGINS`, `LOG_LEVEL`.
 
 ## Run
 

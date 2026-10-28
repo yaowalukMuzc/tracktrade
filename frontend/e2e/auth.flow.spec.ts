@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-// Full-stack flow (needs the API): register → empty shell → logout → login → reload keeps session → logout.
+// Full-stack flow (auth service + API): register → onboarding → empty shell → logout → login → reload keeps session → logout.
 // Run against docker compose: E2E_BASE_URL=http://localhost:8080 npx playwright test auth.flow
 test.skip(!process.env.E2E_BASE_URL, 'needs the full stack (set E2E_BASE_URL)')
 
@@ -19,13 +19,25 @@ test('register, logout, login, refresh-on-reload, logout', async ({ page, isMobi
   await page.getByRole('checkbox').check()
   await page.getByRole('button', { name: 'Create account' }).click()
 
+  // A new user has no trading account yet, so the guard sends them through onboarding (F-02 AC1).
+  await expect(page).toHaveURL((url) => url.pathname === '/onboarding')
+  await page.getByLabel('Account name').fill('E2E Live')
+  await page.getByLabel('Broker').fill('IC Markets')
+  await page.getByLabel('Initial balance').fill('10000')
+  if (isMobile) {
+    await page.getByRole('button', { name: 'Next: connect broker' }).click()
+    await page.getByRole('button', { name: 'Get started' }).click()
+  } else {
+    await page.getByRole('button', { name: 'Save and get started' }).click()
+  }
+
   // Empty shell
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { level: 1 })).toContainText('E2E')
   const nav = isMobile ? page.getByRole('navigation', { name: 'Bottom menu' }) : page.getByRole('navigation', { name: 'Main menu' })
   await expect(nav).toBeVisible()
 
-  // Session survives a reload via the refresh cookie (access token is memory-only).
+  // Session survives a reload via the Better Auth session cookie (the API JWT is memory-only).
   await page.reload()
   await expect(page).toHaveURL(/\/$/)
 

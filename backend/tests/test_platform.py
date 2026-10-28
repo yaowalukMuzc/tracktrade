@@ -15,7 +15,7 @@ from app.modules.emotions.models import EmotionTag
 from app.modules.symbols.models import Symbol
 from app.modules.users.models import User
 from app.seeds import load_yaml, run_seeds
-from tests.conftest import auth, register
+from tests.conftest import auth, signup
 
 # ------------------------------------------------------------------ health / errors
 
@@ -74,8 +74,8 @@ async def test_reference_endpoints_require_auth(client: httpx.AsyncClient) -> No
         assert (await client.get(path)).status_code == 401
 
 
-async def test_symbols_endpoint(client: httpx.AsyncClient) -> None:
-    headers = auth((await register(client))["access_token"])
+async def test_symbols_endpoint(client: httpx.AsyncClient, app: FastAPI) -> None:
+    headers = auth((await signup(app))["access_token"])
     symbols = {s["code"]: s for s in (await client.get("/api/v1/symbols", headers=headers)).json()}
     assert len(symbols) == len(load_yaml("symbols"))
     xau = symbols["XAUUSD"]
@@ -87,11 +87,10 @@ async def test_symbols_endpoint(client: httpx.AsyncClient) -> None:
 
 
 async def test_emotion_tags_are_system_plus_own(
-    client: httpx.AsyncClient, db: AsyncSession
+    client: httpx.AsyncClient, db: AsyncSession, app: FastAPI
 ) -> None:
-    alice = await register(client, "alice@example.com")
-    client.cookies.clear()
-    bob = await register(client, "bob@example.com")
+    alice = await signup(app, "alice@example.com")
+    bob = await signup(app, "bob@example.com")
     alice_user = (
         await db.execute(select(User).where(User.email == "alice@example.com"))
     ).scalar_one()
@@ -113,8 +112,8 @@ async def test_emotion_tags_are_system_plus_own(
     assert {t["valence"] for t in b_tags} == {"pos", "neg", "neutral"}
 
 
-async def test_mistake_categories_endpoint(client: httpx.AsyncClient) -> None:
-    headers = auth((await register(client))["access_token"])
+async def test_mistake_categories_endpoint(client: httpx.AsyncClient, app: FastAPI) -> None:
+    headers = auth((await signup(app))["access_token"])
     cats = (await client.get("/api/v1/mistake-categories", headers=headers)).json()
     assert [c["dimension"] for c in cats] == sorted(
         (c["dimension"] for c in cats), key=DIMENSIONS.index

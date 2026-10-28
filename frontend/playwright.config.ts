@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 // E2E_BASE_URL=http://localhost:8080 runs against `docker compose up` (full stack).
 // Without it, Playwright starts the Vite dev server; screens that need the API then see a signed-out session.
-const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
+const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5178'
 
 export default defineConfig({
   testDir: './e2e',
@@ -16,5 +16,5 @@ export default defineConfig({
   ],
   webServer: process.env.E2E_BASE_URL
     ? undefined
-    : { command: 'npm run dev -- --port 5173 --strictPort', url: baseURL, reuseExistingServer: true, timeout: 60_000 },
+    : { command: 'npm run dev', url: baseURL, reuseExistingServer: true, timeout: 60_000 },
 })

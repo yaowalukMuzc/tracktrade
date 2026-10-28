@@ -1,0 +1,33 @@
+{
+  "name": "tracktrade-auth",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TrackTrade authentication service (Better Auth) — serves /api/auth/*",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --import tsx --watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "type-check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.2",
+    "better-auth": "1.7.14",
+    "nodemailer": "^10.2.1",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@standard-schema/spec": "^1.1.0",
+    "@types/node": "^24.19.2",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
+    "jose": "^6.2.13",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
