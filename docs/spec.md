@@ -205,7 +205,7 @@ users(trader) N─N users(mentor) via mentor_links
 ### F-02 Trading Accounts & Risk Profile
 - [x] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance
 - [x] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5)
-- [ ] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี
+- [x] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี
 - [x] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด)
 
 ### F-03 Symbol Specification
@@ -219,31 +219,31 @@ users(trader) N─N users(mentor) via mentor_links
 - [ ] AC3: หน้า setup แสดงสถิติ: จำนวนเทรด, win rate, expectancy (R), avg adherence และ avg quality
 
 ### F-05 Market Analysis
-- [ ] AC1: สร้าง analysis ต่อ symbol/วัน ได้ โดยใส่ HTF bias, key levels, TF, session, narrative และ confidence
-- [ ] AC2: วาดบนกราฟ (เส้น, กล่อง, ข้อความ, horizontal line) และบันทึกเป็น `chart_drawings` ได้
-- [ ] AC3: 1 analysis สร้างได้หลาย plan (scenario A/B/…)
+- [x] AC1: สร้าง analysis ต่อ symbol/วัน ได้ โดยใส่ HTF bias, key levels, TF, session, narrative และ confidence
+- [x] AC2: วาดบนกราฟ (เส้น, กล่อง, ข้อความ, horizontal line) และบันทึกเป็น `chart_drawings` ได้
+- [x] AC3: 1 analysis สร้างได้หลาย plan (scenario A/B/…)
 
 ### F-06 Trade Plan & Plan Lock
-- [ ] AC1: Plan ต้องมีฟิลด์บังคับ: setup, direction, entry, SL, อย่างน้อย 1 TP และ risk %
-- [ ] AC2: ระบบคำนวณ planned lot, risk amount และ R:R ให้อัตโนมัติจาก risk profile
-- [ ] AC3: ถ้า checklist ข้อ required ยังไม่ครบ จะ lock ไม่ได้ (แสดงเตือน)
-- [ ] AC4: เมื่อ lock ระบบบันทึก `locked_at` และ `lock_hash`; การแก้หลัง lock ต้องสร้าง revision ใหม่และกรอกเหตุผลเสมอ
+- [x] AC1: Plan ต้องมีฟิลด์บังคับ: setup, direction, entry, SL, อย่างน้อย 1 TP และ risk %
+- [x] AC2: ระบบคำนวณ planned lot, risk amount และ R:R ให้อัตโนมัติจาก risk profile
+- [x] AC3: ถ้า checklist ข้อ required ยังไม่ครบ จะ lock ไม่ได้ (แสดงเตือน)
+- [x] AC4: เมื่อ lock ระบบบันทึก `locked_at` และ `lock_hash`; การแก้หลัง lock ต้องสร้าง revision ใหม่และกรอกเหตุผลเสมอ
 - [ ] AC5: revision ที่เกิดหลัง entry จะถูกติด `changed_after_entry=true` และนับเป็น deviation
-- [ ] AC6: เปลี่ยนสถานะเป็น skipped/missed/invalidated ได้พร้อมเหตุผล; plan ที่หมด `valid_until` แล้วไม่มีเทรดจะกลายเป็น `expired`
-- [ ] AC7: บันทึก pre-trade emotion (mood, confidence, tags) ได้ในฟอร์ม plan
+- [x] AC6: เปลี่ยนสถานะเป็น skipped/missed/invalidated ได้พร้อมเหตุผล; plan ที่หมด `valid_until` แล้วไม่มีเทรดจะกลายเป็น `expired`
+- [x] AC7: บันทึก pre-trade emotion (mood, confidence, tags) ได้ในฟอร์ม plan
 
 ### F-07 Manual Trade Entry
-- [ ] AC1: กรอก position พร้อม executions หลายรายการได้ (scale-in/partial close)
-- [ ] AC2: ระบบคำนวณ net P/L, R-multiple (จาก initial risk) และ avg entry/exit ให้
-- [ ] AC3: เลือก plan ที่จะผูกได้ ถ้าไม่ผูก plan หรือ plan ถูก lock หลังเวลา entry จะติด `is_unplanned=true`
+- [x] AC1: กรอก position พร้อม executions หลายรายการได้ (scale-in/partial close)
+- [x] AC2: ระบบคำนวณ net P/L, R-multiple (จาก initial risk) และ avg entry/exit ให้
+- [x] AC3: เลือก plan ที่จะผูกได้ ถ้าไม่ผูก plan หรือ plan ถูก lock หลังเวลา entry จะติด `is_unplanned=true`
 
 ### F-08 Auto Sync MT5 / cTrader
 - [ ] AC1: **MT5:** สร้าง API key ต่อบัญชีได้; EA ส่ง deals, positions และการแก้ SL/TP เข้า `/ingest` ภายใน 5 วินาทีหลังเกิดเหตุการณ์
 - [ ] AC2: **cTrader:** เชื่อม OAuth ได้ และ worker ดึง deals/positions แบบ real-time
-- [ ] AC3: ข้อมูลซ้ำ (broker_deal_id เดิม) ต้องไม่สร้าง record ใหม่ (idempotent)
+- [x] AC3: ข้อมูลซ้ำ (broker_deal_id เดิม) ต้องไม่สร้าง record ใหม่ (idempotent)
 - [ ] AC4: ซิงก์ประวัติย้อนหลังได้อย่างน้อย 90 วันตอนเชื่อมต่อครั้งแรก
 - [ ] AC5: ดึง OHLC (M1–D1) ช่วง ±N แท่งรอบเทรดมาเก็บใน `ohlc_bars`
-- [ ] AC6: หน้า connection แสดงสถานะ, last_sync_at และ error ล่าสุด
+- [x] AC6: หน้า connection แสดงสถานะ, last_sync_at และ error ล่าสุด
 
 ### F-09 Screenshot Scan (OCR/AI)
 - [ ] AC1: อัปโหลดภาพ (PNG/JPG ≤ 10MB) แล้วได้ข้อมูล symbol, direction, lot, entry, SL, TP, exit, เวลา และ P/L ภายใน 15 วินาที
@@ -252,12 +252,12 @@ users(trader) N─N users(mentor) via mentor_links
 - [ ] AC4: เมื่อยืนยันแล้ว position จะมี `source=ocr` และแนบภาพต้นฉบับไว้
 
 ### F-10 Execution ↔ Plan Matching
-- [ ] AC1: position ใหม่จะ auto-match กับ plan ที่ locked ซึ่ง symbol/direction ตรงกัน และ entry ห่างจาก plan ไม่เกิน tolerance (ค่า default 0.3×ระยะ SL) ภายในเวลา `valid_until`
-- [ ] AC2: ถ้ามีหลาย plan ที่เข้าเงื่อนไข หรือหาไม่เจอ ให้ `match_status=pending` และเข้าคิวให้ user เลือก
-- [ ] AC3: user แก้การ match ได้ และระบบคำนวณ metrics ใหม่ทันที
+- [x] AC1: position ใหม่จะ auto-match กับ plan ที่ locked ซึ่ง symbol/direction ตรงกัน และ entry ห่างจาก plan ไม่เกิน tolerance (ค่า default 0.3×ระยะ SL) ภายในเวลา `valid_until`
+- [x] AC2: ถ้ามีหลาย plan ที่เข้าเงื่อนไข หรือหาไม่เจอ ให้ `match_status=pending` และเข้าคิวให้ user เลือก
+- [x] AC3: user แก้การ match ได้ และระบบคำนวณ metrics ใหม่ทันที
 
 ### F-11 Emotion Tracking (3 จุด)
-- [ ] AC1: บันทึก **Pre-trade** ได้ใน plan (F-06 AC7)
+- [x] AC1: บันทึก **Pre-trade** ได้ใน plan (F-06 AC7)
 - [ ] AC2: **In-trade:** เมื่อเกิด `order_modifications` ที่เพิ่ม risk หรือปิดก่อน TP ระบบสร้าง prompt ถามเหตุผลและอารมณ์ใน inbox ของ trade
 - [ ] AC3: **Post-trade:** ฟอร์ม review มี mood, tags และ note
 - [ ] AC4: user สร้าง emotion tag เองได้ และ tag ระบบแสดงได้ทั้ง TH และ EN
@@ -310,7 +310,7 @@ users(trader) N─N users(mentor) via mentor_links
 ### F-19 In-app Chart (Plan vs Actual)
 - [ ] AC1: แสดงกราฟจาก `ohlc_bars` ใน TF ที่เลือก (M1–D1)
 - [ ] AC2: overlay เส้น plan (entry/SL/TP แบบเส้นประ) เทียบกับ actual (จุด fill, เส้น SL/TP ที่ถูกแก้แสดงตามเวลา)
-- [ ] AC3: มี drawing tools (trendline, ray, horizontal, rectangle, text, measure); บันทึกและโหลดกลับได้
+- [x] AC3: มี drawing tools (trendline, ray, horizontal, rectangle, text, measure); บันทึกและโหลดกลับได้
 - [ ] AC4: ใช้งานบนมือถือได้ (pinch zoom/pan)
 
 ### F-20 Alerts: Rule Breach
@@ -380,21 +380,21 @@ users(trader) N─N users(mentor) via mentor_links
 - [x] Audit log middleware สำหรับ entity สำคัญ
 
 ### Phase 3 — Analysis, Plan & Plan Lock
-- [ ] Market analysis CRUD + narrative rich text editor (F-05)
-- [ ] ใส่ Lightweight Charts component พื้นฐาน + drawing tools + `chart_drawings` (F-19 AC3)
-- [ ] Trade plan form: คำนวณ lot/risk/RR อัตโนมัติ, checklist answers, pre-trade emotion (F-06)
-- [ ] Plan lock: `locked_at`, `lock_hash`, revisions append-only, บังคับกรอกเหตุผล
-- [ ] Plan state machine (draft/locked/triggered/closed/skipped/missed/invalidated/expired) + job สำหรับ expire
-- [ ] หน้า "Today": analysis และ plan ของวันนี้ (คล้าย Journal ของ TradeMotion)
+- [x] Market analysis CRUD + narrative rich text editor (F-05)
+- [x] ใส่ Lightweight Charts component พื้นฐาน + drawing tools + `chart_drawings` (F-19 AC3)
+- [x] Trade plan form: คำนวณ lot/risk/RR อัตโนมัติ, checklist answers, pre-trade emotion (F-06)
+- [x] Plan lock: `locked_at`, `lock_hash`, revisions append-only, บังคับกรอกเหตุผล
+- [x] Plan state machine (draft/locked/triggered/closed/skipped/missed/invalidated/expired) + job สำหรับ expire
+- [x] หน้า "Today": analysis และ plan ของวันนี้ (คล้าย Journal ของ TradeMotion)
 
 ### Phase 4 — Execution Ingestion (Manual + Sync) & Matching
-- [ ] Manual position + executions entry (F-07) + การคำนวณ P/L, R และ MAE/MFE
-- [ ] Ingest API (idempotent, API key ต่อบัญชี, rate limit)
+- [x] Manual position + executions entry (F-07) + การคำนวณ P/L, R และ MAE/MFE
+- [x] Ingest API (idempotent, API key ต่อบัญชี, rate limit)
 - [ ] MT5 EA (MQL5): ส่ง deals/positions/SL-TP modifications + OHLC รอบเทรด (F-08)
 - [ ] cTrader Open API worker: OAuth flow, sync history 90 วัน, real-time events
-- [ ] `order_modifications` + การจำแนก risk increase/decrease
-- [ ] Matching engine execution ↔ plan + คิว pending ใน UI (F-10)
-- [ ] Unplanned flag + หน้า Connection status
+- [x] `order_modifications` + การจำแนก risk increase/decrease
+- [x] Matching engine execution ↔ plan + คิว pending ใน UI (F-10)
+- [x] Unplanned flag + หน้า Connection status
 
 ### Phase 5 — OCR Scan, Emotion & Review
 - [ ] Upload ภาพ → Claude vision → extracted JSON → ฟอร์มยืนยันพร้อม highlight confidence (F-09)

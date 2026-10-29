@@ -49,7 +49,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AuthConfig {
   if (secret.length < 32) throw new Error('BETTER_AUTH_SECRET must be at least 32 characters')
   if (mode === 'prod' && secret === DEV_SECRET) throw new Error('BETTER_AUTH_SECRET must be set in prod')
 
-  const baseUrl = (env.BETTER_AUTH_URL ?? 'http://localhost:5178').replace(/\/$/, '')
+  const baseUrl = (env.BETTER_AUTH_URL ?? 'http://localhost:5179').replace(/\/$/, '')
   return {
     env: mode,
     port: Number(env.PORT ?? 3000),

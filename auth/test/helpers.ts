@@ -4,7 +4,7 @@ import { loadConfig, type AuthConfig } from '../src/config.js'
 import type { Mail } from '../src/mailer.js'
 import { TEST_DB_URL } from './global-setup.js'
 
-export const ORIGIN = 'http://localhost:5178'
+export const ORIGIN = 'http://localhost:5179'
 export const PASSWORD = 'correct-horse-1'
 /** argon2-cffi `PasswordHasher().hash(PASSWORD)` — what Phase 1 stored in users.password_hash. */
 export const PHASE1_HASH = '$argon2id$v=19$m=65536,t=3,p=4$jEpJWGllzOBjiPHyDJfC9w$pX5lzuVhCYsoKwRRZQAjhZD5GR6OLXcnoSsfefAg9YE'

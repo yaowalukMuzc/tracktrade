@@ -1,0 +1,90 @@
+{
+  "analysis": {
+    "title": "Market Analysis",
+    "titleWithSymbol": "Market Analysis · {symbol}",
+    "back": "Today",
+    "save": "Save",
+    "saving": "Saving…",
+    "autosaved": "Autosaved {time}",
+    "unsaved": "Not saved yet",
+    "createPlan": "Create plan from this analysis",
+    "createPlanShort": "Create plan",
+    "createPlanHint": "Save the analysis first, then create a plan from it",
+    "symbol": "Symbol",
+    "symbolLocked": "Plans use this analysis, so its symbol can't change",
+    "date": "Date",
+    "account": "Account",
+    "noAccount": "No account",
+    "bias": "HTF bias",
+    "timeframes": "Timeframes",
+    "timeframesUsed": "Timeframes used",
+    "session": "Session",
+    "confidence": "Confidence",
+    "chart": {
+      "label": "{symbol} {tf} chart",
+      "timeframe": "Chart timeframe",
+      "sourceBroker": "OHLC from {source}"
+    },
+    "narrative": {
+      "title": "Narrative",
+      "editor": "Narrative — the market story and your reasoning",
+      "toolbar": "Text formatting",
+      "bold": "Bold",
+      "italic": "Italic",
+      "heading": "Heading",
+      "image": "Insert image",
+      "imageAlt": "Narrative image",
+      "uploading": "Uploading image…"
+    },
+    "levels": {
+      "title": "Key levels",
+      "add": "Add",
+      "addLevel": "Add level",
+      "empty": "No key levels yet — add the support, resistance or zones you are watching",
+      "remove": "Remove level {price}",
+      "dialogTitle": "Add key level",
+      "kind": "Type",
+      "price": "Price",
+      "priceFrom": "Zone from",
+      "priceTo": "Zone to",
+      "label": "Note",
+      "labelPlaceholder": "e.g. H4 swing low",
+      "cancel": "Cancel",
+      "submit": "Add level",
+      "kinds": {
+        "support": "Support",
+        "resistance": "Resistance",
+        "zone": "Zone",
+        "liquidity": "Liquidity",
+        "other": "Other"
+      },
+      "errors": {
+        "required": "Enter a price",
+        "positive": "Price must be a number above 0",
+        "sameAsPrice": "The zone end must differ from its start",
+        "tooMany": "Up to {max} levels"
+      }
+    },
+    "plans": {
+      "title": "Plans from this analysis",
+      "empty": "No plans from this analysis yet",
+      "open": "Open plan {label} · {direction} · {order}"
+    },
+    "notFound": "This analysis was not found — it may have been deleted or belong to another account",
+    "backToday": "Back to Today",
+    "loading": "Loading analysis",
+    "errors": {
+      "save": "Couldn't save",
+      "network": "Can't reach the server — try again",
+      "hasPlans": "Plans use this analysis, so its symbol can't change",
+      "validation": "Some fields are invalid",
+      "drawings": "Couldn't save the chart drawings",
+      "upload": "Couldn't upload the image",
+      "fileType": "PNG, JPG or WebP only",
+      "fileSize": "Files up to {mb} MB",
+      "load": "Couldn't load the analysis",
+      "generic": "Something went wrong — try again"
+    },
+    "retry": "Try again"
+  }
+}

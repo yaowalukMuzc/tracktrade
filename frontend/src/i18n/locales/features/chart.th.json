@@ -1,0 +1,26 @@
+{
+  "chart": {
+    "entryShort": "EN",
+    "slShort": "SL",
+    "tpShort": "TP",
+    "tpShortN": "TP{n}",
+    "measureLabel": "{delta} ({pct}) · {bars} แท่ง",
+    "textPrompt": "พิมพ์ข้อความแล้วกด Enter",
+    "timeframes": "Timeframe",
+    "loadError": "โหลดกราฟไม่สำเร็จ",
+    "retry": "ลองอีกครั้ง",
+    "sourceMock": "ข้อมูลกราฟตัวอย่าง · OHLC จริงมาเมื่อเชื่อมต่อโบรกเกอร์",
+    "sourceBroker": "OHLC จาก {source}",
+    "tools": {
+      "label": "เครื่องมือวาด",
+      "cursor": "เลือก",
+      "trendline": "Trendline",
+      "ray": "Ray",
+      "horizontal": "เส้นแนวนอน",
+      "rectangle": "สี่เหลี่ยม / โซน",
+      "text": "ข้อความ",
+      "measure": "วัดระยะ",
+      "delete": "ลบ drawing ที่เลือก"
+    }
+  }
+}

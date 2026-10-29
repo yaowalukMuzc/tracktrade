@@ -18,6 +18,10 @@ export interface Account {
   is_active: boolean
   archived_at: string | null
   created_at: string
+  /** Reported by a connected broker (EA heartbeat / cTrader); null for manual accounts. */
+  last_balance?: Dec | null
+  last_equity?: Dec | null
+  last_equity_at?: string | null
 }
 
 export interface RiskProfileInput {

@@ -17,8 +17,13 @@
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/vue": "^1.0.8",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@tiptap/vue-3": "^3.32.0",
     "@vueuse/core": "^15.0.0",
     "better-auth": "^1.7.14",
+    "lightweight-charts": "^5.2.1",
     "pinia": "^4.0.3",
     "vue": "^3.5.43",
     "vue-i18n": "^11.4.14",

@@ -1,0 +1,125 @@
+{
+  "tradeNew": {
+    "title": "Add trade",
+    "crumb": "Trades",
+    "close": "Close",
+    "mode": {
+      "label": "How to add the trade",
+      "manual": "Manual",
+      "scan": "Screenshot scan",
+      "scanShort": "Screenshot",
+      "scanAction": "Scan image"
+    },
+    "fields": {
+      "account": "Account",
+      "symbol": "Symbol",
+      "direction": "Direction",
+      "initialSl": "Initial SL",
+      "initialTp": "Initial TP",
+      "plan": "Link to plan",
+      "rate": "Rate {quote} → {account}",
+      "rateHelp": "This pair must be converted to the account currency — enter the exchange rate at the time of the trade"
+    },
+    "executions": {
+      "title": "Executions",
+      "hint": "scale-in / partial close",
+      "addIn": "Entry",
+      "addOut": "Exit",
+      "side": { "in": "IN", "out": "OUT" },
+      "row": "{lot} lot {'@'} {price}",
+      "scaleIn": "scale-in",
+      "partial": "partial",
+      "blank": "Tap to enter lot and price",
+      "edit": "Edit execution {n}",
+      "empty": "No executions yet — add an entry first",
+      "cols": { "side": "Side", "time": "Time", "lot": "Lot", "price": "Price", "commission": "Commission" }
+    },
+    "dialog": {
+      "addIn": "Add entry",
+      "addOut": "Add exit",
+      "edit": "Edit execution",
+      "side": "Type",
+      "lot": "Lot",
+      "price": "Price",
+      "time": "Time ({tz})",
+      "commission": "Commission",
+      "commissionHelp": "Enter what you paid — it is recorded as a cost (−)",
+      "swap": "Swap",
+      "swapHelp": "Use − for swap you paid",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "calc": {
+      "title": "Calculated for you",
+      "titleDesktop": "Auto calculation",
+      "status": { "open": "Open", "closed": "Closed" },
+      "avg": "Avg entry / exit",
+      "totalLot": "Total lot",
+      "openLot": "Still open",
+      "commission": "Commission",
+      "swap": "Swap",
+      "net": "Net P/L",
+      "r": "R-multiple",
+      "rNoSl": "Add an initial SL to get R",
+      "waiting": "Enter lot and price to calculate",
+      "loading": "Calculating…"
+    },
+    "plan": {
+      "later": "Decide later (match queue)",
+      "none": "No plan (Unplanned)",
+      "option": "{label} · {symbol} {direction} ({state})",
+      "locked": "Locked {time}",
+      "draft": "Draft — not locked",
+      "status": "{status}",
+      "recommended": "Suggested",
+      "laterHelp": "Matched to a locked plan automatically; if several plans fit or none is found it waits in the match queue",
+      "warn": {
+        "plan_not_locked": "This plan was not locked before the entry — the trade will be marked Unplanned",
+        "locked_after_entry": "This plan was locked after the entry — the trade will be marked Unplanned",
+        "no_plan": "Recorded as an unplanned trade — counts as a Discipline deviation"
+      }
+    },
+    "save": "Save trade",
+    "blocked": {
+      "account": "Choose an account first",
+      "symbol": "Choose a symbol first",
+      "executions": "Add at least one entry",
+      "execution": "Enter lot and price for every execution",
+      "sl": "Initial SL is not valid",
+      "tp": "Initial TP is not valid",
+      "rate": "The exchange rate is not valid",
+      "calc": "Fix the error above before saving"
+    },
+    "errors": {
+      "exit_before_entry": "The first execution must be an entry — an exit is timed before the entry",
+      "exit_exceeds_open": "Exits close more lots than are open",
+      "stop_loss_wrong_side": "SL must be below the entry for a LONG and above it for a SHORT",
+      "conversion_rate_required": "This pair needs an exchange rate to the account currency — enter it below",
+      "invalid_execution": "Lot and price must be greater than 0",
+      "no_executions": "Add at least one entry",
+      "plan_mismatch": "That plan is for another account, symbol or direction",
+      "account_archived": "This account is archived — unarchive it to add trades",
+      "validation_error": "Some fields are not valid",
+      "not_found": "The selected account, symbol or plan was not found",
+      "generic": "Could not save, please try again",
+      "load": "Could not load the data",
+      "positive": "Must be greater than 0",
+      "lotStep": "At most 2 decimals",
+      "tooPrecise": "At most 6 decimals",
+      "required": "Required",
+      "cost": "Enter a positive amount",
+      "number": "Not a valid number"
+    },
+    "retry": "Retry",
+    "noAccount": {
+      "title": "No trading account yet",
+      "body": "Create an account first, then add trades to it",
+      "action": "Go to accounts"
+    },
+    "scan": {
+      "message": "Screenshot scanning isn't available yet — enter the trade manually for now",
+      "back": "Enter manually"
+    }
+  }
+}

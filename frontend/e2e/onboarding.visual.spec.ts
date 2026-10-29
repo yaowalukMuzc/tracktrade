@@ -1,11 +1,12 @@
 import { expect, test, type Page } from '@playwright/test'
 import { apiCall, prefs, signUp } from './helpers'
 
-// Phase 2 onboarding (F-02 AC1–AC2): screenshots to docs/qa/phase-2/ to compare by eye with
-// screens/web/02-WOnboarding.png, screens/mobile/03-Onboarding.png and 04-ConnectBroker.png, plus the save flow.
+// Onboarding (F-02 AC1–AC2, F-08 AC1 since Phase 4): screenshots to docs/qa/phase-4/ to compare by eye with
+// screens/web/02-WOnboarding.png, screens/mobile/03-Onboarding.png and 04-ConnectBroker.png, plus the save flow and
+// the broker step (API key once, "waiting for the EA" until the first deal arrives).
 test.skip(!process.env.E2E_BASE_URL, 'needs the full stack (set E2E_BASE_URL)')
 
-const out = (name: string) => `../docs/qa/phase-2/onboarding-${name}.png`
+const out = (name: string) => `../docs/qa/phase-4/onboarding-${name}.png`
 
 /** No white text on the lavender brand fill (CLAUDE.md non-negotiable). */
 async function whiteOnBrand(page: Page) {
@@ -53,19 +54,24 @@ for (const theme of ['light', 'dark'] as const) {
     await page.evaluate(() => document.fonts.ready)
 
     if (!isMobile) {
-      await page.getByText('MT5 (EA)').click()
-      await expect(page.getByText('การซิงก์อัตโนมัติจะเปิดในอัปเดตถัดไป')).toBeVisible()
+      // Platform MT5 ⇄ import method "MT5 (EA)" are one choice.
+      await expect(page.getByRole('radio', { name: /^MT5 \(EA\)/ })).toBeChecked()
       expect(await whiteOnBrand(page)).toBe(0)
       await shot(page, `desktop-${theme}`)
+      await page.getByRole('button', { name: 'บันทึกและเชื่อมต่อ Broker' }).click()
+      await expect(page.getByRole('heading', { name: 'เลือกวิธีบันทึกเทรด' })).toBeVisible()
+      await expect(page.getByTestId('api-key')).toHaveText(/^tt_live_/)
+      await shot(page, `broker-desktop-${theme}`)
       return
     }
     expect(await whiteOnBrand(page)).toBe(0)
     await shot(page, `mobile-${theme}`)
     await page.getByRole('button', { name: 'ถัดไป: เชื่อมต่อ Broker' }).click()
     await expect(page.getByRole('heading', { name: 'เลือกวิธีบันทึกเทรด' })).toBeVisible()
-    await page.getByText('MT5 (EA)').click()
-    await expect(page.getByText('การซิงก์อัตโนมัติจะเปิดในอัปเดตถัดไป')).toBeVisible()
-    await shot(page, `mobile-step2-${theme}`)
+    await expect(page.getByTestId('api-key')).toHaveText(/^tt_live_/)
+    await expect(page.getByText('รอสัญญาณจาก EA…')).toBeVisible()
+    expect(await whiteOnBrand(page)).toBe(0)
+    await shot(page, `broker-mobile-${theme}`)
   })
 }
 
@@ -74,7 +80,7 @@ test('validates, then saves the account with its risk profile in one go', async 
   const { token } = await signUp(page)
   await page.goto('/onboarding?redirect=/calendar')
 
-  const save = isMobile ? 'ถัดไป: เชื่อมต่อ Broker' : 'บันทึกและเริ่มใช้งาน'
+  const save = isMobile ? 'ถัดไป: เชื่อมต่อ Broker' : 'บันทึกและเชื่อมต่อ Broker'
   await page.getByRole('button', { name: save }).click()
   await expect(page.getByText('กรุณากรอกช่องนี้')).toHaveCount(3)
   await expect(page.getByLabel('ชื่อบัญชี')).toBeFocused()
@@ -95,7 +101,11 @@ test('validates, then saves the account with its risk profile in one go', async 
   await expect(page.getByText('0.5% ของ $100,000 = $500 ต่อเทรด')).toBeVisible()
 
   await page.getByRole('button', { name: save }).click()
-  if (isMobile) await page.getByRole('button', { name: 'เริ่มใช้งาน' }).click()
+  // Saved → the broker step; going back and saving again must not create a second account.
+  await expect(page.getByTestId('api-key')).toHaveText(/^tt_live_/)
+  await page.getByRole('button', { name: 'ย้อนกลับ', exact: true }).click()
+  await page.getByRole('button', { name: save }).click()
+  await page.getByRole('button', { name: 'เริ่มใช้งาน', exact: true }).click()
   await expect(page).toHaveURL((u) => u.pathname === '/calendar')
 
   const accounts = await apiCall<{ id: string; name: string; broker: string; account_type: string; platform: string; currency: string; initial_balance: string }[]>(
@@ -119,4 +129,23 @@ test('skip for now goes to the redirect target', async ({ page, isMobile }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(isMobile ? 'Set up trading account' : 'Set up your first trading account')
   await page.getByRole('button', { name: 'Skip for now' }).click()
   await expect(page).toHaveURL((u) => u.pathname === '/stats')
+})
+
+test('broker step: the first deal from the EA turns "waiting" into success', async ({ page, isMobile }) => {
+  await prefs(page, 'light', 'th')
+  await signUp(page)
+  await page.goto('/onboarding')
+  await fillAccount(page)
+  await page.getByRole('button', { name: isMobile ? 'ถัดไป: เชื่อมต่อ Broker' : 'บันทึกและเชื่อมต่อ Broker' }).click()
+  const key = (await page.getByTestId('api-key').innerText()).trim()
+  await expect(page.getByText('รอสัญญาณจาก EA…')).toBeVisible()
+  const res = await page.request.post('/api/v1/ingest/events', {
+    headers: { 'X-Api-Key': key },
+    data: {
+      account: { login: '5120934', currency: 'USD', balance: '100000.00', equity: '100000.00' },
+      deals: [{ ticket: '1', position_id: '1', symbol: 'XAUUSD', entry: 'in', type: 'buy', volume: '0.10', price: '4387.60', time: Math.floor(Date.now() / 1000) }],
+    },
+  })
+  expect(res.status()).toBe(200)
+  await expect(page.getByText('ได้รับ deal แรกแล้ว')).toBeVisible({ timeout: 10_000 })
 })

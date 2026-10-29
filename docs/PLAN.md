@@ -2,6 +2,7 @@
 
 > เขียนจาก kickoff (2026-10-12) หลังอ่าน `CLAUDE.md`, `docs/spec.md` ทั้งไฟล์, `design-system/*`, ภาพใน `screens/web` (18) + `screens/mobile` (31) และ `screens/source/WSide|WToday|WPlan.dc.html`
 > อัปเดต 2026-10-28: เปลี่ยน auth เป็น **Better Auth** ตาม spec (2026-10-22) — ดู §5.3, §6 auth, §8.1 S6–S7
+> อัปเดต 2026-10-29: การตัดสินใจ Phase 4 (ingest, matching, cTrader) — ดู §5.4, §6 positions / connections, §8.1 S3–S4, M14, R6
 > เอกสารนี้คือแผนอ้างอิงของทุก phase — prompt ใน `docs/prompts/phase-N.md` สั่งให้อ่านก่อนเริ่มงาน ถ้าตัดสินใจอะไรเปลี่ยนไป ให้แก้ที่นี่ก่อนแล้วค่อยแก้โค้ด
 
 ## 0. สถานะตอนเริ่ม
@@ -370,6 +371,28 @@ backend/
 
 ---
 
+### 5.4 Execution ingest & matching (Phase 4)
+
+ตัดสินตอนทำ Phase 4 (2026-10-29):
+
+| เรื่อง | ตัดสิน | เหตุผล |
+|---|---|---|
+| Protocol EA ↔ API | เอกสาร `connectors/mt5-ea/PROTOCOL.md` v1 — endpoint เดียว `POST /ingest/events` (`X-Api-Key`); ตัวเลขเป็น **string**, เวลาเป็น unix วินาที UTC (EA แปลงจาก server time เอง) | float ทำราคาเพี้ยน; server time ของโบรกเกอร์ไม่ใช่ UTC |
+| Idempotency | unique `(account_id, broker_deal_id)` ใน `executions`, `(account_id, broker_position_id)` ใน `positions`, `(account_id, broker_event_id)` ใน `order_modifications`, PK `(symbol_id, timeframe, ts)` ของ `ohlc_bars`; insert แบบ `ON CONFLICT DO NOTHING` + lock แถว connection ต่อ request | ส่งซ้ำได้เสมอ (F-08 AC3) และ batch ซ้อนกันไม่สร้างซ้ำ |
+| คำสั่งให้ EA (M14) | ไม่มี `GET /ingest/commands` แยก — **คำสั่ง (`resync`, `ohlc`) ส่งกลับใน response ของ heartbeat** ที่ EA ยิงทุก 10 วินาที; ส่งครั้งเดียว | ลด endpoint และ EA ไม่ต้อง poll สองทาง |
+| OHLC รอบเทรด (F-08 AC5) | เมื่อ position ปิด → คำสั่ง `ohlc` ต่อ timeframe (M1–D1) ช่วง ±200 แท่ง ส่งทันที 1 ครั้ง + อีกครั้งเมื่อแท่งหลัง exit มีแล้ว (≤ 1 วัน); history import ขอเฉพาะเทรดที่ปิดใน 7 วันล่าสุด | 90 วัน × 7 TF หนักเกินไป |
+| Symbol ของโบรกเกอร์ | resolve: mapping ของบัญชี → code มาตรฐาน → ตัด suffix (`XAUUSD.m`); spec ที่ EA ส่ง (contract size, tick value) ถูกเก็บเป็น `account_symbol_overrides` อัตโนมัติ (R9); symbol ที่ไม่รู้จัก → `unknown_symbols` + `last_error` | risk calc ตรงกับ MT5 จริง |
+| ตัวเลขของ position | `positions/calc.py`: replay fills ตามเวลาแบบ MT5 (avg open price), ถ้าโบรกเกอร์ส่ง profit ของทุก exit ใช้ค่านั้น; initial risk = ทุก entry × ระยะถึง initial SL; R = net / initial risk เฉพาะเทรดที่ปิดแล้ว; MAE/MFE = ระยะราคา (≥0) จาก bar timeframe เล็กสุดที่ครอบช่วงเปิด | ตรงกับแบบ 10-ManualTrade (+2.10R) และตัวเลขโบรกเกอร์ |
+| Matching (S3) | candidate = แผน locked/triggered/closed/expired/missed ของบัญชี + symbol + ทิศเดียวกัน, `locked_at ≤ entry ≤ valid_until`, ระยะ fill ถึง entry ของแผน ≤ 0.3 × ระยะ SL โดยใช้ราคาแผน **ณ เวลา entry** (revision ล่าสุดก่อน entry); 1 อัน → auto, 0 / หลายอัน → pending; เก็บระยะจริงใน `positions.match_meta` | spec F-10; revision หลัง entry ต้องไม่ย้ายเป้า |
+| History import | เทรดเก่าจาก history import ที่ไม่มี candidate เลย → บันทึกเป็น unplanned (`match_status=auto`) แทน pending | ไม่ให้คิวจับคู่ท่วมด้วยเทรดย้อนหลัง 90 วัน; เทรด live ยังเป็น pending ตาม spec |
+| สถานะแผนตามเทรด | `plans.sync_with_positions`: มีเทรดที่ "planned" → triggered, ปิดหมด → closed, เลิกผูก → locked (หรือ expired ถ้าเลย valid_until); แผนที่ expired ยังจับคู่ได้ถ้า entry อยู่ในช่วงเวลา (เทรด manual มักบันทึกทีหลัง) | spec §1.7 |
+| Unplanned (F-07 AC3) | `is_unplanned = ไม่มีแผน หรือ locked_at > entry`; ผูกแผน draft ได้จากฟอร์ม แต่เทรดเป็น unplanned (`unplanned_reason`) และไม่ทำให้แผนเปลี่ยนสถานะ | ตามแบบ 10-ManualTrade |
+| Side effects | WS event / arq job ส่ง **หลัง commit** เท่านั้น (`core/db.after_commit`, `core/effects.Effects`); hook Phase 6 = job `recompute_position` (ตอนนี้แค่ publish `metrics.updated`) | client ที่ refetch ต้องเห็นข้อมูลใหม่ |
+| cTrader (R6) | JSON over WebSocket (port 5036) — ไม่ต้องมี protobuf; OAuth `state` = Fernet-sealed + nonce ใช้ครั้งเดียวใน Redis; token เข้ารหัส Fernet (`FERNET_KEY`); sync = arq job `sync_ctrader` (retry 3 ครั้ง backoff, token เสีย = error ไม่ retry); real-time = process `ctrader-stream` แยก | **ยังไม่ได้ทดสอบกับ cTrader จริง** (ไม่มี client id/secret) — ทดสอบกับ fake server |
+| Pagination `/positions` | offset/limit + `total` + `counts` ต่อแท็บ แทน cursor | แบบมี "แสดง 1–8 จาก 42" และปุ่มหน้า |
+
+---
+
 ## 6. API contract draft (`/api/v1`)
 
 รูปแบบทั่วไป: list ใช้ cursor pagination `?cursor=&limit=` → `{items, next_cursor}`; ทุก list รับ `account_id` (ไม่ส่ง = ทุกบัญชี); error `{code, message, details}`; เวลาเป็น ISO-8601 UTC; เงิน/ราคาเป็น string
@@ -421,7 +444,7 @@ backend/
 | GET | `/accounts/{id}/ingestion-jobs` | ประวัติการนำเข้า |
 | GET | `/downloads/mt5-ea` | ไฟล์ `.ex5` |
 | POST | `/ingest/events` | header `X-Api-Key`; `{account:{balance,equity,server_time}, deals[], positions[], modifications[], ohlc[]}` → `{accepted, duplicates}` (idempotent) |
-| GET | `/ingest/commands` | EA poll ทุก 10s → `[{id, kind:"resync"\|"ohlc", params}]` |
+| ~~GET~~ | ~~`/ingest/commands`~~ | ยกเลิก — คำสั่งอยู่ใน response ของ `POST /ingest/events` (§5.4) |
 
 ### playbook / attachments
 | Method | Path | Request → Response |
@@ -437,21 +460,26 @@ backend/
 ### analysis / plans
 | Method | Path | Request → Response |
 |---|---|---|
-| GET / POST | `/analyses?date=&symbol=` | `{account_id?, symbol_id, analysis_date, htf_bias, key_levels[{price,price_to?,kind,label}], timeframes[], session, narrative(json), confidence}` |
-| GET / PATCH | `/analyses/{id}` | (+ `plans[]` ย่อ) |
-| GET / PUT | `/chart-drawings?owner_type&owner_id&timeframe` | `[{tool, points, style, text?}]` |
-| GET / POST | `/plans?date=&status=&analysis_id=` | `{analysis_id, setup_id, account_id, symbol_id, direction, scenario_label, entry_type, entry_price, stop_loss, take_profits[], planned_risk_pct, management_plan, invalidation, valid_until, checklist_answers[], pre_emotion{mood,confidence,tags[]}}` → Plan (+ calc) |
-| GET / PATCH | `/plans/{id}` | PATCH ได้เฉพาะ `draft` |
-| POST | `/plans/{id}/lock` | → `{locked_at, lock_hash, revision_no:1}`; required ขาด → 422 `checklist_incomplete {missing[]}` |
-| POST | `/plans/{id}/revisions` | `{changes{...}, reason}` (reason บังคับ) → revision (+ `changed_after_entry`) |
-| GET | `/plans/{id}/revisions` | |
-| POST | `/plans/{id}/status` | `{status: skipped\|missed\|invalidated, reason}` |
+| GET / POST | `/analyses?date=&symbol_id=&account_id=` | `{account_id?, symbol_id, analysis_date?, htf_bias, key_levels[{price,price_to?,kind,label}], timeframes[], session?, narrative(Tiptap JSON doc), confidence}` (วันที่ default = วันนี้ตาม timezone ผู้ใช้) |
+| GET / PATCH / DELETE | `/analyses/{id}` | (+ `plans[]` ย่อ); เปลี่ยน symbol / ลบ เมื่อมี plan แล้ว → 409 `analysis_has_plans` |
+| GET / PUT | `/chart-drawings?owner_type=analysis\|plan&owner_id` | PUT แทนที่ทั้งชุด `{drawings[{id?, tool, timeframe, points[{time,price}], style{color(token),line,width}, text}]}` (≤200) |
+| GET | `/market-data/ohlc?symbol_id&tf&to&count` | `{source:"mock"\|"mt5"\|"ctrader", digits, bars[{time,open,high,low,close,volume}]}` — Phase 3 เป็น mock แบบ deterministic (ไม่มีวันเสาร์-อาทิตย์) จน OHLC จริงมากับ sync ใน Phase 4 |
+| GET / POST | `/plans?date=&status=&analysis_id=&account_id=` | `{analysis_id?, setup_id, account_id, symbol_id, direction, scenario_label?, entry_type, entry_price, stop_loss, take_profits[{price,pct}], planned_risk_pct, quote_to_account_rate?, management_plan{partial,break_even,trailing}, invalidation, valid_until?, checklist_answers[], pre_emotion{mood,confidence,tags[],note}?}` → Plan (+ calc); `valid_until` default = สิ้นวันของ plan ตาม timezone ผู้ใช้ |
+| GET / PATCH / DELETE | `/plans/{id}` | PATCH / DELETE ได้เฉพาะ `draft` (409 `plan_not_draft`) |
+| PUT | `/plans/{id}/pre-emotion` | `{mood?, confidence?, tags[], note}` ก่อน entry (F-06 AC7) |
+| POST | `/plans/{id}/lock` | → Plan (`locked_at`, `lock_hash`, rev 1); required ขาด → 422 `checklist_incomplete {missing[{id,text}]}` |
+| POST | `/plans/{id}/revisions` | `{changes{entry_type?,entry_price?,stop_loss?,take_profits?,planned_risk_pct?,management_plan?,invalidation?,valid_until?}, reason}` (reason บังคับ) → 201 revision (`changed_after_entry`, `risk_delta_amount`, `risk_delta_r`) |
+| POST | `/plans/{id}/revisions/preview` | `{changes}` → revision ที่จะเกิด (ไม่บันทึก) สำหรับ sheet "Risk เพิ่มขึ้น +0.33R" |
+| GET | `/plans/{id}/revisions` | append-only (DB trigger ห้าม UPDATE) |
+| POST | `/plans/{id}/status` | `{status: skipped\|missed\|invalidated, reason}`; missed ได้เฉพาะ locked; ผิด state → 409 `invalid_transition` |
 
 ### positions / matching / OCR
 | Method | Path | Request → Response |
 |---|---|---|
-| GET | `/positions?tab=all\|review\|pending\|unplanned\|open&symbol&setup_id&quadrant&from&to&q&cursor` | `{items[PositionSummary], counts{all,review,pending,unplanned,open}, next_cursor}` |
-| POST | `/positions` | manual `{account_id, symbol_id, direction, initial_sl, initial_tp, plan_id?, executions[{side,lot,price,executed_at,commission}], swap?}` → Position (+ calc) |
+| GET | `/positions?tab=all\|review\|pending\|unplanned\|open&account_id&symbol_id&setup_id&direction&from&to&q&offset&limit` | `{items[PositionSummary], total, offset, limit, counts{all,review,pending,unplanned,open}}` (offset แทน cursor — §5.4) |
+| POST | `/positions` | manual `{account_id, symbol_id, direction, initial_sl, initial_tp, plan_id? \| unplanned?, executions[{side,lot,price,executed_at,commission,swap}], quote_to_account_rate?}` → Position (+ calc) |
+| POST | `/positions/preview` | body เดียวกับ POST → calc (avg, P/L, R, `unplanned_reason`) ไม่บันทึก |
+| GET | `/positions/plan-options?account_id&symbol_id&direction&opened_at&entry_price` | แผนให้ฟอร์มเลือก (รวม draft) พร้อมระยะ / eligible / recommended |
 | GET / PATCH / DELETE | `/positions/{id}` | detail: position + executions + plan snapshot + adherence + deviations + quality(by source) + summary + review state; DELETE เฉพาะ manual/ocr |
 | GET | `/positions/{id}/timeline` | `[{type, at, title_key, data}]` |
 | GET | `/positions/{id}/chart?tf=` | `{bars[], plan_lines, fills[], sl_tp_changes[], drawings[]}` |
@@ -459,7 +487,6 @@ backend/
 | GET | `/positions/{id}/match-candidates` | `[{plan, entry_distance, distance_pct_of_sl, within_valid, recommended}]` |
 | PUT | `/positions/{id}/match` | `{plan_id \| null}` (null = unplanned) → recompute |
 | GET | `/positions/export.csv?…filters` | |
-| GET | `/market-data/ohlc?symbol_id&tf&from&to&account_id` | `[{ts,o,h,l,c,v}]` |
 | POST | `/ocr/uploads` | multipart → 202 `{id}`; WS `ocr.completed` |
 | GET | `/ocr/uploads/{id}` | `{status, fields{name:{value, confidence}}, read_count, total}` |
 | POST | `/ocr/uploads/{id}/confirm` | position payload ที่ user แก้แล้ว → Position (`source=ocr`, แนบภาพ) |
@@ -471,7 +498,7 @@ backend/
 | POST | `/emotion-logs` | `{owner_type, owner_id, phase, mood, confidence?, tags[], trigger_event?, reason_code?, note?}` |
 | GET | `/inbox` | in-trade prompts ที่ยังไม่ตอบ `[{id, position_id, trigger_event, detail}]` |
 | POST | `/inbox/{id}/answer` · `/dismiss` | emotion log payload |
-| GET / PUT | `/daily/{date}` | `{mood?, tags[], journal?}` |
+| GET / PUT | `/daily/{date}` | `{mood?, tags[], note}` (F-11 AC5, 1 รายการต่อวัน — Phase 3) |
 | GET / PUT | `/positions/{id}/review` | draft `{what_went_well, what_went_wrong, lesson, would_take_again, self_scores{analysis,planning,emotion}, mistake_category_ids[], post_emotion{...}, attachment_ids[]}` |
 | POST | `/positions/{id}/review/submit` | → recompute quality |
 | GET | `/mistake-categories` | |
@@ -479,7 +506,7 @@ backend/
 ### metrics / stats / calendar / diagnosis / coach
 | Method | Path | Request → Response |
 |---|---|---|
-| GET | `/today` | `{pnl_today, r_today, trades_today, daily_loss, adherence_week, goal?, todo{pending_match, pending_review, inbox}}` |
+| GET | `/today?date=&account_id=` | `{date, timezone, analyses[], plans[], risk[{account_id,name,…RiskStatus}], pnl[{currency,amount,r,trades}], adherence_week?, goal_adherence?, todo{pending_match, pending_review, inbox}, daily?}` (Phase 3: pnl ว่าง, todo = 0 จนมีเทรด) |
 | GET | `/stats/summary?from&to&setup_id` | `{pnl{net, win_rate, wins, losses, profit_factor, gross_win, gross_loss, expectancy_r, avg_win_r, avg_loss_r, max_dd_pct}, behavior{avg_adherence, avg_quality, grade, unplanned_pct, mistake_cost_r, mistake_cost_amount, deltas}}` |
 | GET | `/stats/equity?from&to&unit` | `{points[], max_dd{from,to,pct}}` |
 | GET | `/stats/quadrants` | `{good_win, good_loss, bad_win, bad_loss}` |
@@ -575,8 +602,8 @@ backend/
 |---|---|---|---|
 | S1 | News provider | ทำ adapter interface; เริ่มด้วย **Finnhub** economic calendar (มี API ทางการ) แล้วเทียบ FMP; ไม่ scrape ForexFactory (ToS เปราะ) | Phase 6 |
 | S2 | Quality weights + rubric | weight เท่ากัน 6 มิติ (1/6) ใน config; rubric 4 ระดับ 25/50/75/100 ตามแบบ; grade A ≥ 85, B ≥ 70, C ≥ 55, D < 55 (สอดคล้องกับภาพ: 58 = C, 71/74 = B) | Phase 6 |
-| S3 | Matching tolerance | ราคา ≤ 0.3×ระยะ SL, เวลา: entry อยู่ระหว่าง `locked_at` – `valid_until`; เก็บค่าใน config ต่อ user ปรับได้ภายหลัง; log distance จริงไว้ validate | Phase 4 |
-| S4 | MT5 bridge | **EA (MQL5)** — แบบ (`04-ConnectBroker`, `14-WAccounts`) ออกแบบรอบ EA + API key; Python package ต้องมี Windows VPS ต่อ user | Phase 4 |
+| S3 | Matching tolerance | ราคา ≤ 0.3×ระยะ SL, เวลา: entry อยู่ระหว่าง `locked_at` – `valid_until`; เก็บค่าใน config ต่อ user ปรับได้ภายหลัง; log distance จริงไว้ validate · **ทำแล้ว:** `MATCH_TOLERANCE_SL` + `positions.match_meta` (§5.4) | Phase 4 ✅ |
+| S4 | MT5 bridge | **EA (MQL5)** — แบบ (`04-ConnectBroker`, `14-WAccounts`) ออกแบบรอบ EA + API key; Python package ต้องมี Windows VPS ต่อ user · **ตัดสินแล้ว:** EA ใน `connectors/mt5-ea/` (ยังไม่ได้ compile/ทดสอบใน MetaTrader จริง) | Phase 4 ✅ |
 | S5 | Attachment storage | **S3-compatible** ตั้งแต่แรก (MinIO ใน docker compose, prod ใช้ R2/S3) — โค้ดเส้นเดียว · **Phase 2 (2026-10-28):** เริ่มด้วย `LocalStorage` (disk, volume `media`) หลัง interface `core/storage.py` เพราะ pull image MinIO ไม่ได้; ไฟล์ส่งผ่าน API ที่ตรวจ owner (`GET /attachments/{id}/content`) ไม่ใช้ public URL — เพิ่ม S3 adapter ก่อน production | Phase 2 / 8 |
 | S6 | Better Auth: แยก Node service หรือรวมกับ web; FastAPI ตรวจแบบ JWT/JWKS หรือถาม Better Auth ทุก request | **ตัดสินแล้ว:** Node service แยก + JWT/JWKS + เช็ก `auth_sessions` (§5.3) | Phase 2 ✅ |
 | S7 | Email provider production | dev = Mailpit; prod = SMTP ผ่าน env (Resend/SES ใช้ SMTP ได้ทั้งคู่) | Phase 8 |
@@ -615,7 +642,7 @@ backend/
 | M11 | Tabs.md: Performance = ภาพรวม·Behavior·Breakdown·Diagnosis; mobile = P/L·Behavior·Diagnosis·AI Coach; web แยก `/stats` กับ `/diagnosis` | web ตามภาพ (2 route), mobile ตามภาพ (4 แท็บใน `/stats`) ใช้ component เดียวกัน; แก้ Tabs.md |
 | M12 | AI Coach อ้าง "#T-1042" แต่ data model ใช้ uuid | เพิ่ม `positions.ref_no` (running number ต่อ user) |
 | M13 | API key แสดง masked + ปุ่ม copy ในหน้า Accounts แต่ spec เก็บแบบ hash | เก็บ `key_prefix` + `key_last4`; copy key เต็มได้เฉพาะตอนสร้าง/rotate (onboarding, "สร้าง key ใหม่") |
-| M14 | ปุ่ม "Sync ตอนนี้" ของ MT5 EA แต่ EA เป็นฝั่ง push | EA poll `GET /ingest/commands` ทุก 10s รับคำสั่ง resync; หรือซ่อนปุ่มสำหรับ MT5 |
+| M14 | ปุ่ม "Sync ตอนนี้" ของ MT5 EA แต่ EA เป็นฝั่ง push | **ทำแล้ว:** "Sync ตอนนี้" สร้างคำสั่ง `resync` (7 วัน) ที่ EA ได้ใน response ของ heartbeat ถัดไป (≤ 10 วินาที) |
 | M15 | "Journal ของวัน" (Calendar, DaySheet) ไม่มี entity | ใช้ `emotion_logs` (`owner_type=day`, `phase=daily`) + `note` เป็น journal — ไม่สร้างตารางใหม่ |
 | M16 | In-trade prompt มีตัวเลือกเหตุผล ("กลัวโดน SL ก่อนกลับตัว" …) | เพิ่ม `emotion_logs.reason_code` (+ ตาราง reason ตาม trigger_event) |
 | M17 | Alerts ในแบบมี mentor comment, sync ล้มเหลว, รายงาน AI พร้อม, งานมอบหมาย — spec มีแค่ `rule_breach/news` | ขยาย `alerts.type` = `rule_breach \| news \| mentor \| system` + `subtype` |
@@ -642,7 +669,7 @@ backend/
 | R3 | Lightweight Charts ไม่มี drawing tools ในตัว | F-05 AC2, F-19 AC3 ใช้เวลามากกว่าคาด | เขียนเป็น series primitives (อิงตัวอย่าง plugin อย่างเป็นทางการ) เริ่มจาก horizontal/rect/trendline ใน Phase 3 แล้ว ray/text/measure; pinch zoom (F-19 AC4) มีในตัว |
 | R4 | OHLC ต้องมาจาก broker ของ user (EA/cTrader) — บัญชี manual/OCR ไม่มีแหล่ง OHLC | กราฟ/MAE/MFE ของเทรด manual ว่าง | fallback: ใช้ OHLC symbol เดียวกันจากบัญชีอื่นของ user; ไม่มีเลย → ซ่อนกราฟ แสดง empty state; พิจารณา data provider ภายหลัง |
 | R5 | MT5 EA latency ≤5s และ WebRequest whitelist | AC1 | EA ใช้ `OnTradeTransaction` + ส่งทันที + queue retry ในไฟล์; วัด latency ด้วย mock script ใน CI |
-| R6 | cTrader Open API (protobuf/TCP, OAuth app ต้องสมัคร) | Phase 4 ล่าช้า | สมัคร app ล่วงหน้า; worker เป็น process แยกใน arq; ถ้ายังไม่ได้ credential ทำ MT5 ก่อน |
+| R6 | cTrader Open API (protobuf/TCP, OAuth app ต้องสมัคร) | Phase 4 ล่าช้า | สมัคร app ล่วงหน้า; worker เป็น process แยกใน arq; ถ้ายังไม่ได้ credential ทำ MT5 ก่อน · **Phase 4:** ใช้ JSON/WebSocket, โค้ดครบ + test กับ fake server แต่ยังไม่มี credential — ต้องสมัคร app แล้วทดสอบกับบัญชี demo |
 | R7 | OCR ≤15s และความแม่นยำ | F-09 | Claude vision + structured output (JSON schema) ต่อ field พร้อม confidence; จำกัดภาพ ≤10MB + ย่อฝั่ง client; ชุดภาพทดสอบใน `sources/` (ต้องตรวจว่าใช้ได้) |
 | R8 | Performance 5,000 เทรด ใน 2s (F-18 AC4) | | ตาราง `trade_quality_summary` materialized + index `(user_id, closed_at)`, `(account_id, closed_at)`; cache Redis ต่อ filter; ทดสอบ load ใน Phase 7 |
 | R9 | ความถูกต้องของ risk calc เทียบ MT5 (≤1%) | F-03 AC3 | ต้องมีค่าจริงจาก MT5 (tick value ต่อ symbol/บัญชี) — EA ส่ง `SYMBOL_TRADE_TICK_VALUE`/contract size มาด้วย เก็บใน `account_symbol_overrides` |

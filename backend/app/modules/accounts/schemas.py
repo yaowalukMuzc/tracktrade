@@ -69,6 +69,10 @@ class AccountOut(BaseModel):
     is_active: bool
     archived_at: datetime | None
     created_at: datetime
+    # Reported by a connected broker (EA heartbeat / cTrader); null for manual accounts.
+    last_balance: Decimal | None = None
+    last_equity: Decimal | None = None
+    last_equity_at: datetime | None = None
 
 
 # ------------------------------------------------------------------ risk profile
@@ -122,9 +126,7 @@ class Usage(BaseModel):
 
 
 class RiskStatusOut(BaseModel):
-    """Today's use of the limits (Accounts > "today" card).
-
-    Trades arrive in Phase 4; until then nothing is used."""
+    """Today's use of the limits (Accounts > "today" card) from closed / opened trades."""
 
     currency: str
     balance: Decimal

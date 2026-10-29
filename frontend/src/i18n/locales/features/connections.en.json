@@ -1,0 +1,100 @@
+{
+  "connections": {
+    "title": "Connections",
+    "back": "Accounts",
+    "openPage": "Connections & import history",
+    "pageEmpty": "No MT5 or cTrader account yet — manual accounts don't need a connection",
+    "loadError": "Could not load connections",
+    "actionError": "That didn't work. Please try again.",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "badge": {
+      "none": "Not connected",
+      "synced": "Synced {ago}",
+      "waitingEa": "Waiting for EA",
+      "syncing": "Syncing",
+      "tokenExpired": "Token expired"
+    },
+    "status": {
+      "connected": "Connected",
+      "pending": "Waiting",
+      "offline": "Offline",
+      "error": "Error"
+    },
+    "mt5": {
+      "title": "MT5 EA",
+      "rowTitle": "{name} · MT5 EA",
+      "noKey": "Create an API key and paste it into the EA in MT5 — trades, SL/TP changes and 90 days of history arrive automatically",
+      "createKey": "Create API key",
+      "apiKey": "API key",
+      "copy": "Copy key",
+      "copyKey": "Copy key",
+      "copied": "Copied",
+      "copyHidden": "The full key is shown only once, when created — use “New key” to copy one again",
+      "lastSync": "Last sync",
+      "lastSyncAgo": "Last sync {ago}",
+      "never": "Nothing received yet",
+      "dealsMods": "Deals today · SL/TP mods",
+      "dealsToday": "Deals today",
+      "mods": "SL/TP mods",
+      "history": "History",
+      "historyDays": "{n} days",
+      "historyPending": "—",
+      "syncNow": "Sync now",
+      "syncSent": "Sent — the EA re-syncs the last 7 days on its next contact (within 10 seconds)",
+      "download": "Download EA",
+      "rotate": "New key",
+      "waitingTitle": "Waiting for the EA…",
+      "waitingBody": "We'll let you know as soon as the first deal arrives",
+      "offlineTitle": "No signal from the EA",
+      "offlineBody": "Last contact {ago} — check that MT5 is running and Algo Trading is on",
+      "unknownSymbols": "Unknown symbols: {list} — map them in Symbol mapping, then Sync now",
+      "stepsTitle": "Install the EA",
+      "step1": "Copy TrackTrade.ex5 to MQL5/Experts",
+      "step2": "Allow WebRequest for {host}",
+      "step3": "Drag the EA onto any chart and paste the API key"
+    },
+    "key": {
+      "title": "API key for {name}",
+      "once": "Shown only once — copy it now. After you close this you'll only see part of it",
+      "label": "API key",
+      "done": "Done",
+      "rotateTitle": "Create a new key?",
+      "rotateBody": "The old key stops working immediately. An EA using it stops sending until you paste the new key",
+      "rotateConfirm": "Create new key"
+    },
+    "ctrader": {
+      "title": "cTrader · {broker}",
+      "rowTitle": "{broker} · cTrader",
+      "connect": "Connect cTrader",
+      "reconnect": "Reconnect cTrader",
+      "intro": "Link your cTrader account with OAuth — real-time trades and 90 days of history",
+      "pending": "Linked — importing 90 days of history",
+      "tokenTitle": "OAuth token expired",
+      "tokenBody": "{error} · reconnect to keep importing trades",
+      "errorTitle": "Sync failed",
+      "errorBody": "{error} · {at}",
+      "notConfigured": "This server has no cTrader Open API app set up yet (needs an app client id) — meanwhile log trades by screenshot or manually",
+      "returnConnected": "cTrader connected — importing your history",
+      "returnError": "Could not connect cTrader",
+      "returnReason": "Reason: {reason}"
+    },
+    "manual": {
+      "title": "Connection",
+      "body": "This account logs trades by screenshot or manual entry — no connection needed"
+    },
+    "historyTitle": "Import history",
+    "historyEmpty": "Nothing imported yet",
+    "job": {
+      "sync": "Sync · {source}",
+      "history": "Initial import · {source}",
+      "resync": "Resync · {source}",
+      "positions": "{n} position | {n} positions",
+      "deals": "{n} deal | {n} deals",
+      "mods": "{n} SL/TP change | {n} SL/TP changes",
+      "days": "{n} days",
+      "failed": "retry {n}/{max} failed",
+      "unknown": "unknown {list}"
+    }
+  }
+}

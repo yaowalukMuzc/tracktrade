@@ -61,6 +61,16 @@ export function refreshAccessToken(): Promise<boolean> {
   return refreshing
 }
 
+/** `path?a=1&b=2`, skipping undefined / null / '' values. */
+export function withQuery(path: string, query: Record<string, string | number | boolean | null | undefined> = {}): string {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== null && value !== '') params.set(key, String(value))
+  }
+  const qs = params.toString()
+  return qs ? `${path}?${qs}` : path
+}
+
 export interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
   body?: unknown
@@ -91,4 +101,31 @@ export async function api<T>(path: string, opts: RequestOptions = {}, retried = 
   if (!res.ok) throw await toError(res)
   if (res.status === 204) return undefined as T
   return (await res.json()) as T
+}
+
+/** fetch() with the bearer token and one refresh on 401 — for uploads and file downloads. */
+export async function authedFetch(input: string, init: RequestInit = {}, retried = false): Promise<Response> {
+  const headers = new Headers(init.headers)
+  const token = getAccessToken()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+  const res = await fetch(input, { ...init, headers, credentials: 'same-origin' })
+  if (res.status === 401 && !retried && (await refreshAccessToken())) return authedFetch(input, init, true)
+  return res
+}
+
+/** Download an authenticated API file (CSV, EA zip) through a temporary object URL. */
+export async function downloadFile(path: string, filename: string): Promise<void> {
+  const res = await authedFetch(`${API_BASE}${path}`)
+  if (!res.ok) throw await toError(res)
+  const url = URL.createObjectURL(await res.blob())
+  try {
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  } finally {
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
 }

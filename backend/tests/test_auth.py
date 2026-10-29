@@ -23,7 +23,10 @@ from app.core.security import RemoteJwks
 from tests.conftest import TEST_JWKS, TEST_KID, TEST_SIGNING_KEY, auth, mint_token, signup
 
 ME = "/api/v1/me"
-PUBLIC_PATHS = {"/api/v1/health"}
+# Not session-based: the cTrader OAuth callback is a browser redirect authenticated by its
+# sealed one-time `state` (tests/test_ctrader.py::test_oauth_round_trip). `/ingest/events` is
+# not listed: without its API key it answers 401 like everything else.
+PUBLIC_PATHS = {"/api/v1/health", "/api/v1/connections/ctrader/callback"}
 
 
 async def _status(client: httpx.AsyncClient, token: str) -> int:

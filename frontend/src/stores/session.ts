@@ -6,6 +6,7 @@ import { onSessionLost, refreshAccessToken, setAccessToken } from '@/api/client'
 import { realtime } from '@/api/ws'
 import { router } from '@/router'
 import { useAccountsStore } from './accounts'
+import { useInboxStore } from './inbox'
 import { useUiStore, type ThemePref } from './ui'
 import type { Locale } from '@/i18n'
 
@@ -54,6 +55,7 @@ export const useSessionStore = defineStore('session', () => {
   function signedOut() {
     setAccessToken(null)
     useAccountsStore().reset()
+    useInboxStore().reset()
     user.value = null
     status.value = 'anonymous'
     realtime.disconnect()

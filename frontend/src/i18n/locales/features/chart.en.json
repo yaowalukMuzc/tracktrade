@@ -1,0 +1,26 @@
+{
+  "chart": {
+    "entryShort": "EN",
+    "slShort": "SL",
+    "tpShort": "TP",
+    "tpShortN": "TP{n}",
+    "measureLabel": "{delta} ({pct}) · {bars} bars",
+    "textPrompt": "Type a note and press Enter",
+    "timeframes": "Timeframe",
+    "loadError": "Couldn't load the chart",
+    "retry": "Try again",
+    "sourceMock": "Sample chart data · real OHLC arrives once a broker is connected",
+    "sourceBroker": "OHLC from {source}",
+    "tools": {
+      "label": "Drawing tools",
+      "cursor": "Select",
+      "trendline": "Trendline",
+      "ray": "Ray",
+      "horizontal": "Horizontal line",
+      "rectangle": "Rectangle / zone",
+      "text": "Text",
+      "measure": "Measure",
+      "delete": "Delete selected drawing"
+    }
+  }
+}

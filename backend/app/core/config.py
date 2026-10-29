@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from decimal import Decimal
 from functools import lru_cache
 from typing import Annotated, Literal
 
@@ -39,8 +40,32 @@ class Settings(BaseSettings):
     MEDIA_ROOT: str = "var/media"
     MAX_UPLOAD_MB: int = 10
 
+    # Frontend origin — where the cTrader OAuth callback sends the browser back to.
+    APP_URL: str = "http://localhost:5179"
+
+    # Execution ingestion (Phase 4, F-07/F-08/F-10).
+    RATE_LIMIT_INGEST: str = "120/min"  # per broker connection
+    INGEST_MAX_BYTES: int = 2_000_000
+    MATCH_TOLERANCE_SL: Decimal = Decimal("0.3")  # |fill - plan entry| <= 0.3 x SL distance (S3)
+    OHLC_BARS_AROUND: int = 200  # bars requested before the entry / after the exit (F-08 AC5)
+    MT5_STALE_SEC: int = 120  # no EA heartbeat for this long -> "not connected"
+    MT5_EA_DIR: str = "../connectors/mt5-ea"  # zipped by GET /downloads/mt5-ea
+
+    # Encrypts OAuth tokens at rest (NFR). Fernet key: `python -c "from cryptography.fernet
+    # import Fernet; print(Fernet.generate_key().decode())"`. Empty -> cTrader linking is off.
+    FERNET_KEY: str = ""
+    # cTrader Open API app (https://openapi.ctrader.com/apps). Empty -> cTrader linking is off.
+    CTRADER_CLIENT_ID: str = ""
+    CTRADER_CLIENT_SECRET: str = ""
+    CTRADER_REDIRECT_URI: str = "http://localhost:5179/api/v1/connections/ctrader/callback"
+    CTRADER_AUTH_URL: str = "https://id.ctrader.com/my/settings/openapi/grantingaccess/"
+    CTRADER_TOKEN_URL: str = "https://openapi.ctrader.com/apps/token"
+    CTRADER_WS_LIVE: str = "wss://live.ctraderapi.com:5036"
+    CTRADER_WS_DEMO: str = "wss://demo.ctraderapi.com:5036"
+    CTRADER_HISTORY_DAYS: int = 90  # F-08 AC4
+
     CORS_ORIGINS: Annotated[list[str], NoDecode] = Field(
-        default_factory=lambda: ["http://localhost:5178"]
+        default_factory=lambda: ["http://localhost:5179"]
     )
     LOG_LEVEL: str = "INFO"
 

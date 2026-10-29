@@ -10,6 +10,8 @@ const ext = (base.extend ?? {}) as Record<string, Record<string, unknown>>
 export default {
   darkMode: ['selector', '[data-theme="dark"]'],
   content: ['./index.html', './src/**/*.{vue,ts}'],
+  // Component variants built at runtime (`tt-badge--${variant}` in TtBadge, TtAlert, TtGrade, TtModal, TtPnl …)
+  // never appear literally in the sources, so the content scan would drop them.
   theme: {
     ...base,
     extend: {

@@ -184,5 +184,53 @@
     "sub": "Every component and variant — Light left / Dark right",
     "light": "Light",
     "dark": "Dark"
+  },
+  "mood": {
+    "step": "{label} {n}"
+  },
+  "trading": {
+    "direction": {
+      "long": "LONG",
+      "short": "SHORT"
+    },
+    "entryType": {
+      "market": "Market",
+      "limit": "Limit",
+      "stop": "Stop"
+    },
+    "entryOrder": {
+      "long": {
+        "market": "Buy market",
+        "limit": "Buy limit",
+        "stop": "Buy stop"
+      },
+      "short": {
+        "market": "Sell market",
+        "limit": "Sell limit",
+        "stop": "Sell stop"
+      }
+    },
+    "bias": {
+      "bull": "Bull",
+      "bear": "Bear",
+      "range": "Range"
+    },
+    "session": {
+      "asia": "Asia",
+      "london": "London",
+      "new_york": "New York"
+    },
+    "planStatus": {
+      "draft": "Draft",
+      "locked": "Locked",
+      "triggered": "Triggered",
+      "closed": "Closed",
+      "skipped": "Skipped",
+      "missed": "Missed",
+      "invalidated": "Invalidated",
+      "expired": "Expired"
+    },
+    "scenario": "Plan {label}",
+    "planTitle": "Plan {label} · {symbol}"
   }
 }

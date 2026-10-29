@@ -34,11 +34,15 @@ import type { Locale } from '@/i18n'
 import { useAccountsStore } from '@/stores/accounts'
 import AccountFormDialog from './AccountFormDialog.vue'
 import AuditLogCard from './AuditLogCard.vue'
+import type { Connection, IngestionJob } from '@/api/connections'
 import ConnectionCard from './ConnectionCard.vue'
+import IngestionHistory from './IngestionHistory.vue'
+import { connectionBadge } from './model'
 import RiskProfileCard from './RiskProfileCard.vue'
 import RulesCard from './RulesCard.vue'
 import SymbolMappingCard from './SymbolMappingCard.vue'
 import TodayCard from './TodayCard.vue'
+import { useConnections, useNow } from './useConnections'
 
 // screens/web/14-WAccounts.png + screens/mobile/23-Accounts.png — F-02 (accounts, risk profile, audit), F-03 AC2 (symbol mapping).
 // URL keeps the selection: /accounts?account=<id>&tab=risk|rules|symbols|connections|audit
@@ -86,7 +90,8 @@ const tabItems = computed(() =>
     count: v === 'rules' && rules.value?.length ? rules.value.length : undefined,
   })),
 )
-const balance = computed(() => Number(selected.value?.initial_balance ?? 0))
+// Running balance from the risk status (broker-reported or initial + closed P/L), initial balance until it loads.
+const balance = computed(() => Number((selected.value && statuses.value[selected.value.id]?.balance) ?? selected.value?.initial_balance ?? 0))
 const editedAt = computed(() =>
   profile.value ? new Intl.DateTimeFormat(intlLocale(locale.value as Locale), { day: 'numeric', month: 'short' }).format(new Date(profile.value.updated_at)) : '',
 )
@@ -129,6 +134,35 @@ async function loadSelected(id: string | null) {
 const refreshAudit = async () => {
   if (selectedId.value) audit.value = await accountsApi.auditLog(selectedId.value)
 }
+
+// ---------------------------------------------------------------- broker connections (F-08)
+
+const now = useNow()
+const linkedIds = computed(() => store.accounts.filter((a) => a.platform !== 'manual').map((a) => a.id))
+const conns = useConnections(linkedIds, { jobs: true })
+function connOf(a: Account): Connection | null {
+  const kind = a.platform === 'mt5' ? 'mt5_ea' : 'ctrader_oauth'
+  return (conns.connections.value[a.id] ?? []).find((c) => c.kind === kind) ?? null
+}
+const connBadge = (a: Account) => connectionBadge(a.platform, connOf(a) ?? undefined, now.value, locale.value)
+const selectedJobs = computed<IngestionJob[] | null>(() => (selected.value && conns.loaded.value ? (conns.jobs.value[selected.value.id] ?? []) : null))
+const selectedHistoryDays = () => (selected.value ? (connOf(selected.value)?.stats.history_days ?? null) : null)
+async function onConnectionChanged(c: Connection) {
+  conns.replace(c)
+  await Promise.all([conns.load(), refreshAudit()])
+}
+
+/** Back from cTrader's consent page: `?ctrader=connected|error&reason=` → a message, then a clean URL. */
+const ctraderReturn = ref<{ ok: boolean; reason: string } | null>(null)
+onMounted(() => {
+  const q = route.query
+  if (q.ctrader !== 'connected' && q.ctrader !== 'error') return
+  ctraderReturn.value = { ok: q.ctrader === 'connected', reason: typeof q.reason === 'string' ? q.reason : '' }
+  const rest = { ...q }
+  delete rest.ctrader
+  delete rest.reason
+  void router.replace({ query: rest })
+})
 
 onMounted(loadAll)
 watch(selectedId, (id) => void loadSelected(id).catch(() => (loadError.value = true)), { immediate: true })
@@ -242,6 +276,15 @@ const money = (a: Account, v?: string) => formatAmount(v ?? a.initial_balance, a
         </template>
       </TtAlert>
 
+      <TtAlert
+        v-if="ctraderReturn"
+        :variant="ctraderReturn.ok ? 'profit' : 'loss'"
+        :title="ctraderReturn.ok ? t('connections.ctrader.returnConnected') : t('connections.ctrader.returnError')"
+        :body="!ctraderReturn.ok && ctraderReturn.reason ? t('connections.ctrader.returnReason', { reason: ctraderReturn.reason }) : undefined"
+        dismissible
+        @dismiss="ctraderReturn = null"
+      />
+
       <div v-if="!store.loaded && !loadError" class="tt-card"><TtSkeleton :lines="3" height="40px" /></div>
 
       <section v-else-if="store.loaded && !store.accounts.length" class="tt-card">
@@ -292,7 +335,7 @@ const money = (a: Account, v?: string) => formatAmount(v ?? a.initial_balance, a
                     <td class="tt-tbl__r tt-num">{{ money(a, statuses[a.id]?.equity) }}</td>
                     <td class="tt-num">{{ usage(a).daily }}</td>
                     <td class="tt-num">{{ usage(a).dd }}</td>
-                    <td><TtBadge variant="outline">{{ t('accounts.connection.none') }}</TtBadge></td>
+                    <td><TtBadge :variant="connBadge(a).variant">{{ t(connBadge(a).key, connBadge(a).params ?? {}) }}</TtBadge></td>
                     <td class="tt-tbl__r relative">
                       <button
                         type="button"
@@ -348,12 +391,29 @@ const money = (a: Account, v?: string) => formatAmount(v ?? a.initial_balance, a
                 />
                 <RulesCard v-if="tab === 'risk' || tab === 'rules'" ref="rulesCard" :rules="rules" :create="createRule" :toggle="toggleRule" :remove="removeRule" />
                 <SymbolMappingCard v-if="tab === 'symbols'" :overrides="overrides" :symbols="symbols" :save="saveOverride" :remove="removeOverride" />
-                <ConnectionCard v-if="tab === 'connections'" :account="selected" />
+                <template v-if="tab === 'connections'">
+                  <ConnectionCard
+                    :account="selected"
+                    :connection="connOf(selected)"
+                    :now="now"
+                    :loading="!conns.loaded.value"
+                    layout="full"
+                    @changed="onConnectionChanged"
+                  />
+                  <IngestionHistory v-if="selected.platform !== 'manual'" :jobs="selectedJobs" :history-days="selectedHistoryDays" />
+                </template>
                 <AuditLogCard v-if="tab === 'audit'" :entries="audit" />
               </div>
               <aside class="flex flex-col gap-6">
                 <TodayCard :status="statuses[selected.id] ?? null" />
-                <ConnectionCard v-if="tab !== 'connections'" :account="selected" />
+                <ConnectionCard
+                  v-if="tab !== 'connections'"
+                  :account="selected"
+                  :connection="connOf(selected)"
+                  :now="now"
+                  :loading="!conns.loaded.value"
+                  @changed="onConnectionChanged"
+                />
               </aside>
             </div>
           </template>
@@ -381,9 +441,9 @@ const money = (a: Account, v?: string) => formatAmount(v ?? a.initial_balance, a
                 </span>
                 <span class="flex flex-none flex-col items-end gap-1">
                   <span class="tt-num text-[17px] font-bold">{{ money(a, statuses[a.id]?.balance) }}</span>
-                  <TtBadge :variant="a.is_active ? 'outline' : 'neutral'">
-                    {{ !a.is_active ? t('accounts.archivedBadge') : a.platform === 'manual' ? t('accounts.platform.manual') : t('accounts.connection.none') }}
-                  </TtBadge>
+                  <TtBadge v-if="!a.is_active" variant="neutral">{{ t('accounts.archivedBadge') }}</TtBadge>
+                  <TtBadge v-else-if="a.platform === 'manual'" variant="outline">{{ t('accounts.platform.manual') }}</TtBadge>
+                  <TtBadge v-else :variant="connBadge(a).variant">{{ t(connBadge(a).key, connBadge(a).params ?? {}) }}</TtBadge>
                 </span>
               </button>
             </li>
@@ -410,7 +470,16 @@ const money = (a: Account, v?: string) => formatAmount(v ?? a.initial_balance, a
             </div>
             <SymbolMappingCard ref="symbolsCard" bare :overrides="overrides" :symbols="symbols" :save="saveOverride" :remove="removeOverride" />
 
-            <ConnectionCard :account="selected" />
+            <ConnectionCard :account="selected" :connection="connOf(selected)" :now="now" :loading="!conns.loaded.value" @changed="onConnectionChanged" />
+            <TtButton
+              v-if="selected.platform !== 'manual'"
+              variant="secondary"
+              block
+              icon="connection"
+              :to="{ name: 'account-connections', query: { account: selected.id } }"
+            >
+              {{ t('connections.openPage') }}
+            </TtButton>
             <AuditLogCard :entries="audit" :limit="5" />
             <TtButton v-if="selected.is_active" variant="ghost" block @click="confirmArchive = selected">{{ t('accounts.archive') }}</TtButton>
             <TtButton v-else variant="ghost" block @click="setArchived(selected, false)">{{ t('accounts.unarchive') }}</TtButton>

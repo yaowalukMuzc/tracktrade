@@ -33,10 +33,7 @@
     "manualSource": "Manual / OCR",
     "connection": {
       "none": "ไม่เชื่อมต่อ",
-      "title": "การเชื่อมต่อ",
-      "cardTitle": "{platform} · {broker}",
-      "notYet": "การซิงก์อัตโนมัติจาก MT5 (EA) และ cTrader จะเปิดให้ใช้ในเวอร์ชันถัดไป ระหว่างนี้บันทึกเทรดด้วย screenshot หรือกรอกเองได้",
-      "manual": "บัญชีนี้บันทึกเทรดด้วย screenshot หรือกรอกเอง ไม่ต้องเชื่อมต่อ"
+      "title": "การเชื่อมต่อ"
     },
     "menu": "ตัวเลือกของ {name}",
     "edit": "แก้ไขบัญชี",

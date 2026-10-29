@@ -21,11 +21,13 @@ const props = withDefaults(
 const showMoney = computed(() => props.visibility === 'currency' && props.money != null)
 const primary = computed(() => (showMoney.value ? props.money! : (props.r ?? 0)))
 const dir = computed(() => directionOf(primary.value))
+// Complete class names so Tailwind's content scan keeps them (a `tt-pnl--${dir}` template is purged).
+const dirClass = { up: 'tt-pnl--up', down: 'tt-pnl--down', flat: 'tt-pnl--flat' }
 const sizeClass = { display: 'text-display', lg: 'text-num-lg', md: 'text-num', sm: 'text-num-sm' }
 </script>
 
 <template>
-  <span class="tt-pnl" :class="[`tt-pnl--${dir}`, sizeClass[size]]">
+  <span class="tt-pnl" :class="[dirClass[dir], sizeClass[size]]">
     <AppIcon v-if="arrow && dir !== 'flat'" :name="dir === 'up' ? 'up' : 'down'" :size="size === 'sm' ? 16 : 20" />
     <template v-if="showMoney">{{ formatMoney(money!, currency, { compact }) }}</template>
     <template v-else-if="r != null">{{ formatR(r) }}</template>

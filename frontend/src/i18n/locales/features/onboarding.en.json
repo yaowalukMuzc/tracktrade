@@ -60,15 +60,12 @@
       "heading": "How will you log trades?",
       "sub": "Pick your main way of recording trades — you can change it later in Accounts",
       "label": "Trade import method",
-      "later": "Coming soon",
       "mt5": "MT5 (EA)",
       "mt5Sub": "Install the EA and paste an API key",
       "ctrader": "cTrader",
       "ctraderSub": "OAuth · real-time",
       "manual": "Screenshot / manual",
-      "manualSub": "No connection needed",
-      "laterTitle": "Automatic sync arrives in a later update",
-      "laterBody": "Meanwhile add trades by screenshot or manual entry, then connect from Accounts when it is ready"
+      "manualSub": "No connection needed"
     },
     "next": "Next: connect broker",
     "save": "Save and get started",
@@ -88,6 +85,30 @@
       "invalid": "This value is not valid",
       "fixFields": "Check the highlighted fields",
       "saveFailed": "Could not save. Please try again."
+    },
+    "saveConnect": "Save and connect broker",
+    "back": "Back",
+    "broker": {
+      "mobileTitle": "Import trades automatically",
+      "heading": "How will you log trades?",
+      "sub": "Connect once — we import 90 days of history and SL/TP changes in real time",
+      "selected": "Selected",
+      "keyLabel": "API key for {name}",
+      "mt5": "MetaTrader 5 (EA)",
+      "mt5Sub": "Install the EA and paste the API key",
+      "ctrader": "cTrader",
+      "ctraderSub": "Linked with OAuth · real-time",
+      "manualTitle": "Screenshot / manual",
+      "manualSub": "No connection needed",
+      "manualBody": "This account logs trades by screenshot or manual entry — add your first trade now",
+      "firstDealTitle": "First deal received",
+      "firstDealBody": "The EA is connected — new trades arrive within seconds",
+      "row": {
+        "scan": "Screenshot scan",
+        "scanSub": "Snap the order, AI reads the values",
+        "manual": "Manual entry",
+        "manualSub": "Enter the position and executions by hand"
+      }
     }
   }
 }

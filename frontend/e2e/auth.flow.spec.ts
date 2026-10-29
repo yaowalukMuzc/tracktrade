@@ -24,12 +24,9 @@ test('register, logout, login, refresh-on-reload, logout', async ({ page, isMobi
   await page.getByLabel('Account name').fill('E2E Live')
   await page.getByLabel('Broker').fill('IC Markets')
   await page.getByLabel('Initial balance').fill('10000')
-  if (isMobile) {
-    await page.getByRole('button', { name: 'Next: connect broker' }).click()
-    await page.getByRole('button', { name: 'Get started' }).click()
-  } else {
-    await page.getByRole('button', { name: 'Save and get started' }).click()
-  }
+  // Phase 4: the account is saved first, then the broker step (EA key) — "Get started" finishes on both sizes.
+  await page.getByRole('button', { name: isMobile ? 'Next: connect broker' : 'Save and connect broker' }).click()
+  await page.getByRole('button', { name: 'Get started' }).click()
 
   // Empty shell
   await expect(page).toHaveURL(/\/$/)

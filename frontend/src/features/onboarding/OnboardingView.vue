@@ -8,16 +8,20 @@ import TtButton from '@/components/ui/TtButton.vue'
 import TtStepper from '@/components/ui/TtStepper.vue'
 import { useDesktop } from '@/composables/useDesktop'
 import { safeRedirect, skipOnboarding } from '@/router/guards'
+import { accountsApi } from '@/api/accounts'
 import { useAccountsStore } from '@/stores/accounts'
 import { useSessionStore } from '@/stores/session'
 import AccountSection from './AccountSection.vue'
+import BrokerStep from './BrokerStep.vue'
 import ImportSection from './ImportSection.vue'
 import RiskSection from './RiskSection.vue'
 import { apiErrors, toPayload, validate, type FieldError, type FieldErrors } from './form'
 import { provideOnboarding } from './useOnboarding'
 
-// screens/web/02-WOnboarding.png (one page: account + risk + import method) and
-// screens/mobile/03-Onboarding.png → 04-ConnectBroker.png (two steps). F-02 AC1–AC2, F-08 (choice only).
+// screens/web/02-WOnboarding.png (account + risk + import method, then the broker step) and
+// screens/mobile/03-Onboarding.png → 04-ConnectBroker.png (two steps). F-02 AC1–AC2, F-08 AC1.
+// The account is saved before the broker step: the EA key / cTrader link belong to it. Going back and saving
+// again updates that account instead of creating a second one.
 // Full-screen flow outside AppLayout: no sidebar / bottom nav.
 const state = provideOnboarding()
 const { t } = useI18n()
@@ -27,7 +31,7 @@ const accounts = useAccountsStore()
 const session = useSessionStore()
 const desktop = useDesktop()
 
-/** Mobile step: 1 = account & risk, 2 = import method. Desktop shows both at once. */
+/** 1 = account & risk (+ import method on desktop), 2 = broker step. */
 const step = ref<1 | 2>(1)
 const busy = ref(false)
 const attempted = ref(false)
@@ -76,18 +80,34 @@ function check() {
   return false
 }
 
+/** First save: one call creates the account with its risk profile. Later: update account + profile. */
+async function saveAccount() {
+  const body = toPayload(state.form)
+  if (!state.account) {
+    state.account = await accounts.create(body)
+    return
+  }
+  const { risk_profile, ...fields } = body
+  const updated = await accountsApi.update(state.account.id, fields)
+  if (risk_profile) await accountsApi.saveRiskProfile(updated.id, risk_profile)
+  if (updated.platform !== state.account.platform) state.apiKey = null
+  accounts.upsert(updated)
+  state.account = updated
+}
+
 async function submit() {
   formError.value = null
-  if (!desktop.value && step.value === 1) {
-    if (check()) await goTo(2)
+  if (step.value === 2) {
+    await router.replace(target.value)
     return
   }
   if (!check()) return
   busy.value = true
   try {
-    // One call creates the account with its risk profile; the store update refreshes the account switcher.
-    await accounts.create(toPayload(state.form))
-    await router.replace(target.value)
+    await saveAccount()
+    // Desktop with "Screenshot / manual" has nothing to connect: done.
+    if (desktop.value && state.method === 'manual') await router.replace(target.value)
+    else await goTo(2)
   } catch (e) {
     const { fields, form } = apiErrors(e)
     setErrors(fields)
@@ -105,6 +125,7 @@ async function skip() {
 }
 
 const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formError.value.key}`) : ''))
+const desktopSave = computed(() => (state.method === 'manual' ? t('onboarding.save') : t('onboarding.saveConnect')))
 </script>
 
 <template>
@@ -113,7 +134,7 @@ const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formE
     <header v-if="desktop" class="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-surface px-8 py-4">
       <span class="tt-wordmark text-[20px]">Track<b>Trade</b></span>
       <span class="flex-1" />
-      <span class="text-caption text-ink-muted">{{ t('onboarding.stepOf', { n: 2, total: 3 }) }}</span>
+      <span class="text-caption text-ink-muted">{{ t('onboarding.stepOf', { n: step + 1, total: 3 }) }}</span>
       <TtButton variant="ghost" size="sm" @click="skip">{{ t('onboarding.skip') }}</TtButton>
     </header>
     <!-- <1024px: app bar + progress bar -->
@@ -122,7 +143,7 @@ const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formE
         <button v-if="step === 2" type="button" class="tt-iconbtn tt-iconbtn--bare -ml-2" :aria-label="t('shell.back')" @click="goTo(1)">
           <AppIcon name="back" />
         </button>
-        <h1 class="tt-appbar__title">{{ step === 1 ? t('onboarding.mobileTitle') : t('onboarding.import.mobileTitle') }}</h1>
+        <h1 class="tt-appbar__title">{{ step === 1 ? t('onboarding.mobileTitle') : t('onboarding.broker.mobileTitle') }}</h1>
         <span class="text-caption text-ink-muted tabular-nums">{{ t('onboarding.stepCount', { n: step, total: 2 }) }}</span>
         <TtButton v-if="step === 1" variant="ghost" size="sm" class="-mr-2" @click="skip">{{ t('onboarding.skip') }}</TtButton>
       </header>
@@ -132,11 +153,11 @@ const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formE
     <form class="flex flex-1 flex-col" novalidate @submit.prevent="submit">
       <div v-if="desktop" class="mx-auto flex w-full max-w-content items-start gap-6 px-8 pb-10 pt-6">
         <aside class="w-60 flex-none">
-          <TtStepper :steps="desktopSteps" :current="1" :label="t('onboarding.progress')" :done-label="t('onboarding.done')" />
+          <TtStepper :steps="desktopSteps" :current="step" :label="t('onboarding.progress')" :done-label="t('onboarding.done')" />
         </aside>
-        <div class="flex min-w-0 flex-1 flex-col gap-6">
+        <div v-if="step === 1" class="flex min-w-0 flex-1 flex-col gap-6">
           <div>
-            <h1 id="ob-heading" class="m-0 text-h1">{{ t('onboarding.title') }}</h1>
+            <h1 id="ob-heading" tabindex="-1" class="m-0 text-h1 outline-none">{{ t('onboarding.title') }}</h1>
             <p class="m-0 text-body text-ink-muted">{{ t('onboarding.sub') }}</p>
           </div>
           <TtAlert v-if="errorText" variant="loss" :title="errorText" />
@@ -146,7 +167,18 @@ const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formE
           </div>
           <ImportSection />
           <div class="flex justify-end gap-3">
-            <TtButton type="submit" variant="primary" size="lg" :loading="busy">{{ t('onboarding.save') }}</TtButton>
+            <TtButton type="submit" variant="primary" size="lg" :loading="busy">{{ desktopSave }}</TtButton>
+          </div>
+        </div>
+        <div v-else class="flex min-w-0 max-w-[720px] flex-1 flex-col gap-6">
+          <div>
+            <h1 id="ob-heading" tabindex="-1" class="m-0 text-h1 outline-none">{{ t('onboarding.broker.heading') }}</h1>
+            <p class="m-0 text-body text-ink-muted">{{ t('onboarding.broker.sub') }}</p>
+          </div>
+          <BrokerStep />
+          <div class="flex justify-end gap-3">
+            <TtButton variant="secondary" size="lg" @click="goTo(1)">{{ t('onboarding.back') }}</TtButton>
+            <TtButton type="submit" variant="primary" size="lg">{{ t('onboarding.start') }}</TtButton>
           </div>
         </div>
       </div>
@@ -155,16 +187,16 @@ const errorText = computed(() => (formError.value ? t(`onboarding.errors.${formE
         <div class="flex flex-1 flex-col gap-4 p-4">
           <div class="flex flex-col gap-2.5">
             <h2 id="ob-heading" tabindex="-1" class="m-0 text-h2 outline-none">
-              {{ step === 1 ? t('onboarding.mobileHeading') : t('onboarding.import.heading') }}
+              {{ step === 1 ? t('onboarding.mobileHeading') : t('onboarding.broker.heading') }}
             </h2>
-            <p class="m-0 text-body-sm text-ink-muted">{{ step === 1 ? t('onboarding.sub') : t('onboarding.import.sub') }}</p>
+            <p class="m-0 text-body-sm text-ink-muted">{{ step === 1 ? t('onboarding.sub') : t('onboarding.broker.sub') }}</p>
           </div>
           <TtAlert v-if="errorText" variant="loss" :title="errorText" />
           <template v-if="step === 1">
             <AccountSection />
             <RiskSection />
           </template>
-          <ImportSection v-else />
+          <BrokerStep v-else />
         </div>
         <div class="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-surface px-4 pb-4 pt-3">
           <TtButton type="submit" variant="primary" size="lg" block :loading="busy">

@@ -1,0 +1,100 @@
+{
+  "connections": {
+    "title": "การเชื่อมต่อ",
+    "back": "บัญชี",
+    "openPage": "การเชื่อมต่อ & ประวัติการนำเข้า",
+    "pageEmpty": "ยังไม่มีบัญชี MT5 หรือ cTrader — บัญชีที่กรอกเองไม่ต้องเชื่อมต่อ",
+    "loadError": "โหลดข้อมูลการเชื่อมต่อไม่สำเร็จ",
+    "actionError": "ทำรายการไม่สำเร็จ ลองใหม่อีกครั้ง",
+    "retry": "ลองใหม่",
+    "cancel": "ยกเลิก",
+    "badge": {
+      "none": "ไม่เชื่อมต่อ",
+      "synced": "Synced {ago}",
+      "waitingEa": "รอ EA",
+      "syncing": "กำลังซิงก์",
+      "tokenExpired": "Token หมดอายุ"
+    },
+    "status": {
+      "connected": "Connected",
+      "pending": "รอสัญญาณ",
+      "offline": "ออฟไลน์",
+      "error": "Error"
+    },
+    "mt5": {
+      "title": "MT5 EA",
+      "rowTitle": "{name} · MT5 EA",
+      "noKey": "สร้าง API key แล้ววางใน EA บน MT5 — เทรด การแก้ SL/TP และประวัติย้อนหลัง 90 วันจะเข้ามาเอง",
+      "createKey": "สร้าง API key",
+      "apiKey": "API key",
+      "copy": "คัดลอก key",
+      "copyKey": "คัดลอก key",
+      "copied": "คัดลอกแล้ว",
+      "copyHidden": "key เต็มแสดงได้ครั้งเดียวตอนสร้าง — กด “สร้าง key ใหม่” ถ้าต้องการคัดลอกอีกครั้ง",
+      "lastSync": "Sync ล่าสุด",
+      "lastSyncAgo": "Sync ล่าสุด {ago}",
+      "never": "ยังไม่ได้รับข้อมูล",
+      "dealsMods": "Deals วันนี้ · SL/TP mods",
+      "dealsToday": "Deals วันนี้",
+      "mods": "SL/TP mods",
+      "history": "ย้อนหลัง",
+      "historyDays": "{n} วัน",
+      "historyPending": "—",
+      "syncNow": "Sync ตอนนี้",
+      "syncSent": "ส่งคำสั่งแล้ว — EA จะซิงก์ 7 วันล่าสุดเมื่อติดต่อครั้งถัดไป (ภายใน 10 วินาที)",
+      "download": "ดาวน์โหลด EA",
+      "rotate": "สร้าง key ใหม่",
+      "waitingTitle": "รอสัญญาณจาก EA…",
+      "waitingBody": "เราจะแจ้งทันทีเมื่อได้รับ deal แรก",
+      "offlineTitle": "ไม่ได้รับสัญญาณจาก EA",
+      "offlineBody": "ติดต่อล่าสุด {ago} — ตรวจว่า MT5 เปิดอยู่และไม่ได้ปิด Algo Trading",
+      "unknownSymbols": "ไม่รู้จัก symbol: {list} — เพิ่มในแท็บ Symbol mapping แล้วกด Sync ตอนนี้",
+      "stepsTitle": "ติดตั้ง EA",
+      "step1": "คัดลอก TrackTrade.ex5 ไปที่ MQL5/Experts",
+      "step2": "เปิด Allow WebRequest ให้ {host}",
+      "step3": "ลาก EA ลงกราฟใดก็ได้ แล้ววาง API key"
+    },
+    "key": {
+      "title": "API key ของ {name}",
+      "once": "แสดงครั้งเดียว — คัดลอกเก็บไว้ตอนนี้ หลังปิดหน้าต่างนี้จะเห็นเพียงบางส่วน",
+      "label": "API key",
+      "done": "เสร็จแล้ว",
+      "rotateTitle": "สร้าง key ใหม่?",
+      "rotateBody": "key เดิมจะใช้ไม่ได้ทันที EA ที่ใช้ key เดิมจะหยุดส่งข้อมูลจนกว่าจะวาง key ใหม่",
+      "rotateConfirm": "สร้าง key ใหม่"
+    },
+    "ctrader": {
+      "title": "cTrader · {broker}",
+      "rowTitle": "{broker} · cTrader",
+      "connect": "เชื่อมต่อ cTrader",
+      "reconnect": "เชื่อมต่อ cTrader ใหม่",
+      "intro": "เชื่อมบัญชี cTrader ผ่าน OAuth — ดึงเทรดแบบ real-time และประวัติย้อนหลัง 90 วัน",
+      "pending": "เชื่อมต่อแล้ว — กำลังดึงประวัติย้อนหลัง 90 วัน",
+      "tokenTitle": "OAuth token หมดอายุ",
+      "tokenBody": "{error} · เชื่อมต่อใหม่เพื่อดึงเทรดต่อ",
+      "errorTitle": "ซิงก์ไม่สำเร็จ",
+      "errorBody": "{error} · {at}",
+      "notConfigured": "เซิร์ฟเวอร์นี้ยังไม่ได้ตั้งค่า cTrader Open API (ต้องมี client id ของแอป) — ระหว่างนี้บันทึกเทรดด้วย screenshot หรือกรอกเองได้",
+      "returnConnected": "เชื่อมต่อ cTrader สำเร็จ — กำลังดึงประวัติย้อนหลัง",
+      "returnError": "เชื่อมต่อ cTrader ไม่สำเร็จ",
+      "returnReason": "เหตุผล: {reason}"
+    },
+    "manual": {
+      "title": "การเชื่อมต่อ",
+      "body": "บัญชีนี้บันทึกเทรดด้วย screenshot หรือกรอกเอง ไม่ต้องเชื่อมต่อ"
+    },
+    "historyTitle": "ประวัติการนำเข้า",
+    "historyEmpty": "ยังไม่มีการนำเข้า",
+    "job": {
+      "sync": "Sync · {source}",
+      "history": "Initial import · {source}",
+      "resync": "Resync · {source}",
+      "positions": "{n} positions",
+      "deals": "{n} deals",
+      "mods": "{n} SL/TP mods",
+      "days": "{n} วัน",
+      "failed": "retry {n}/{max} ล้มเหลว",
+      "unknown": "ไม่รู้จัก {list}"
+    }
+  }
+}

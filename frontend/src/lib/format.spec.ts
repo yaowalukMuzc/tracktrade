@@ -30,3 +30,13 @@ describe('format', () => {
     expect(directionOf(0)).toBe('flat')
   })
 })
+
+describe('formatAmount', () => {
+  it('shows cents only when present, and then always two digits', async () => {
+    const { formatAmount } = await import('./format')
+    expect(formatAmount(100000, 'USD')).toBe('$100,000')
+    expect(formatAmount('3037.2', 'USD')).toBe('$3,037.20')
+    expect(formatAmount('1012.4', 'USD')).toBe('$1,012.40')
+    expect(formatAmount('10.005', 'USD', 0)).toBe('$10')
+  })
+})

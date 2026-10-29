@@ -1,0 +1,90 @@
+{
+  "analysis": {
+    "title": "Market Analysis",
+    "titleWithSymbol": "Market Analysis · {symbol}",
+    "back": "วันนี้",
+    "save": "บันทึก",
+    "saving": "กำลังบันทึก…",
+    "autosaved": "บันทึกอัตโนมัติ {time}",
+    "unsaved": "ยังไม่ได้บันทึก",
+    "createPlan": "สร้างแผนจาก Analysis นี้",
+    "createPlanShort": "สร้างแผนจากนี้",
+    "createPlanHint": "บันทึก Analysis ก่อน แล้วจึงสร้างแผนได้",
+    "symbol": "Symbol",
+    "symbolLocked": "มีแผนใช้ Analysis นี้อยู่ จึงเปลี่ยน Symbol ไม่ได้",
+    "date": "วันที่",
+    "account": "บัญชี",
+    "noAccount": "ไม่ระบุบัญชี",
+    "bias": "HTF bias",
+    "timeframes": "Timeframes",
+    "timeframesUsed": "Timeframes ที่ใช้",
+    "session": "Session",
+    "confidence": "Confidence",
+    "chart": {
+      "label": "กราฟ {symbol} {tf}",
+      "timeframe": "Timeframe ของกราฟ",
+      "sourceBroker": "OHLC จาก {source}"
+    },
+    "narrative": {
+      "title": "Narrative",
+      "editor": "Narrative — เล่าภาพตลาดและเหตุผล",
+      "toolbar": "จัดรูปแบบข้อความ",
+      "bold": "ตัวหนา",
+      "italic": "ตัวเอียง",
+      "heading": "หัวข้อ",
+      "image": "ใส่รูป",
+      "imageAlt": "รูปประกอบ Narrative",
+      "uploading": "กำลังอัปโหลดรูป…"
+    },
+    "levels": {
+      "title": "Key levels",
+      "add": "เพิ่ม",
+      "addLevel": "เพิ่ม level",
+      "empty": "ยังไม่มี key level — เพิ่มแนวรับ แนวต้าน หรือโซนที่จับตา",
+      "remove": "ลบ level {price}",
+      "dialogTitle": "เพิ่ม Key level",
+      "kind": "ประเภท",
+      "price": "ราคา",
+      "priceFrom": "ราคาเริ่มโซน",
+      "priceTo": "ราคาสิ้นสุดโซน",
+      "label": "คำอธิบาย",
+      "labelPlaceholder": "เช่น H4 swing low",
+      "cancel": "ยกเลิก",
+      "submit": "เพิ่ม level",
+      "kinds": {
+        "support": "Support",
+        "resistance": "Resistance",
+        "zone": "Zone",
+        "liquidity": "Liquidity",
+        "other": "Other"
+      },
+      "errors": {
+        "required": "กรอกราคา",
+        "positive": "ราคาต้องเป็นตัวเลขมากกว่า 0",
+        "sameAsPrice": "ราคาสิ้นสุดต้องต่างจากราคาเริ่ม",
+        "tooMany": "เพิ่มได้สูงสุด {max} levels"
+      }
+    },
+    "plans": {
+      "title": "แผนจาก Analysis นี้",
+      "empty": "ยังไม่มีแผนจาก Analysis นี้",
+      "open": "เปิดแผน {label} · {direction} · {order}"
+    },
+    "notFound": "ไม่พบ Analysis นี้ — อาจถูกลบไปแล้ว หรือไม่ใช่ของบัญชีคุณ",
+    "backToday": "กลับไปหน้าวันนี้",
+    "loading": "กำลังโหลด Analysis",
+    "errors": {
+      "save": "บันทึกไม่สำเร็จ",
+      "network": "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — ลองอีกครั้ง",
+      "hasPlans": "มีแผนใช้ Analysis นี้อยู่ จึงเปลี่ยน Symbol ไม่ได้",
+      "validation": "ข้อมูลบางช่องไม่ถูกต้อง",
+      "drawings": "บันทึกเส้นบนกราฟไม่สำเร็จ",
+      "upload": "อัปโหลดรูปไม่สำเร็จ",
+      "fileType": "รองรับเฉพาะ PNG, JPG หรือ WebP",
+      "fileSize": "ไฟล์ต้องไม่เกิน {mb} MB",
+      "load": "โหลด Analysis ไม่สำเร็จ",
+      "generic": "เกิดข้อผิดพลาด — ลองอีกครั้ง"
+    },
+    "retry": "ลองอีกครั้ง"
+  }
+}

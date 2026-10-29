@@ -33,10 +33,7 @@
     "manualSource": "Manual / OCR",
     "connection": {
       "none": "Not connected",
-      "title": "Connection",
-      "cardTitle": "{platform} · {broker}",
-      "notYet": "Automatic sync from MT5 (EA) and cTrader arrives in an upcoming release. Until then, add trades by screenshot or by hand.",
-      "manual": "This account logs trades by screenshot or by hand — no connection needed."
+      "title": "Connection"
     },
     "menu": "Options for {name}",
     "edit": "Edit account",

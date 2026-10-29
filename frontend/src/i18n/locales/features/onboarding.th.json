@@ -60,15 +60,12 @@
       "heading": "เลือกวิธีบันทึกเทรด",
       "sub": "เลือกวิธีหลักที่คุณจะบันทึกเทรด — เปลี่ยนได้ทีหลังที่หน้าบัญชี",
       "label": "วิธีนำเข้าเทรด",
-      "later": "เร็ว ๆ นี้",
       "mt5": "MT5 (EA)",
       "mt5Sub": "ติดตั้ง EA แล้ววาง API key",
       "ctrader": "cTrader",
       "ctraderSub": "OAuth · real-time",
       "manual": "Screenshot / กรอกเอง",
-      "manualSub": "ไม่ต้องเชื่อมต่อ",
-      "laterTitle": "การซิงก์อัตโนมัติจะเปิดในอัปเดตถัดไป",
-      "laterBody": "ระหว่างนี้เพิ่มเทรดด้วย Screenshot หรือกรอกเองได้เลย แล้วค่อยเชื่อมต่อที่หน้าบัญชีเมื่อพร้อม"
+      "manualSub": "ไม่ต้องเชื่อมต่อ"
     },
     "next": "ถัดไป: เชื่อมต่อ Broker",
     "save": "บันทึกและเริ่มใช้งาน",
@@ -88,6 +85,30 @@
       "invalid": "ค่านี้ไม่ถูกต้อง",
       "fixFields": "ตรวจสอบช่องที่มีข้อความแจ้งเตือน",
       "saveFailed": "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+    },
+    "saveConnect": "บันทึกและเชื่อมต่อ Broker",
+    "back": "ย้อนกลับ",
+    "broker": {
+      "mobileTitle": "นำเข้าเทรดอัตโนมัติ",
+      "heading": "เลือกวิธีบันทึกเทรด",
+      "sub": "เชื่อมครั้งเดียว ระบบดึงประวัติย้อนหลัง 90 วัน และการแก้ SL/TP แบบ real-time",
+      "selected": "เลือกอยู่",
+      "keyLabel": "API key ของบัญชี {name}",
+      "mt5": "MetaTrader 5 (EA)",
+      "mt5Sub": "ติดตั้ง EA แล้ววาง API key",
+      "ctrader": "cTrader",
+      "ctraderSub": "เชื่อมผ่าน OAuth · real-time",
+      "manualTitle": "Screenshot / กรอกเอง",
+      "manualSub": "ไม่ต้องเชื่อมต่อ",
+      "manualBody": "บัญชีนี้บันทึกเทรดด้วย screenshot หรือกรอกเอง — เริ่มเพิ่มเทรดแรกได้เลย",
+      "firstDealTitle": "ได้รับ deal แรกแล้ว",
+      "firstDealBody": "EA เชื่อมต่อสำเร็จ — เทรดใหม่จะเข้ามาเองภายในไม่กี่วินาที",
+      "row": {
+        "scan": "Screenshot scan",
+        "scanSub": "แคปภาพออเดอร์ ให้ AI อ่านค่า",
+        "manual": "กรอกเอง",
+        "manualSub": "บันทึก position และ executions ด้วยมือ"
+      }
     }
   }
 }

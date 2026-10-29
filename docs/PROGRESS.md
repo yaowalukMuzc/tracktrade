@@ -35,21 +35,23 @@
 > - ตาราง auth ใช้ Alembic เป็นเจ้าของ schema เดียว (`users` + `auth_sessions/auth_accounts/auth_verifications/auth_jwks`)
 
 ### Phase 3 — Analysis, Plan & Plan Lock
-- [ ] Market analysis CRUD + narrative rich text editor (F-05)
-- [ ] ใส่ Lightweight Charts component พื้นฐาน + drawing tools + `chart_drawings` (F-19 AC3)
-- [ ] Trade plan form: คำนวณ lot/risk/RR อัตโนมัติ, checklist answers, pre-trade emotion (F-06)
-- [ ] Plan lock: `locked_at`, `lock_hash`, revisions append-only, บังคับกรอกเหตุผล
-- [ ] Plan state machine (draft/locked/triggered/closed/skipped/missed/invalidated/expired) + job สำหรับ expire
-- [ ] หน้า "Today": analysis และ plan ของวันนี้ (คล้าย Journal ของ TradeMotion)
+- [x] Market analysis CRUD + narrative rich text editor (F-05) — `backend/app/modules/analysis/*` (`market_analyses`, narrative = Tiptap JSON + `narrative_text`), หน้า `/analysis/new`, `/analysis/:id` (autosave, key levels, Tiptap B/I/H2/รูป); `test_analysis.py`, e2e `analysis.visual`
+- [x] ใส่ Lightweight Charts component พื้นฐาน + drawing tools + `chart_drawings` (F-19 AC3) — `components/chart/TradeChart.vue` (Lightweight Charts v5 + series primitive วาด trendline/ray/horizontal/rectangle/text/measure, เลือก/ลบได้, สีจาก token), `GET/PUT /chart-drawings`; vitest `TradeChart.spec.ts`, `geometry.spec.ts`; OHLC เป็น mock (`/market-data/ohlc`, `source: "mock"`) จนกว่าจะมีข้อมูลจริงจาก sync ใน Phase 4
+- [x] Trade plan form: คำนวณ lot/risk/RR อัตโนมัติ, checklist answers, pre-trade emotion (F-06) — หน้า `/plans/new?analysis=`, `/plans/:id` คำนวณสดผ่าน `/risk/calc`, checklist, อารมณ์ก่อนเทรด, management toggles, preview บนกราฟ; `test_plans.py`, vitest `features/plans/form.spec.ts`, e2e `plan.visual`
+- [x] Plan lock: `locked_at`, `lock_hash`, revisions append-only, บังคับกรอกเหตุผล — sha256 ของ snapshot ที่ normalize แล้ว (`plans/snapshot.py`), revision 1 = ตอน lock, revision ต่อไปต้องมี reason, DB trigger ห้าม UPDATE `trade_plan_revisions`; `test_plans.py::test_lock_hash_is_stable`, `test_locked_plan_changes_only_through_revisions`, e2e `plan.flow`
+- [x] Plan state machine (draft/locked/triggered/closed/skipped/missed/invalidated/expired) + job สำหรับ expire — `plans/service.py` (`MANUAL_TRANSITIONS`, `mark_triggered` สำหรับ matching Phase 4, `expire_due`) + arq cron `expire_plans` ทุก 5 นาที; `test_status_changes_need_a_reason`, `test_expire_job`
+- [x] หน้า "Today": analysis และ plan ของวันนี้ (คล้าย Journal ของ TradeMotion) — `GET /today` + หน้า `/` (KPI, Analysis + กราฟ, ตารางแผน, ต้องจัดการ, daily mood, ข่าว = empty state จนมี provider ใน Phase 6); e2e `today.visual` (desktop/mobile × light/dark) → `docs/qa/phase-3/*.png`
 
 ### Phase 4 — Execution Ingestion (Manual + Sync) & Matching
-- [ ] Manual position + executions entry (F-07) + การคำนวณ P/L, R และ MAE/MFE
-- [ ] Ingest API (idempotent, API key ต่อบัญชี, rate limit)
-- [ ] MT5 EA (MQL5): ส่ง deals/positions/SL-TP modifications + OHLC รอบเทรด (F-08)
-- [ ] cTrader Open API worker: OAuth flow, sync history 90 วัน, real-time events
-- [ ] `order_modifications` + การจำแนก risk increase/decrease
-- [ ] Matching engine execution ↔ plan + คิว pending ใน UI (F-10)
-- [ ] Unplanned flag + หน้า Connection status
+- [x] Manual position + executions entry (F-07) + การคำนวณ P/L, R และ MAE/MFE — `modules/positions/{calc,service,router}.py` (replay fills แบบ MT5, ใช้ profit ของโบรกเกอร์เมื่อมี, R = net / initial risk), `POST /positions` + `/positions/preview`, หน้า `/trades/new?mode=manual` (`features/trade-new`); `tests/test_position_calc.py` (ตัวเลขแบบ 10-ManualTrade: 4,403.18 / 4,383.75, +$968.00, +2.10R), `test_positions.py`, vitest `trade-new/model.spec.ts`, e2e `trade-new.flow` · MAE/MFE มาจาก `ohlc_bars` (bar ของ symbol เดียวกันจากบัญชีไหนก็ได้ — R4) — เทรด manual ที่ไม่มี bar ใดเลยจะเป็น "—"
+- [x] Ingest API (idempotent, API key ต่อบัญชี, rate limit) — `POST /ingest/events` (`X-Api-Key`, protocol `connectors/mt5-ea/PROTOCOL.md`), key เก็บ sha256 + prefix/last4, rate limit ต่อ connection (`RATE_LIMIT_INGEST`), ≤2 MB; `tests/test_ingest.py` (ส่งซ้ำ/พร้อมกัน 4 request = 1 record, 401/422/413/429, event ถึง WebSocket < 5 วินาที)
+- [ ] MT5 EA (MQL5): ส่ง deals/positions/SL-TP modifications + OHLC รอบเทรด (F-08) — ⚠️ เขียนครบแล้ว `connectors/mt5-ea/` (`TrackTrade.mq5`, `include/TrackTrade/*.mqh`, README ไทย/อังกฤษ, `tools/mock_ea.py`) แต่**ยังไม่ได้ compile ใน MetaEditor / ทดสอบกับบัญชี demo** (จุดที่ต้องเช็กก่อนอยู่ท้าย README) — ฝั่ง server ทดสอบด้วย payload แบบเดียวกันแล้ว
+- [ ] cTrader Open API worker: OAuth flow, sync history 90 วัน, real-time events — ⚠️ โค้ดครบ (`modules/connections/ctrader/*`: OAuth + state ใช้ครั้งเดียว, token เข้ารหัส Fernet, JSON/WebSocket client, sync job retry 3 ครั้ง, process `ctrader-stream`) + `tests/test_ctrader.py` กับ fake server แต่**ยังไม่มี cTrader app (client id/secret) จึงยังไม่ได้ทดสอบกับของจริง**
+- [x] `order_modifications` + การจำแนก risk increase/decrease — `calc.risk_direction` (SL ห่างขึ้น/ลบ SL = increase, เข้าใกล้/ตั้ง SL = decrease, TP = neutral); `test_position_calc.py::test_risk_direction`, `test_ingest.py` (SL widened → increase)
+- [x] Matching engine execution ↔ plan + คิว pending ใน UI (F-10) — `positions/matching.py` (tolerance 0.3×SL, ช่วง locked_at–valid_until, ใช้ราคาแผน ณ เวลา entry), `GET /positions/match-queue`, `/match-candidates`, `PUT /match`; modal บน `/trades` (desktop) + `/trades/match` (mobile); `test_positions.py`, e2e `trades.spec.ts`, `docs/qa/phase-4/trades-*.png`
+- [x] Unplanned flag + หน้า Connection status — `is_unplanned` + `unplanned_reason` (no_plan / plan_not_locked / locked_after_entry); แท็บการเชื่อมต่อใน `/accounts` + `/accounts/connections` (สถานะ, key แสดงครั้งเดียว, Sync ตอนนี้, ดาวน์โหลด EA, ประวัติการนำเข้า) + onboarding ขั้น Broker ใช้งานจริง; e2e `connections.visual`, `onboarding.visual` → `docs/qa/phase-4/connections-*.png`, `onboarding-broker-*.png`
+
+> **การตัดสินใจ Phase 4 (2026-10-29)** — รายละเอียดใน `docs/PLAN.md` §5.4: protocol EA เดียว (`POST /ingest/events`, ตัวเลขเป็น string, เวลา UTC), คำสั่ง resync/ohlc ส่งกลับใน response ของ heartbeat (แทน `GET /ingest/commands`), เทรดจาก history import ที่ไม่มีแผนเลย = unplanned (ไม่เข้าคิว), แผน expired ยังจับคู่ได้ถ้า entry อยู่ในช่วงเวลา, `/positions` ใช้ offset/limit, cTrader ใช้ JSON/WebSocket
 
 ### Phase 5 — OCR Scan, Emotion & Review
 - [ ] Upload ภาพ → Claude vision → extracted JSON → ฟอร์มยืนยันพร้อม highlight confidence (F-09)
@@ -104,7 +106,7 @@
 ### F-02 Trading Accounts & Risk Profile
 - [x] AC1: สร้าง/แก้/archive บัญชีได้หลายบัญชี โดยแต่ละบัญชีมี type, currency และ initial balance — `test_accounts.py`, e2e `accounts.visual` (archive), onboarding
 - [x] AC2: ทุกบัญชีต้องมี Risk Profile ซึ่งมีค่า default ให้ (1% ต่อเทรด, max daily loss 3%, max DD 10%, max trades 5) — `test_accounts.py::test_create_account_gets_default_risk_profile`, e2e onboarding (ค่าที่กรอกถูกบันทึก)
-- [ ] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี — ⚠️ บางส่วน: account switcher + store (`accountParam`) ใช้งานได้และมี test (`stores/accounts.spec.ts`); รอหน้า dashboard/รายการที่ใช้ filter (Phase 4–7)
+- [x] AC3: Dashboard filter ได้ทั้ง "ทุกบัญชี" และรายบัญชี — หน้า Today กรองตาม account switcher (`GET /today?account_id=`); `test_analysis.py::test_today`, e2e `today.visual` (สลับเป็น Demo แล้วแผนของ FTMO หายไป) · หน้ารายการ/สถิติใน Phase 4–7 ใช้ `accountParam` เดียวกัน
 - [x] AC4: เมื่อแก้ Risk Profile ระบบเก็บ audit log และไม่คำนวณ adherence ของเทรดเก่าใหม่ (เทรดเก่าใช้ snapshot ของ profile ณ เวลาที่เทรด) — `test_accounts.py::test_risk_profile_update_versions_and_audit` (Phase 4 ต้องผูก position กับ version id)
 
 ### F-03 Symbol Specification
@@ -118,31 +120,31 @@
 - [ ] AC3: หน้า setup แสดงสถิติ: จำนวนเทรด, win rate, expectancy (R), avg adherence และ avg quality — UI + `GET /setups/{id}/stats` พร้อมแล้วแต่แสดง "—" จนกว่าจะมีเทรด (Phase 7)
 
 ### F-05 Market Analysis
-- [ ] AC1: สร้าง analysis ต่อ symbol/วัน ได้ โดยใส่ HTF bias, key levels, TF, session, narrative และ confidence
-- [ ] AC2: วาดบนกราฟ (เส้น, กล่อง, ข้อความ, horizontal line) และบันทึกเป็น `chart_drawings` ได้
-- [ ] AC3: 1 analysis สร้างได้หลาย plan (scenario A/B/…)
+- [x] AC1: สร้าง analysis ต่อ symbol/วัน ได้ โดยใส่ HTF bias, key levels, TF, session, narrative และ confidence — `test_analysis.py::test_create_analysis_with_all_fields`, e2e `analysis.visual` (สร้างผ่าน UI แล้ว reload)
+- [x] AC2: วาดบนกราฟ (เส้น, กล่อง, ข้อความ, horizontal line) และบันทึกเป็น `chart_drawings` ได้ — `test_drawings_save_and_load`, e2e `analysis.visual` (วาดเส้นแนวนอน → reload)
+- [x] AC3: 1 analysis สร้างได้หลาย plan (scenario A/B/…) — `test_one_analysis_many_scenarios`, e2e `plan.flow`
 
 ### F-06 Trade Plan & Plan Lock
-- [ ] AC1: Plan ต้องมีฟิลด์บังคับ: setup, direction, entry, SL, อย่างน้อย 1 TP และ risk %
-- [ ] AC2: ระบบคำนวณ planned lot, risk amount และ R:R ให้อัตโนมัติจาก risk profile
-- [ ] AC3: ถ้า checklist ข้อ required ยังไม่ครบ จะ lock ไม่ได้ (แสดงเตือน)
-- [ ] AC4: เมื่อ lock ระบบบันทึก `locked_at` และ `lock_hash`; การแก้หลัง lock ต้องสร้าง revision ใหม่และกรอกเหตุผลเสมอ
-- [ ] AC5: revision ที่เกิดหลัง entry จะถูกติด `changed_after_entry=true` และนับเป็น deviation
-- [ ] AC6: เปลี่ยนสถานะเป็น skipped/missed/invalidated ได้พร้อมเหตุผล; plan ที่หมด `valid_until` แล้วไม่มีเทรดจะกลายเป็น `expired`
-- [ ] AC7: บันทึก pre-trade emotion (mood, confidence, tags) ได้ในฟอร์ม plan
+- [x] AC1: Plan ต้องมีฟิลด์บังคับ: setup, direction, entry, SL, อย่างน้อย 1 TP และ risk % — `test_required_fields` (422), vitest `form.spec.ts`
+- [x] AC2: ระบบคำนวณ planned lot, risk amount และ R:R ให้อัตโนมัติจาก risk profile — `test_planned_lot_risk_and_rr_are_calculated` (0.48 lot / $995.52 / R:R 1.94), e2e `plan.flow`
+- [x] AC3: ถ้า checklist ข้อ required ยังไม่ครบ จะ lock ไม่ได้ (แสดงเตือน) — `test_lock_needs_required_checklist` (422 `checklist_incomplete` + รายการที่ขาด), e2e `plan.visual` (Alert + checklist ขอบแดง)
+- [x] AC4: เมื่อ lock ระบบบันทึก `locked_at` และ `lock_hash`; การแก้หลัง lock ต้องสร้าง revision ใหม่และกรอกเหตุผลเสมอ — `test_locked_plan_changes_only_through_revisions`, e2e `plan.flow`, `plan.visual`
+- [ ] AC5: revision ที่เกิดหลัง entry จะถูกติด `changed_after_entry=true` และนับเป็น deviation — ⚠️ บางส่วน: ติด flag แล้ว (`test_revision_after_entry_is_flagged`, หน้า plan แสดง "แก้หลังเข้าเทรด"); การนับเป็น deviation อยู่ใน adherence engine Phase 6
+- [x] AC6: เปลี่ยนสถานะเป็น skipped/missed/invalidated ได้พร้อมเหตุผล; plan ที่หมด `valid_until` แล้วไม่มีเทรดจะกลายเป็น `expired` — `test_status_changes_need_a_reason`, `test_expire_job`
+- [x] AC7: บันทึก pre-trade emotion (mood, confidence, tags) ได้ในฟอร์ม plan — `test_pre_trade_emotion`, หน้า plan (Mood / Confidence / tags)
 
 ### F-07 Manual Trade Entry
-- [ ] AC1: กรอก position พร้อม executions หลายรายการได้ (scale-in/partial close)
-- [ ] AC2: ระบบคำนวณ net P/L, R-multiple (จาก initial risk) และ avg entry/exit ให้
-- [ ] AC3: เลือก plan ที่จะผูกได้ ถ้าไม่ผูก plan หรือ plan ถูก lock หลังเวลา entry จะติด `is_unplanned=true`
+- [x] AC1: กรอก position พร้อม executions หลายรายการได้ (scale-in/partial close) — `POST /positions`, หน้า `/trades/new`; `test_manual_scale_in_partial_close_design_numbers`, e2e `trade-new.flow`
+- [x] AC2: ระบบคำนวณ net P/L, R-multiple (จาก initial risk) และ avg entry/exit ให้ — `positions/calc.py`; `test_position_calc.py`
+- [x] AC3: เลือก plan ที่จะผูกได้ ถ้าไม่ผูก plan หรือ plan ถูก lock หลังเวลา entry จะติด `is_unplanned=true` — `test_plan_locked_after_entry_is_unplanned`, `test_draft_plan_in_form_is_unplanned`
 
 ### F-08 Auto Sync MT5 / cTrader
-- [ ] AC1: **MT5:** สร้าง API key ต่อบัญชีได้; EA ส่ง deals, positions และการแก้ SL/TP เข้า `/ingest` ภายใน 5 วินาทีหลังเกิดเหตุการณ์
-- [ ] AC2: **cTrader:** เชื่อม OAuth ได้ และ worker ดึง deals/positions แบบ real-time
-- [ ] AC3: ข้อมูลซ้ำ (broker_deal_id เดิม) ต้องไม่สร้าง record ใหม่ (idempotent)
-- [ ] AC4: ซิงก์ประวัติย้อนหลังได้อย่างน้อย 90 วันตอนเชื่อมต่อครั้งแรก
-- [ ] AC5: ดึง OHLC (M1–D1) ช่วง ±N แท่งรอบเทรดมาเก็บใน `ohlc_bars`
-- [ ] AC6: หน้า connection แสดงสถานะ, last_sync_at และ error ล่าสุด
+- [ ] AC1: **MT5:** สร้าง API key ต่อบัญชีได้; EA ส่ง deals, positions และการแก้ SL/TP เข้า `/ingest` ภายใน 5 วินาทีหลังเกิดเหตุการณ์ — ⚠️ key + ingest + event → WebSocket < 5 วินาทีผ่านแล้ว (`test_ingest.py`); EA ส่งทันทีจาก `OnTradeTransaction` แต่ยังไม่ได้วัดใน MT5 จริง
+- [ ] AC2: **cTrader:** เชื่อม OAuth ได้ และ worker ดึง deals/positions แบบ real-time — ⚠️ โค้ด + test กับ fake server (`test_ctrader.py`); รอ cTrader app credential เพื่อทดสอบจริง
+- [x] AC3: ข้อมูลซ้ำ (broker_deal_id เดิม) ต้องไม่สร้าง record ใหม่ (idempotent) — `test_deal_flow_idempotent_matched_and_closed`, `test_concurrent_duplicate_batches_store_once`, `test_history_sync_imports_deals_and_picks_account`
+- [ ] AC4: ซิงก์ประวัติย้อนหลังได้อย่างน้อย 90 วันตอนเชื่อมต่อครั้งแรก — ⚠️ server รับ history import ได้ (`test_history_import_does_not_flood_match_queue`), EA ส่ง 90 วันตอนรันครั้งแรก, cTrader ดึง 90 วัน (fake) — ยังไม่ได้ทดสอบกับโบรกเกอร์จริง
+- [ ] AC5: ดึง OHLC (M1–D1) ช่วง ±N แท่งรอบเทรดมาเก็บใน `ohlc_bars` — ⚠️ server ส่งคำสั่ง `ohlc` ±200 แท่ง M1–D1 เมื่อเทรดปิด, เก็บ bar idempotent, คำนวณ MAE/MFE, กราฟใช้ bar จริง (`test_bars_fill_mae_mfe_and_chart`); ฝั่ง EA/cTrader ที่ดึง bar ยังไม่ได้ทดสอบจริง
+- [x] AC6: หน้า connection แสดงสถานะ, last_sync_at และ error ล่าสุด — `GET /accounts/{id}/connections`, แท็บการเชื่อมต่อ + `/accounts/connections`; e2e `connections.visual`
 
 ### F-09 Screenshot Scan (OCR/AI)
 - [ ] AC1: อัปโหลดภาพ (PNG/JPG ≤ 10MB) แล้วได้ข้อมูล symbol, direction, lot, entry, SL, TP, exit, เวลา และ P/L ภายใน 15 วินาที
@@ -151,16 +153,16 @@
 - [ ] AC4: เมื่อยืนยันแล้ว position จะมี `source=ocr` และแนบภาพต้นฉบับไว้
 
 ### F-10 Execution ↔ Plan Matching
-- [ ] AC1: position ใหม่จะ auto-match กับ plan ที่ locked ซึ่ง symbol/direction ตรงกัน และ entry ห่างจาก plan ไม่เกิน tolerance (ค่า default 0.3×ระยะ SL) ภายในเวลา `valid_until`
-- [ ] AC2: ถ้ามีหลาย plan ที่เข้าเงื่อนไข หรือหาไม่เจอ ให้ `match_status=pending` และเข้าคิวให้ user เลือก
-- [ ] AC3: user แก้การ match ได้ และระบบคำนวณ metrics ใหม่ทันที
+- [x] AC1: position ใหม่จะ auto-match กับ plan ที่ locked ซึ่ง symbol/direction ตรงกัน และ entry ห่างจาก plan ไม่เกิน tolerance (ค่า default 0.3×ระยะ SL) ภายในเวลา `valid_until` — `test_single_locked_plan_auto_matches_and_drives_plan_status`, `test_tolerance_boundary_inclusive`, `test_time_window`
+- [x] AC2: ถ้ามีหลาย plan ที่เข้าเงื่อนไข หรือหาไม่เจอ ให้ `match_status=pending` และเข้าคิวให้ user เลือก — `test_two_candidates_pending_then_manual_pick_and_unplanned`, e2e `trades.spec.ts` (modal / หน้า match มือถือ) · ข้อยกเว้นที่ตั้งใจ: เทรดจาก history import ที่ไม่มีแผนเลย → unplanned (PLAN §5.4)
+- [x] AC3: user แก้การ match ได้ และระบบคำนวณ metrics ใหม่ทันที — `PUT /positions/{id}/match` + สถานะแผนตาม (`sync_with_positions`) + job `recompute_position` (engine adherence/quality จะเสียบใน Phase 6)
 
 ### F-11 Emotion Tracking (3 จุด)
-- [ ] AC1: บันทึก **Pre-trade** ได้ใน plan (F-06 AC7)
+- [x] AC1: บันทึก **Pre-trade** ได้ใน plan (F-06 AC7) — `test_pre_trade_emotion`
 - [ ] AC2: **In-trade:** เมื่อเกิด `order_modifications` ที่เพิ่ม risk หรือปิดก่อน TP ระบบสร้าง prompt ถามเหตุผลและอารมณ์ใน inbox ของ trade
 - [ ] AC3: **Post-trade:** ฟอร์ม review มี mood, tags และ note
 - [ ] AC4: user สร้าง emotion tag เองได้ และ tag ระบบแสดงได้ทั้ง TH และ EN
-- [ ] AC5: มี daily mood (ไม่บังคับ) แสดงบน calendar
+- [ ] AC5: มี daily mood (ไม่บังคับ) แสดงบน calendar — ⚠️ บางส่วน: บันทึกได้แล้วที่หน้า Today (`PUT /daily/{date}`, `test_daily_mood`, e2e `today.visual`); การแสดงบน calendar มากับ Phase 7
 
 ### F-12 Trade Review
 - [ ] AC1: หลังปิด position จะมี review ที่สถานะ "รอรีวิว"
@@ -209,8 +211,8 @@
 ### F-19 In-app Chart (Plan vs Actual)
 - [ ] AC1: แสดงกราฟจาก `ohlc_bars` ใน TF ที่เลือก (M1–D1)
 - [ ] AC2: overlay เส้น plan (entry/SL/TP แบบเส้นประ) เทียบกับ actual (จุด fill, เส้น SL/TP ที่ถูกแก้แสดงตามเวลา)
-- [ ] AC3: มี drawing tools (trendline, ray, horizontal, rectangle, text, measure); บันทึกและโหลดกลับได้
-- [ ] AC4: ใช้งานบนมือถือได้ (pinch zoom/pan)
+- [x] AC3: มี drawing tools (trendline, ray, horizontal, rectangle, text, measure); บันทึกและโหลดกลับได้ — `TradeChart` + `ChartToolbar`, `test_drawings_save_and_load`, e2e `analysis.visual`
+- [ ] AC4: ใช้งานบนมือถือได้ (pinch zoom/pan) — ⚠️ บางส่วน: `TradeChart` เปิด pinch/drag ของ Lightweight Charts และวาดด้วยการแตะได้ (หน้า Analysis มือถือ); ยังไม่ได้ทดสอบบนเครื่องจริง — ปิดพร้อม overlay ใน Phase 7
 
 ### F-20 Alerts: Rule Breach
 - [ ] AC1: เมื่อ position ใหม่ทำให้ผิด rule ระบบสร้าง `rule_breaches` และ `alerts` ภายใน 5 วินาที
@@ -241,12 +243,12 @@
 ### Non-Functional Requirements
 - [ ] Security: HTTPS
 - [x] Security: hash password ด้วย argon2 — Better Auth custom hash argon2id (`auth/src/password.ts`) พารามิเตอร์เท่า Phase 1
-- [ ] Security: เข้ารหัส OAuth tokens (at rest)
-- [ ] Security: เก็บ API key แบบ hash
-- [ ] Security: rate limit บน auth และ ingest — auth เสร็จแล้ว (Better Auth `rateLimit`, `auth/test/rate-limit.spec.ts`); ingest รอ Phase 4
+- [x] Security: เข้ารหัส OAuth tokens (at rest) — Fernet (`core/crypto.py`, `FERNET_KEY`); `test_ctrader.py` ตรวจว่า token ใน DB ไม่ใช่ plain text
+- [x] Security: เก็บ API key แบบ hash — sha256 + prefix/last4 (`connections/keys.py`); `test_key_shown_once_hashed_and_rotatable`
+- [x] Security: rate limit บน auth และ ingest — auth: Better Auth `rateLimit` (`auth/test/rate-limit.spec.ts`); ingest: ต่อ connection (`test_ingest_rate_limit`)
 - [ ] Privacy: ข้อมูลที่ส่งไป AI ไม่มี PII
 - [ ] Privacy: ผู้ใช้ export และลบข้อมูลตัวเองได้
 - [ ] Performance: API p95 < 300ms
 - [ ] Performance: ingest event ถึง alert < 5s
-- [ ] Reliability: ingest idempotent; job retry มี backoff; backup DB รายวัน
+- [ ] Reliability: ingest idempotent; job retry มี backoff; backup DB รายวัน — ingest idempotent ✅ + cTrader job retry backoff ✅ (Phase 4); backup DB รายวันรอ Phase 8
 - [ ] Auditability: plan revisions, score sources และ mentor actions ตรวจย้อนหลังได้

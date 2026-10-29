@@ -1,4 +1,4 @@
-import { API_BASE, ApiError, api, getAccessToken, refreshAccessToken } from './client'
+import { API_BASE, ApiError, api, authedFetch } from './client'
 import type { Dec } from './accounts'
 
 export type Timeframe = 'M1' | 'M5' | 'M15' | 'M30' | 'H1' | 'H4' | 'D1' | 'W1'
@@ -99,15 +99,6 @@ export const playbookApi = {
   addExample: (id: string, attachmentId: string, note = '') =>
     api<Setup>(`${s(id)}/examples`, { method: 'POST', body: { attachment_id: attachmentId, note } }),
   removeExample: (id: string, exampleId: string) => api<Setup>(`${s(id)}/examples/${exampleId}`, { method: 'DELETE' }),
-}
-
-async function authedFetch(input: string, init: RequestInit = {}, retried = false): Promise<Response> {
-  const headers = new Headers(init.headers)
-  const token = getAccessToken()
-  if (token) headers.set('Authorization', `Bearer ${token}`)
-  const res = await fetch(input, { ...init, headers, credentials: 'same-origin' })
-  if (res.status === 401 && !retried && (await refreshAccessToken())) return authedFetch(input, init, true)
-  return res
 }
 
 /** Multipart upload (`api()` only sends JSON). Server checks type from the bytes and size ≤ 10 MB. */

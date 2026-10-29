@@ -1,0 +1,98 @@
+{
+  "today": {
+    "sessionHint": {
+      "opensIn": "{session} opens in {time}",
+      "open": "{session} is open"
+    },
+    "duration": {
+      "h": "{h} h",
+      "m": "{m} min",
+      "hm": "{h} h {m} min"
+    },
+    "session": {
+      "tokyo": "Tokyo",
+      "london": "London",
+      "new_york": "New York"
+    },
+    "kpi": {
+      "pnl": "P/L today",
+      "trades": "Trades today",
+      "tradesShort": "Trades",
+      "tradeCount": "{n} trade | {n} trades",
+      "otherCurrencies": "+{n} other currency | +{n} other currencies",
+      "dailyLoss": "Daily loss used",
+      "dailyLossShort": "Daily loss",
+      "dailyLossLimit": "limit {pct}% · {amount}",
+      "adherence": "Adherence this week",
+      "adherencePending": "Calculated once reviewed trades exist",
+      "goal": "Mentor goal {pct}%",
+      "noAccount": "No account yet"
+    },
+    "analysis": {
+      "title": "Analysis · {symbol}",
+      "section": "Today's analysis",
+      "add": "+ Add",
+      "open": "Open analysis",
+      "htf": "HTF",
+      "pick": "Choose analysis",
+      "confidence": "Confidence {n}/10",
+      "plans": "{n} plan | {n} plans",
+      "chart": "{symbol} {tf} chart",
+      "timeframes": "Chart timeframe",
+      "noNarrative": "No analysis notes written yet",
+      "empty": "No analysis for today yet — start with your market view before planning",
+      "write": "Write today's analysis"
+    },
+    "plans": {
+      "title": "Today's trade plans",
+      "section": "Trade plans",
+      "new": "+ New plan",
+      "name": "{label} · {symbol}",
+      "cols": {
+        "plan": "Plan",
+        "direction": "Direction",
+        "setup": "Setup",
+        "entry": "Entry",
+        "sl": "SL",
+        "tp": "TP",
+        "rr": "R:R",
+        "status": "Status"
+      },
+      "draftChecklist": "{status} · checklist {done}/{total}",
+      "checklist": "checklist {done}/{total}",
+      "notLocked": "not locked",
+      "meta": "{setup} · {risk}% · {lot} lot",
+      "expires": "expires {time}",
+      "empty": "No plans for today yet",
+      "create": "Create plan"
+    },
+    "todo": {
+      "title": "To do",
+      "match": "{n} trade waiting to be matched | {n} trades waiting to be matched",
+      "review": "{n} trade to review | {n} trades to review",
+      "inbox": "{n} new inbox item | {n} new inbox items",
+      "empty": "Nothing pending — nice"
+    },
+    "mood": {
+      "title": "How do you feel today?",
+      "optional": "Optional",
+      "optionalMobile": "Daily mood · optional",
+      "label": "Today's mood",
+      "tags": "Today's emotion tags",
+      "more": "More",
+      "less": "Less",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Couldn't save",
+      "retry": "Try again"
+    },
+    "news": {
+      "title": "Today's news",
+      "all": "All",
+      "empty": "No economic calendar connected yet — the day's key events will show here"
+    },
+    "loadError": "Couldn't load today",
+    "retry": "Try again",
+    "fab": "Create new plan"
+  }
+}

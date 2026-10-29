@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import SideNav from '@/components/shell/SideNav.vue'
 import AppBar from '@/components/shell/AppBar.vue'
 import BottomNav from '@/components/shell/BottomNav.vue'
+import { useInboxStore } from '@/stores/inbox'
+
+// The shell is only rendered for a signed-in user, so this is where the nav badges start updating.
+const inbox = useInboxStore()
+onMounted(() => inbox.start())
 </script>
 
 <template>

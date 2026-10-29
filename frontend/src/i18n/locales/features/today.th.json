@@ -1,0 +1,98 @@
+{
+  "today": {
+    "sessionHint": {
+      "opensIn": "{session} เปิดอีก {time}",
+      "open": "{session} เปิดอยู่"
+    },
+    "duration": {
+      "h": "{h} ชม.",
+      "m": "{m} นาที",
+      "hm": "{h} ชม. {m} นาที"
+    },
+    "session": {
+      "tokyo": "Tokyo",
+      "london": "London",
+      "new_york": "New York"
+    },
+    "kpi": {
+      "pnl": "P/L วันนี้",
+      "trades": "เทรดวันนี้",
+      "tradesShort": "เทรด",
+      "tradeCount": "{n} เทรด",
+      "otherCurrencies": "+{n} สกุลเงินอื่น",
+      "dailyLoss": "Daily loss ที่ใช้ไป",
+      "dailyLossShort": "Daily loss",
+      "dailyLossLimit": "limit {pct}% · {amount}",
+      "adherence": "Adherence สัปดาห์นี้",
+      "adherencePending": "คำนวณเมื่อมีเทรดที่รีวิวแล้ว",
+      "goal": "เป้าหมาย {pct}% จาก Mentor",
+      "noAccount": "ยังไม่มีบัญชี"
+    },
+    "analysis": {
+      "title": "Analysis · {symbol}",
+      "section": "Analysis วันนี้",
+      "add": "+ เพิ่ม",
+      "open": "เปิด Analysis",
+      "htf": "HTF",
+      "pick": "เลือก Analysis",
+      "confidence": "Confidence {n}/10",
+      "plans": "{n} แผน",
+      "chart": "กราฟ {symbol} {tf}",
+      "timeframes": "Timeframe ของกราฟ",
+      "noNarrative": "ยังไม่ได้เขียนบันทึกการวิเคราะห์",
+      "empty": "ยังไม่มี Analysis ของวันนี้ — เริ่มจากมุมมองตลาดก่อนวางแผน",
+      "write": "เขียน Analysis วันนี้"
+    },
+    "plans": {
+      "title": "แผนการเทรดวันนี้",
+      "section": "แผนการเทรด",
+      "new": "+ แผนใหม่",
+      "name": "{label} · {symbol}",
+      "cols": {
+        "plan": "แผน",
+        "direction": "ทิศทาง",
+        "setup": "Setup",
+        "entry": "Entry",
+        "sl": "SL",
+        "tp": "TP",
+        "rr": "R:R",
+        "status": "สถานะ"
+      },
+      "draftChecklist": "{status} · checklist {done}/{total}",
+      "checklist": "checklist {done}/{total}",
+      "notLocked": "ยังไม่ล็อก",
+      "meta": "{setup} · {risk}% · {lot} lot",
+      "expires": "หมดอายุ {time}",
+      "empty": "ยังไม่มีแผนของวันนี้",
+      "create": "สร้างแผน"
+    },
+    "todo": {
+      "title": "ต้องจัดการ",
+      "match": "{n} เทรดรอจับคู่กับแผน",
+      "review": "{n} เทรดรอรีวิว",
+      "inbox": "{n} รายการใหม่ในกล่องข้อความ",
+      "empty": "ไม่มีงานค้าง เยี่ยมเลย"
+    },
+    "mood": {
+      "title": "วันนี้รู้สึกอย่างไร?",
+      "optional": "ไม่บังคับ",
+      "optionalMobile": "Daily mood · ไม่บังคับ",
+      "label": "อารมณ์วันนี้",
+      "tags": "แท็กอารมณ์วันนี้",
+      "more": "อื่นๆ",
+      "less": "ย่อ",
+      "saving": "กำลังบันทึก…",
+      "saved": "บันทึกแล้ว",
+      "error": "บันทึกไม่สำเร็จ",
+      "retry": "ลองอีกครั้ง"
+    },
+    "news": {
+      "title": "ข่าววันนี้",
+      "all": "ทั้งหมด",
+      "empty": "ยังไม่ได้เชื่อมต่อปฏิทินข่าวเศรษฐกิจ — ข่าวสำคัญของวันจะแสดงที่นี่"
+    },
+    "loadError": "โหลดข้อมูลวันนี้ไม่สำเร็จ",
+    "retry": "ลองอีกครั้ง",
+    "fab": "สร้างแผนใหม่"
+  }
+}

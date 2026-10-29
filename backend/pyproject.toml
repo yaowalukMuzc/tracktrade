@@ -22,6 +22,7 @@ dependencies = [
     "cryptography>=43",  # EdDSA for Better Auth JWTs (pyjwt)
     "httpx>=0.27",  # JWKS fetch
     "python-multipart>=0.0.9",  # file uploads (attachments)
+    "websockets>=13",  # cTrader Open API (JSON over WebSocket)
 ]
 
 [dependency-groups]

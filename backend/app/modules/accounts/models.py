@@ -62,6 +62,10 @@ class TradingAccount(Base):
     # Archive instead of delete (F-02 AC1): the account and its history stay.
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"))
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Latest balance / equity reported by the broker (EA heartbeat, cTrader) — PLAN M26.
+    last_balance: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
+    last_equity: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
+    last_equity_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class _RiskValues:

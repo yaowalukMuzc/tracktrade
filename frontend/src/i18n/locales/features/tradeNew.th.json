@@ -1,0 +1,125 @@
+{
+  "tradeNew": {
+    "title": "เพิ่มเทรด",
+    "crumb": "เทรด",
+    "close": "ปิด",
+    "mode": {
+      "label": "วิธีเพิ่มเทรด",
+      "manual": "กรอกเอง",
+      "scan": "Screenshot scan",
+      "scanShort": "Screenshot",
+      "scanAction": "Scan ภาพ"
+    },
+    "fields": {
+      "account": "บัญชี",
+      "symbol": "Symbol",
+      "direction": "Direction",
+      "initialSl": "Initial SL",
+      "initialTp": "Initial TP",
+      "plan": "ผูกกับแผน",
+      "rate": "อัตรา {quote} → {account}",
+      "rateHelp": "คู่เงินนี้ต้องแปลงเป็นสกุลของบัญชี — ใส่อัตราแลกเปลี่ยน ณ เวลาที่เทรด"
+    },
+    "executions": {
+      "title": "Executions",
+      "hint": "scale-in / partial close",
+      "addIn": "Entry",
+      "addOut": "Exit",
+      "side": { "in": "IN", "out": "OUT" },
+      "row": "{lot} lot {'@'} {price}",
+      "scaleIn": "scale-in",
+      "partial": "partial",
+      "blank": "แตะเพื่อกรอก lot และราคา",
+      "edit": "แก้ execution {n}",
+      "empty": "ยังไม่มี execution — เพิ่ม Entry ก่อน",
+      "cols": { "side": "Side", "time": "เวลา", "lot": "Lot", "price": "ราคา", "commission": "Commission" }
+    },
+    "dialog": {
+      "addIn": "เพิ่ม Entry",
+      "addOut": "เพิ่ม Exit",
+      "edit": "แก้ Execution",
+      "side": "ประเภท",
+      "lot": "Lot",
+      "price": "ราคา",
+      "time": "เวลา ({tz})",
+      "commission": "Commission",
+      "commissionHelp": "กรอกยอดที่จ่าย — ระบบบันทึกเป็นค่าใช้จ่าย (−)",
+      "swap": "Swap",
+      "swapHelp": "ใส่ − ถ้าเสีย swap",
+      "save": "บันทึก",
+      "cancel": "ยกเลิก",
+      "delete": "ลบ"
+    },
+    "calc": {
+      "title": "คำนวณให้อัตโนมัติ",
+      "titleDesktop": "คำนวณอัตโนมัติ",
+      "status": { "open": "Open", "closed": "Closed" },
+      "avg": "Avg entry / exit",
+      "totalLot": "Total lot",
+      "openLot": "ยังเปิดอยู่",
+      "commission": "Commission",
+      "swap": "Swap",
+      "net": "Net P/L",
+      "r": "R-multiple",
+      "rNoSl": "ใส่ Initial SL เพื่อคำนวณ R",
+      "waiting": "กรอก lot และราคาให้ครบเพื่อคำนวณ",
+      "loading": "กำลังคำนวณ…"
+    },
+    "plan": {
+      "later": "เลือกภายหลัง (เข้าคิวจับคู่)",
+      "none": "ไม่มีแผน (Unplanned)",
+      "option": "{label} · {symbol} {direction} ({state})",
+      "locked": "Locked {time}",
+      "draft": "Draft — ยังไม่ล็อก",
+      "status": "{status}",
+      "recommended": "แนะนำ",
+      "laterHelp": "ระบบจะจับคู่กับแผนที่ล็อกไว้ให้อัตโนมัติ ถ้ามีหลายแผนหรือไม่พบจะเข้าคิวให้เลือก",
+      "warn": {
+        "plan_not_locked": "แผนนี้ยังไม่ถูกล็อกก่อนเวลา entry — เทรดจะถูกติด Unplanned",
+        "locked_after_entry": "แผนนี้ล็อกหลังเวลา entry — เทรดจะถูกติด Unplanned",
+        "no_plan": "บันทึกเป็นเทรดนอกแผน — นับเป็น deviation ของมิติ Discipline"
+      }
+    },
+    "save": "บันทึกเทรด",
+    "blocked": {
+      "account": "เลือกบัญชีก่อนบันทึก",
+      "symbol": "เลือก Symbol ก่อนบันทึก",
+      "executions": "เพิ่ม Entry อย่างน้อย 1 รายการ",
+      "execution": "กรอก lot และราคาของทุก execution ให้ครบ",
+      "sl": "Initial SL ไม่ถูกต้อง",
+      "tp": "Initial TP ไม่ถูกต้อง",
+      "rate": "อัตราแลกเปลี่ยนไม่ถูกต้อง",
+      "calc": "แก้ข้อผิดพลาดด้านบนก่อนบันทึก"
+    },
+    "errors": {
+      "exit_before_entry": "Execution แรกต้องเป็น Entry — เวลาของ Exit อยู่ก่อน Entry",
+      "exit_exceeds_open": "Exit ปิด lot มากกว่าที่เปิดอยู่",
+      "stop_loss_wrong_side": "SL ต้องอยู่ต่ำกว่าราคา entry สำหรับ LONG และสูงกว่าสำหรับ SHORT",
+      "conversion_rate_required": "คู่เงินนี้ต้องใช้อัตราแลกเปลี่ยนเป็นสกุลของบัญชี — กรอกอัตราด้านล่าง",
+      "invalid_execution": "Lot และราคาต้องมากกว่า 0",
+      "no_executions": "เพิ่ม Entry อย่างน้อย 1 รายการ",
+      "plan_mismatch": "แผนนี้เป็นของบัญชี Symbol หรือทิศทางอื่น",
+      "account_archived": "บัญชีนี้ถูก archive — เปิดใช้บัญชีก่อนเพิ่มเทรด",
+      "validation_error": "ข้อมูลบางช่องไม่ถูกต้อง",
+      "not_found": "ไม่พบบัญชี Symbol หรือแผนที่เลือก",
+      "generic": "บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง",
+      "load": "โหลดข้อมูลไม่สำเร็จ",
+      "positive": "ต้องมากกว่า 0",
+      "lotStep": "ทศนิยมได้ไม่เกิน 2 ตำแหน่ง",
+      "tooPrecise": "ทศนิยมได้ไม่เกิน 6 ตำแหน่ง",
+      "required": "กรุณากรอก",
+      "cost": "กรอกเป็นยอดบวก",
+      "number": "ตัวเลขไม่ถูกต้อง"
+    },
+    "retry": "ลองใหม่",
+    "noAccount": {
+      "title": "ยังไม่มีบัญชีเทรด",
+      "body": "สร้างบัญชีก่อน แล้วค่อยเพิ่มเทรดเข้าไป",
+      "action": "ไปที่บัญชี"
+    },
+    "scan": {
+      "message": "การสแกนภาพหน้าจอยังไม่เปิดใช้ — ตอนนี้กรอกเทรดเองได้ก่อน",
+      "back": "กรอกเอง"
+    }
+  }
+}

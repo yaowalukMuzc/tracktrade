@@ -49,14 +49,16 @@ export function formatPct(value: number, digits = 1, signed = false) {
   return (signed ? signOf(value) : value < 0 ? MINUS : '') + Math.abs(value).toFixed(digits) + '%'
 }
 
-/** Unsigned amount (balances, limits — not a P/L): `$100,000`, `$1,000.50`. Decimals only when present. */
+/** Unsigned amount (balances, limits — not a P/L): `$100,000`, `$1,000.50`. Cents only when present, then always
+ *  two digits (`$3,037.20`, never `$3,037.2`). */
 export function formatAmount(value: number | string, currency = 'USD', maxDigits = 2) {
   const n = typeof value === 'string' ? Number(value) : value
+  const rounded = Math.round(n * 10 ** maxDigits) / 10 ** maxDigits
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
     currencyDisplay: 'narrowSymbol',
-    minimumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(rounded) ? 0 : maxDigits,
     maximumFractionDigits: maxDigits,
   }).format(n)
 }

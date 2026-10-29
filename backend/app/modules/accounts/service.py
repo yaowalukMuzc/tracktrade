@@ -5,9 +5,10 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Sequence
-from datetime import UTC, datetime
+from datetime import UTC, datetime, time, timedelta
 from decimal import Decimal
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
@@ -38,7 +39,11 @@ from app.modules.accounts.schemas import (
     _validate_params,
 )
 from app.modules.audit.service import record, snapshot
+from app.modules.positions.models import Position
 from app.modules.symbols.models import Symbol
+from app.modules.users.models import User
+
+CENT = Decimal("0.01")
 
 
 def _now() -> datetime:
@@ -229,21 +234,81 @@ async def risk_profile_at(
     return version
 
 
+async def current_balance(session: AsyncSession, account: TradingAccount) -> Decimal:
+    """Broker-reported balance when a connection sends it (PLAN M26), else initial + closed P/L."""
+    if account.last_balance is not None:
+        return account.last_balance
+    closed = await session.scalar(
+        select(func.coalesce(func.sum(Position.net_pnl), 0)).where(
+            Position.account_id == account.id, Position.status == "closed"
+        )
+    )
+    return account.initial_balance + Decimal(closed or 0)
+
+
+async def _day_bounds(session: AsyncSession, ctx: AccessContext) -> tuple[datetime, datetime]:
+    """Today in the trader's timezone, as UTC instants (PLAN Q6: per-account zone later)."""
+    user = await session.get(User, ctx.owner_id)
+    try:
+        tz = ZoneInfo(user.timezone if user else "UTC")
+    except (KeyError, ValueError):
+        tz = ZoneInfo("UTC")
+    start = datetime.combine(datetime.now(tz).date(), time.min, tzinfo=tz)
+    return start.astimezone(UTC), (start + timedelta(days=1)).astimezone(UTC)
+
+
+async def _peak_balance(session: AsyncSession, account: TradingAccount) -> Decimal:
+    """Highest balance reached: initial balance + running sum of closed P/L, in close order."""
+    running = (
+        func.sum(Position.net_pnl).over(order_by=(Position.closed_at, Position.id)).label("running")
+    )
+    sub = (
+        select(running)
+        .where(Position.account_id == account.id, Position.status == "closed")
+        .subquery()
+    )
+    best = await session.scalar(select(func.max(sub.c.running)))
+    return account.initial_balance + max(Decimal(best or 0), Decimal(0))
+
+
 async def risk_status(
     session: AsyncSession, ctx: AccessContext, account_id: uuid.UUID
 ) -> RiskStatusOut:
+    """Today's use of the limits from real trades (F-02 + Accounts "today" card)."""
     account = await get_account(session, ctx, account_id)
     profile = await get_risk_profile(session, ctx, account_id)
-    # Until positions exist (Phase 4) balance = initial balance and nothing is used.
-    balance = account.initial_balance
-    daily_limit = (balance * profile.max_daily_loss_pct / 100).quantize(Decimal("0.01"))
+    balance = await current_balance(session, account)
+    equity = account.last_equity if account.last_equity is not None else balance
+    start, end = await _day_bounds(session, ctx)
+    closed_today = await session.scalar(
+        select(func.coalesce(func.sum(Position.net_pnl), 0)).where(
+            Position.account_id == account_id,
+            Position.status == "closed",
+            Position.closed_at >= start,
+            Position.closed_at < end,
+        )
+    )
+    opened_today = await session.scalar(
+        select(func.count()).where(
+            Position.account_id == account_id,
+            Position.opened_at >= start,
+            Position.opened_at < end,
+        )
+    )
+    peak = max(await _peak_balance(session, account), balance)
+    drawdown = ((peak - balance) / peak * 100).quantize(CENT) if peak > 0 else Decimal(0)
+    # Daily limit is a % of the balance at the start of the day (FTMO style).
+    day_start_balance = balance - Decimal(closed_today or 0)
+    daily_limit = (day_start_balance * profile.max_daily_loss_pct / 100).quantize(CENT)
     return RiskStatusOut(
         currency=account.currency,
         balance=balance,
-        equity=balance,
-        daily_loss=Usage(used=Decimal("0"), limit=daily_limit),
-        drawdown_pct=Usage(used=Decimal("0"), limit=profile.max_drawdown_pct),
-        trades_today=Usage(used=Decimal("0"), limit=Decimal(profile.max_trades_per_day)),
+        equity=equity,
+        daily_loss=Usage(used=max(-Decimal(closed_today or 0), Decimal(0)), limit=daily_limit),
+        drawdown_pct=Usage(used=max(drawdown, Decimal(0)), limit=profile.max_drawdown_pct),
+        trades_today=Usage(
+            used=Decimal(opened_today or 0), limit=Decimal(profile.max_trades_per_day)
+        ),
     )
 
 
@@ -444,12 +509,11 @@ def _strip_suffix(broker_symbol: str) -> str:
     return letters[:6]
 
 
-async def resolve_symbol(
-    session: AsyncSession, ctx: AccessContext, account_id: uuid.UUID, broker_symbol: str
-) -> SymbolResolveOut:
-    """Broker symbol → standard symbol + effective specs (override first, then the standard
-    code, then the code with the broker suffix removed). Used by imports in Phase 4."""
-    await get_account(session, ctx, account_id)
+async def resolve_broker_symbol(
+    session: AsyncSession, account_id: uuid.UUID, broker_symbol: str
+) -> tuple[Symbol, AccountSymbolOverride | None] | None:
+    """Broker symbol → standard symbol: the account's mapping first, then the standard code,
+    then the code with the broker suffix removed (`XAUUSD.m` → XAUUSD). None when unknown."""
     stmt = (
         select(AccountSymbolOverride, Symbol)
         .join(Symbol, Symbol.id == AccountSymbolOverride.symbol_id)
@@ -461,25 +525,30 @@ async def resolve_symbol(
     found = (await session.execute(stmt)).first()
     if found is not None:
         row, symbol = found
-        return SymbolResolveOut(
-            broker_symbol=broker_symbol,
-            symbol_id=symbol.id,
-            symbol_code=symbol.code,
-            contract_size=row.contract_size or symbol.contract_size,
-            tick_value=row.tick_value,
-            source="override",
-        )
+        return symbol, row
     for code in dict.fromkeys((broker_symbol.upper(), _strip_suffix(broker_symbol))):
         std = (
             await session.execute(select(Symbol).where(Symbol.code == code))
         ).scalar_one_or_none()
         if std is not None:
-            return SymbolResolveOut(
-                broker_symbol=broker_symbol,
-                symbol_id=std.id,
-                symbol_code=std.code,
-                contract_size=std.contract_size,
-                tick_value=None,
-                source="standard",
-            )
-    raise NotFound("Unknown symbol; add a symbol mapping for this account")
+            return std, None
+    return None
+
+
+async def resolve_symbol(
+    session: AsyncSession, ctx: AccessContext, account_id: uuid.UUID, broker_symbol: str
+) -> SymbolResolveOut:
+    """Broker symbol → standard symbol + effective specs (used by the mapping UI and imports)."""
+    await get_account(session, ctx, account_id)
+    found = await resolve_broker_symbol(session, account_id, broker_symbol)
+    if found is None:
+        raise NotFound("Unknown symbol; add a symbol mapping for this account")
+    symbol, row = found
+    return SymbolResolveOut(
+        broker_symbol=broker_symbol,
+        symbol_id=symbol.id,
+        symbol_code=symbol.code,
+        contract_size=(row.contract_size if row else None) or symbol.contract_size,
+        tick_value=row.tick_value if row else None,
+        source="override" if row else "standard",
+    )

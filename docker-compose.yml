@@ -14,9 +14,16 @@ x-backend-env: &backend-env
   AUTH_JWKS_URL: http://auth:3000/api/auth/jwks
   JWT_ISSUER: ${JWT_ISSUER:-tracktrade-auth}
   JWT_AUDIENCE: ${JWT_AUDIENCE:-tracktrade-api}
-  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5178}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5179}
   LOG_LEVEL: ${LOG_LEVEL:-INFO}
   MEDIA_ROOT: /data/media
+  APP_URL: ${APP_URL:-http://localhost:8080}
+  MT5_EA_DIR: /app/connectors/mt5-ea
+  # cTrader linking stays off until these are set (https://openapi.ctrader.com/apps).
+  FERNET_KEY: ${FERNET_KEY:-}
+  CTRADER_CLIENT_ID: ${CTRADER_CLIENT_ID:-}
+  CTRADER_CLIENT_SECRET: ${CTRADER_CLIENT_SECRET:-}
+  CTRADER_REDIRECT_URI: ${CTRADER_REDIRECT_URI:-http://localhost:8080/api/v1/connections/ctrader/callback}
 
 services:
   postgres:
@@ -58,7 +65,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-tracktrade}:${POSTGRES_PASSWORD:-tracktrade}@postgres:5432/${POSTGRES_DB:-tracktrade}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-dev-only-better-auth-secret-change-me-0123456789}
       BETTER_AUTH_URL: ${PUBLIC_URL:-http://localhost:8080}
-      TRUSTED_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5178}
+      TRUSTED_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5179}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       JWT_ISSUER: ${JWT_ISSUER:-tracktrade-auth}
       JWT_AUDIENCE: ${JWT_AUDIENCE:-tracktrade-api}
@@ -80,6 +87,7 @@ services:
     environment: *backend-env
     volumes:
       - media:/data/media # uploaded images (playbook examples, later reviews/OCR)
+      - ./connectors/mt5-ea:/app/connectors/mt5-ea:ro # served as GET /downloads/mt5-ea
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -104,6 +112,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+
+  ctrader-stream:
+    # Live cTrader execution events (F-08 AC2). Idles when CTRADER_CLIENT_ID / FERNET_KEY are empty.
+    build: ./backend
+    command: ["python", "-m", "app.modules.connections.ctrader.stream"]
+    environment: *backend-env
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
 
   web:
     # Build context is the repo root: the frontend imports ../design-system (single source of tokens).
